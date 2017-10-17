@@ -44,7 +44,7 @@
 // Math operations for interleaved N-way SSE data
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <constexpr int intrlv> class MathOps
+template <const int intrlv> class MathOps
 {
 public:
 	static constexpr int raw_vec_elem = 8;
