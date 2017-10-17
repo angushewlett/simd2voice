@@ -3,9 +3,14 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#if WIN32
+#if WIN32 && !CEXCOMPILE
 #include <windows.h>
 #endif
+
+#if CEXCOMPILE
+#define valigned_malloc(a, b) malloc(a)
+#define valigned_free(a) free(a)
+#else
 
 ////////////////////////////////
 // aligned malloc() wrapper
@@ -30,6 +35,7 @@ inline void valigned_free( void *mem )
     free(mem);
 #endif
 }
+#endif
 
 ////////////////////////////////
 // floating point (-1,1) pseudo random number generator
@@ -38,7 +44,5 @@ inline float randf()
     return 2.f * ((rand() / (float)RAND_MAX) - 0.5f);
 };
 
-////////////////////////////////
-// aligned malloc wrapper
 
 #endif
