@@ -2,7 +2,9 @@
 #define __XBasicAmpTmpl_H__
 
 //#include "PerformanceCounterScope.h"
+#ifndef CEXCOMPILE
 #include "XBasicAmp.h"
+#endif
 
 // Assumed headers:
 // TIOAdapter type
