@@ -38,7 +38,6 @@
 #define generic_mulps _mm256_mul_ps
 #define generic_subps _mm256_sub_ps
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class Mathops_AVX
 // Math operations for interleaved N-way SSE data
