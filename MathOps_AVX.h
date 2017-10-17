@@ -18,7 +18,9 @@
 // * typedefs / conversion routines for packing/unpacking to plain vectors of floats/ints
 ////////////////////////////////
 
+#ifndef CEXCOMPILE
 #include "MathOps_Common.h"
+#endif
 
 #if (_MSC_VER || __ICC) // MS compiler allows direct access to union members
 #define VECPRE32 __declspec(align(32))

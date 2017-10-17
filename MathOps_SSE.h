@@ -27,7 +27,9 @@
 #include <smmintrin.h>
 #endif
 
+#ifndef CEXCOMPILE
 #include "MathOps_Common.h"
+#endif
 
 #if (_MSC_VER || __ICC) // MS compiler allows direct access to union members
 #define VECPRE16 __declspec(align(16))
