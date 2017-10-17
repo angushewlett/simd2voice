@@ -12,7 +12,12 @@
 
 typedef int32_t int32;
 typedef uint32_t uint32;
+
+#if WIN32
+#define vforceinline __forceinline
+#else
 #define vforceinline __inline__ __attribute__((always_inline))
+#endif
 
 namespace XDSP
 {
