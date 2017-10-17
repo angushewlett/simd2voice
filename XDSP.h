@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <vector>
 #if CEXCOMPILE
-#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XHelpers.h>
+//#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XHelpers.h>
 #else
 #include "XHelpers.h"
 #endif
