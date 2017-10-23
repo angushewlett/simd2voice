@@ -45,9 +45,9 @@ template <class Mathops_t, class DSPNode_t> class IOAdapter : public Mathops_t
 public:
     // Import types from the base mathops implementation
 	typedef typename Mathops_t::vec_float vec_float;
-	typedef typename Mathops_t::vec_int vec_int;
+//	typedef typename Mathops_t::vec_int vec_int;
 	typedef typename Mathops_t::vec_union_f vec_union_f;
-	typedef typename Mathops_t::vec_union_i32 vec_union_i32;
+//	typedef typename Mathops_t::vec_union_i32 vec_union_i32;
     
 	static constexpr int32 vec_elem = Mathops_t::vec_elem;
 	static constexpr int32 interleave = Mathops_t::interleave;
@@ -69,12 +69,24 @@ public:
         void ResetIterator() { m_buff_read = m_buff_start; };
         //friend SampleInputStream & operator >> (SampleInputStream &instr,  vec_float& f);
         
-        SampleInputStream & operator >> (vec_float& f)
+        vforceinline SampleInputStream & operator >> (vec_float& f)
         {
             f= *m_buff_read;
             m_buff_read += XDSP::kMaxVoices / vec_elem;
             return *this;
-        }
+        };
+        
+        vforceinline SampleInputStream operator++(int n)
+        {
+            SampleInputStream tmp(*this);
+            m_buff_read += XDSP::kMaxVoices / vec_elem;
+            return tmp;
+        };
+        
+        vforceinline const vec_float & operator*()
+        {
+            return *m_buff_read;
+        };
         
     protected:
         const vec_float* m_buff_read = 0;
@@ -92,12 +104,25 @@ public:
         };
         void ResetIterator() { m_buff_write = m_buff_start; };
 
-        SampleOutputStream & operator << (vec_float f)
+        vforceinline SampleOutputStream & operator << (vec_float f)
         {
             *m_buff_write = f;
             m_buff_write += XDSP::kMaxVoices / vec_elem;
             return *this;
-        }
+        };
+        
+        vforceinline SampleOutputStream operator++(int n)
+        {
+            SampleOutputStream tmp(*this);
+            m_buff_write += XDSP::kMaxVoices / vec_elem;
+            return tmp;
+        };
+        
+        vforceinline vec_float & operator*()
+        {
+            return *m_buff_write;
+        };
+        
     protected:
         vec_float* m_buff_write = 0;
         vec_float* m_buff_start = 0;

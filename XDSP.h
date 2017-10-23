@@ -275,6 +275,14 @@ public:
     };
 
     ////////////////////////////////
+    // Default impl for buffer processing, just call ProcessBuffer_Dispatch().
+    virtual void ProcessBuffer (const XDSP::ProcessGlobals& process_globals)
+    {
+        // Call the templated base class to dispatch
+        ProcessBuffer_Dispatch(process_globals);
+    }
+
+    ////////////////////////////////
     // Main dispatch entry point for buffer processing, selects which CPU specific dispatch to use
     virtual int32 ProcessBuffer_Dispatch(const ProcessGlobals& process_globals)
     {
@@ -285,25 +293,27 @@ public:
         // by way of a CPU-specific (rather than type specific) compilation unit.
         // They in turn instantiate templates for a specific node-type and mathops-implementation
         ///////
-
+#if !CEXCOMPILE && !DISPATCHTESTCOMPILE
 #if ARCH_X86 || ARCH_X64
-#if COMPILER_ALLOW_AVX512
+#if ENABLE_AVX512
         if (cpu_feature_level >= eFeatAVX512) return ProcessBuffer_AVX512(process_globals, this);
 #endif
-#if COMPILER_ALLOW_AVX
-//        if (cpu_feature_level >= SIMD::eFeatFMA) return ProcessBuffer_FMA(process_globals, static_cast<TNode*>(this));
-//        if (cpu_feature_level >= SIMD::eFeatAVX) return ProcessBuffer_AVX(process_globals, static_cast<TNode*>(this));
+#if ENABLE_AVX
+        if (cpu_feature_level >= SIMD::eFeatFMA) return ProcessBuffer_FMA(process_globals, static_cast<TNode*>(this));
+        if (cpu_feature_level >= SIMD::eFeatAVX) return ProcessBuffer_AVX(process_globals, static_cast<TNode*>(this));
 #endif
-#if COMPILER_ALLOW_SSE
+#if ENABLE_SSE
         if (cpu_feature_level >= SIMD::eFeatSSE4) return ProcessBuffer_SSE4(process_globals, static_cast<TNode*>(this));
         if (cpu_feature_level >= SIMD::eFeatSSE2) return ProcessBuffer_SSE2(process_globals, static_cast<TNode*>(this));
 #endif
 #endif
         
-#if ARCH_ARM && COMPILER_ALLOW_NEON
+#if ARCH_ARM && ENABLE_NEON
         if (cpu_feature_level >= SIMD::eFeatNEON) return T::ProcessBuffer_NEON(process_globals, static_cast<TNode*>(this));
 #endif
-        return 0;// ProcessBuffer_Scalar(process_globals, static_cast<TNode*>(this));
+        return ProcessBuffer_Scalar(process_globals, static_cast<TNode*>(this));
+#endif
+        return 0;
     }
 
     ////////////////////////////////

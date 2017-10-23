@@ -21,240 +21,190 @@
 //
 ////////////////////////////////
 
-/*#ifdef __VELLOCET_VSIMD_H__
-#error Sorry, this code can't be mixed in the same cpp as VSIMD.
-#endif
-*/
+#define SIMDFUNC static vforceinline vec_float
 
 
-#define INTERLEAVED_SINGLE_ASSIGN(result, value_token)\
-	if (intrlv > 0) result.m[0] = value_token;\
-	if (intrlv > 1) result.m[1] = value_token; \
-	if (intrlv > 2) result.m[2] = value_token; \
-	if (intrlv > 3) result.m[3] = value_token; /*\
-	if (intrlv > 4) result.m[4] = value_token; \
-	if (intrlv > 5) result.m[5] = value_token; \
-	if (intrlv > 6) result.m[6] = value_token; \
-	if (intrlv > 7) result.m[7] = value_token; */
-
-#define INTERLEAVED_INDEX_ASSIGN(result, value_token)\
-	if (intrlv > 0) result.m[0] = value_token[0];\
-	if (intrlv > 1) result.m[1] = value_token[1]; \
-	if (intrlv > 2) result.m[2] = value_token[2]; \
-	if (intrlv > 3) result.m[3] = value_token[3]; /*\
-	if (intrlv > 4) result.m[4] = value_token[4]; \
-	if (intrlv > 5) result.m[5] = value_token[5]; \
-	if (intrlv > 6) result.m[6] = value_token[6]; \
-	if (intrlv > 7) result.m[7] = value_token[7]; */
-
-#define INTERLEAVED_INDEX_ASSIGN_T(result_token, value_token)\
-	if (intrlv > 0) result_token[0] = value_token[0];\
-	if (intrlv > 1) result_token[1] = value_token[1]; \
-	if (intrlv > 2) result_token[2] = value_token[2]; \
-	if (intrlv > 3) result_token[3] = value_token[3]; /*\
-	if (intrlv > 4) result_token[4] = value_token[4]; \
-	if (intrlv > 5) result_token[5] = value_token[5]; \
-	if (intrlv > 6) result_token[6] = value_token[6]; \
-	if (intrlv > 7) result_token[7] = value_token[7]; */
-
-#define INTERLEAVED_SINGLE_ASSIGN_P(result, value_token, intp)\
-	if (intp > 0) result.m[0] = value_token;\
-	if (intp > 1) result.m[1] = value_token; \
-	if (intp > 2) result.m[2] = value_token; \
-	if (intp > 3) result.m[3] = value_token; /*\
-	if (intrlv > 4) result.m[4] = value_token; \
-	if (intrlv > 5) result.m[5] = value_token; \
-	if (intrlv > 6) result.m[6] = value_token; \
-	if (intrlv > 7) result.m[7] = value_token; */
-
-#define INTERLEAVED_INDEX_ASSIGN_P(result, value_token, intp)\
-	if (intp > 0) result.m[0] = value_token[0];\
-	if (intp > 1) result.m[1] = value_token[1]; \
-	if (intp > 2) result.m[2] = value_token[2]; \
-	if (intp > 3) result.m[3] = value_token[3]; /*\
-	if (intp > 4) result.m[4] = value_token[4]; \
-	if (intp > 5) result.m[5] = value_token[5]; \
-	if (intp > 6) result.m[6] = value_token[6]; \
-	if (intp > 7) result.m[7] = value_token[7]; */
-
-#define INTERLEAVED_INDEX_ASSIGN_TP(result_token, value_token, intp)\
-	if (intp > 0) result_token[0] = value_token[0];\
-	if (intp > 1) result_token[1] = value_token[1]; \
-	if (intp > 2) result_token[2] = value_token[2]; \
-	if (intp > 3) result_token[3] = value_token[3]; /*\
-	if (intrlv > 4) result_token[4] = value_token[4]; \
-	if (intrlv > 5) result_token[5] = value_token[5]; \
-	if (intrlv > 6) result_token[6] = value_token[6]; \
-	if (intrlv > 7) result_token[7] = value_token[7]; */
+#define GENERATE_INTERLEAVED_FUNCTION_2ARG(func_alias, sseop) SIMDFUNC func_alias(const vec_float& q1, const vec_float& q2)   { return simd_funcgen_2op<vec_float, vec_elem_t, sseop, interleave>(q1, q2); };
+#define GENERATE_INTERLEAVED_FUNCTION_2ARG_K(func_alias, sseop, K) SIMDFUNC func_alias(const vec_float& q1, const vec_float& q2)   { return simd_funcgen_2op_k<vec_float, vec_elem_t, sseop, interleave, K>(q1, q2); };
+#define GENERATE_INTERLEAVED_FUNCTION_1ARG(func_alias, sseop) SIMDFUNC func_alias(const vec_float& q1)   { return simd_funcgen_1op<vec_float, __m128, sseop, interleave>(q1); };
 
 
-#define INTERLEAVED_UNROLL_1(result, oper, ar1)\
-	if (intrlv > 0) result.m[0] = oper(ar1.m[0]);\
-	if (intrlv > 1) result.m[1] = oper(ar1.m[1]); \
-	if (intrlv > 2) result.m[2] = oper(ar1.m[2]); \
-	if (intrlv > 3) result.m[3] = oper(ar1.m[3]); /*\
-	if (intrlv > 4) result.m[4] = oper(ar1.m[4]); \
-	if (intrlv > 5) result.m[5] = oper(ar1.m[5]); \
-	if (intrlv > 6) result.m[6] = oper(ar1.m[6]); \
-	if (intrlv > 7) result.m[7] = oper(ar1.m[7]); */
-
-#define INTERLEAVED_UNROLL_OP(result, oper, ar1, ar2)\
-	if (intrlv > 0) result.m[0] = ar1.m[0] oper ar2.m[0];\
-	if (intrlv > 1) result.m[1] = ar1.m[1] oper ar2.m[1];\
-	if (intrlv > 2) result.m[2] = ar1.m[2] oper ar2.m[2];\
-	if (intrlv > 3) result.m[3] = ar1.m[3] oper ar2.m[3];/*\
-	if (intrlv > 4) result.m[4] = ar1.m[4] oper ar2.m[4];\
-	if (intrlv > 5) result.m[5] = ar1.m[5] oper ar2.m[5];\
-	if (intrlv > 6) result.m[6] = ar1.m[6] oper ar2.m[6];\
-	if (intrlv > 7) result.m[7] = ar1.m[7] oper ar2.m[7];\*/
-
-#if ARCH_ARM
-#define INTERLEAVED_UNROLL_1K(result, oper, ar1, k)\
-if (intrlv > 0) result.m[0] = vreinterpretq_s32_u32(oper(vreinterpretq_u32_s32(ar1.m[0]), k));\
-if (intrlv > 1) result.m[1] = vreinterpretq_s32_u32(oper(vreinterpretq_u32_s32(ar1.m[1]), k));\
-if (intrlv > 2) result.m[2] = vreinterpretq_s32_u32(oper(vreinterpretq_u32_s32(ar1.m[2]), k));\
-if (intrlv > 3) result.m[3] = vreinterpretq_s32_u32(oper(vreinterpretq_u32_s32(ar1.m[3]), k));
-#else
-#define INTERLEAVED_UNROLL_1K(result, oper, ar1, k)\
-	if (intrlv > 0) result.m[0] = oper(ar1.m[0], k);\
-	if (intrlv > 1) result.m[1] = oper(ar1.m[1], k); \
-	if (intrlv > 2) result.m[2] = oper(ar1.m[2], k); \
-	if (intrlv > 3) result.m[3] = oper(ar1.m[3], k); 
-#endif
-
-/*\
-	if (intrlv > 4) result.m[4] = oper(ar1.m[4], k); \
-	if (intrlv > 5) result.m[5] = oper(ar1.m[5], k); \
-	if (intrlv > 6) result.m[6] = oper(ar1.m[6], k); \
-	if (intrlv > 7) result.m[7] = oper(ar1.m[7], k); */
-
-#define INTERLEAVED_UNROLL_2(result, oper, ar1, ar2)\
-	if (intrlv > 0) result.m[0] = oper(ar1.m[0], ar2.m[0]);\
-	if (intrlv > 1) result.m[1] = oper(ar1.m[1], ar2.m[1]); \
-	if (intrlv > 2) result.m[2] = oper(ar1.m[2], ar2.m[2]); \
-	if (intrlv > 3) result.m[3] = oper(ar1.m[3], ar2.m[3]); /*\
-	if (intrlv > 4) result.m[4] = oper(ar1.m[4], ar2.m[4]); \
-	if (intrlv > 5) result.m[5] = oper(ar1.m[5], ar2.m[5]); \
-	if (intrlv > 6) result.m[6] = oper(ar1.m[6], ar2.m[6]); \
-	if (intrlv > 7) result.m[7] = oper(ar1.m[7], ar2.m[7]); */
-
-#define INTERLEAVED_UNROLL_2D(result, oper, ar1, ar2)\
-	if (2*intrlv > 0) result.m[0] = oper(ar1.m[0], ar2.m[0]);\
-	if (2*intrlv > 1) result.m[1] = oper(ar1.m[1], ar2.m[1]); \
-	if (2*intrlv > 2) result.m[2] = oper(ar1.m[2], ar2.m[2]); \
-	if (2*intrlv > 3) result.m[3] = oper(ar1.m[3], ar2.m[3]); \
-	if (2*intrlv > 4) result.m[4] = oper(ar1.m[4], ar2.m[4]); \
-	if (2*intrlv > 5) result.m[5] = oper(ar1.m[5], ar2.m[5]); \
-	if (2*intrlv > 6) result.m[6] = oper(ar1.m[6], ar2.m[6]); \
-	if (2*intrlv > 7) result.m[7] = oper(ar1.m[7], ar2.m[7]);
-
-#define INTERLEAVED_UNROLL_2K(result, oper, ar1, ar2, k)\
-	if (intrlv > 0) result.m[0] = oper(ar1.m[0], ar2.m[0], k);\
-	if (intrlv > 1) result.m[1] = oper(ar1.m[1], ar2.m[1], k); \
-	if (intrlv > 2) result.m[2] = oper(ar1.m[2], ar2.m[2], k); \
-	if (intrlv > 3) result.m[3] = oper(ar1.m[3], ar2.m[3], k);/* \
-	if (intrlv > 4) result.m[4] = oper(ar1.m[4], ar2.m[4], k); \
-	if (intrlv > 5) result.m[5] = oper(ar1.m[5], ar2.m[5], k); \
-	if (intrlv > 6) result.m[6] = oper(ar1.m[6], ar2.m[6], k); \
-	if (intrlv > 7) result.m[7] = oper(ar1.m[7], ar2.m[7], k); */
+// Macros to generate wrapper functions around the compiler SIMD intrinsics
+#define ARG2WRAPPER(t, x) inline static t wrap_##x (const t& a, const t& b) { return x(a,b); };
+#define ARG2WRAPPERK(t, x) template<int k> inline static t wrap_##x (const t& a, const t& b) { return x(a,b,k); };
+#define ARG1WRAPPER(t, x) inline static t wrap_##x (const t& a) { return x(a); };
 
 
-#if 1 // ARCH_X86 || ARCH_X64
-// avx512 only - logical functions take INT
-#define INTERLEAVED_UNROLL_2I(result, oper, ar1, ar2)\
-if (intrlv > 0) result.m[0] = _mm512_castsi512_ps(oper(_mm512_castps_si512(ar1.m[0]),_mm512_castps_si512(ar2.m[0])));\
-if (intrlv > 1) result.m[1] = _mm512_castsi512_ps(oper(_mm512_castps_si512(ar1.m[1]),_mm512_castps_si512(ar2.m[1])));\
-if (intrlv > 2) result.m[2] = _mm512_castsi512_ps(oper(_mm512_castps_si512(ar1.m[2]),_mm512_castps_si512(ar2.m[2])));\
-if (intrlv > 3) result.m[3] = _mm512_castsi512_ps(oper(_mm512_castps_si512(ar1.m[3]),_mm512_castps_si512(ar2.m[3])));
-#else
-// arm only - for logical functions which require reinterpret_casts to take float data
-#define INTERLEAVED_UNROLL_1II(result, oper, ar1)\
-if (intrlv > 0) result.m[0] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[0])));\
-if (intrlv > 1) result.m[1] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[1]))); \
-if (intrlv > 2) result.m[2] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[2]))); \
-if (intrlv > 3) result.m[3] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[3])));
+
+template <typename container_t, typename elem_t, elem_t(&lambda)(const elem_t&), int loop_max> static inline container_t simd_funcgen_1op(const container_t& a)
+{
+    container_t result;
+    if (loop_max > 0x0) result.m[0x0] = lambda(a.m[0x0]);
+    if (loop_max > 0x1) result.m[0x1] = lambda(a.m[0x1]);
+    if (loop_max > 0x2) result.m[0x2] = lambda(a.m[0x2]);
+    if (loop_max > 0x3) result.m[0x3] = lambda(a.m[0x3]);
+    if (loop_max > 0x4) result.m[0x4] = lambda(a.m[0x4]);
+    if (loop_max > 0x5) result.m[0x5] = lambda(a.m[0x5]);
+    if (loop_max > 0x6) result.m[0x6] = lambda(a.m[0x6]);
+    if (loop_max > 0x7) result.m[0x7] = lambda(a.m[0x7]);
+    if (loop_max > 0x8) result.m[0x8] = lambda(a.m[0x8]);
+    if (loop_max > 0x9) result.m[0x9] = lambda(a.m[0x9]);
+    if (loop_max > 0xA) result.m[0xA] = lambda(a.m[0xA]);
+    if (loop_max > 0xB) result.m[0xB] = lambda(a.m[0xB]);
+    if (loop_max > 0xC) result.m[0xC] = lambda(a.m[0xC]);
+    if (loop_max > 0xD) result.m[0xD] = lambda(a.m[0xD]);
+    if (loop_max > 0xE) result.m[0xE] = lambda(a.m[0xE]);
+    if (loop_max > 0xF) result.m[0xF] = lambda(a.m[0xF]);
+    return result;
+};
 
 
-#define INTERLEAVED_UNROLL_2I(result, oper, ar1, ar2)\
-if (intrlv > 0) result.m[0] = vreinterpretq_f32_u32(oper(ar1.m[0], ar2.m[0]));\
-if (intrlv > 1) result.m[1] = vreinterpretq_f32_u32(oper(ar1.m[1], ar2.m[1])); \
-if (intrlv > 2) result.m[2] = vreinterpretq_f32_u32(oper(ar1.m[2], ar2.m[2])); \
-if (intrlv > 3) result.m[3] = vreinterpretq_f32_u32(oper(ar1.m[3], ar2.m[3])); /* \
-if (intrlv > 4) result.m[4] = vreinterpretq_f32_s32(oper(ar1.m[4], ar2.m[4])); \
-if (intrlv > 5) result.m[5] = vreinterpretq_f32_s32(oper(ar1.m[5], ar2.m[5])); \
-if (intrlv > 6) result.m[6] = vreinterpretq_f32_s32(oper(ar1.m[6], ar2.m[6])); \
-if (intrlv > 7) result.m[7] = vreinterpretq_f32_s32(oper(ar1.m[7], ar2.m[7]));*/
-#endif
+template <typename container_t, typename elem_t, elem_t(&lambda)(const elem_t&,  const elem_t&), int loop_max> static inline container_t simd_funcgen_2op(const container_t& a, const container_t& b)
+{
+    container_t result;
+    if (loop_max > 0x0) result.m[0x0] = lambda(a.m[0x0], b.m[0x0]);
+    if (loop_max > 0x1) result.m[0x1] = lambda(a.m[0x1], b.m[0x1]);
+    if (loop_max > 0x2) result.m[0x2] = lambda(a.m[0x2], b.m[0x2]);
+    if (loop_max > 0x3) result.m[0x3] = lambda(a.m[0x3], b.m[0x3]);
+    if (loop_max > 0x4) result.m[0x4] = lambda(a.m[0x4], b.m[0x4]);
+    if (loop_max > 0x5) result.m[0x5] = lambda(a.m[0x5], b.m[0x5]);
+    if (loop_max > 0x6) result.m[0x6] = lambda(a.m[0x6], b.m[0x6]);
+    if (loop_max > 0x7) result.m[0x7] = lambda(a.m[0x7], b.m[0x7]);
+    if (loop_max > 0x8) result.m[0x8] = lambda(a.m[0x8], b.m[0x8]);
+    if (loop_max > 0x9) result.m[0x9] = lambda(a.m[0x9], b.m[0x9]);
+    if (loop_max > 0xA) result.m[0xA] = lambda(a.m[0xA], b.m[0xA]);
+    if (loop_max > 0xB) result.m[0xB] = lambda(a.m[0xB], b.m[0xB]);
+    if (loop_max > 0xC) result.m[0xC] = lambda(a.m[0xC], b.m[0xC]);
+    if (loop_max > 0xD) result.m[0xD] = lambda(a.m[0xD], b.m[0xD]);
+    if (loop_max > 0xE) result.m[0xE] = lambda(a.m[0xE], b.m[0xE]);
+    if (loop_max > 0xF) result.m[0xF] = lambda(a.m[0xF], b.m[0xF]);
+    return result;    
+};
 
-#define INTERLEAVED_UNROLL_2III(result, oper, ar1, ar2)\
-if (intrlv > 0) result.m[0] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[0]), vreinterpretq_u32_f32(ar2.m[0])));\
-if (intrlv > 1) result.m[1] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[1]), vreinterpretq_u32_f32(ar2.m[1]))); \
-if (intrlv > 2) result.m[2] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[2]), vreinterpretq_u32_f32(ar2.m[2]))); \
-if (intrlv > 3) result.m[3] = vreinterpretq_f32_u32(oper(vreinterpretq_u32_f32(ar1.m[3]), vreinterpretq_u32_f32(ar2.m[3]))); /*\
-if (intrlv > 4) result.m[4] = vreinterpretq_f32_s32(oper(vreinterpretq_s32_f32(ar1.m[4]), vreinterpretq_s32_f32(ar2.m[4]))); \
-if (intrlv > 5) result.m[5] = vreinterpretq_f32_s32(oper(vreinterpretq_s32_f32(ar1.m[5]), vreinterpretq_s32_f32(ar2.m[5]))); \
-if (intrlv > 6) result.m[6] = vreinterpretq_f32_s32(oper(vreinterpretq_s32_f32(ar1.m[6]), vreinterpretq_s32_f32(ar2.m[6]))); \
-if (intrlv > 7) result.m[7] = vreinterpretq_f32_s32(oper(vreinterpretq_s32_f32(ar1.m[7]), vreinterpretq_s32_f32(ar2.m[7])));*/
-
-#define INTERLEAVED_UNROLL_3(result, oper, ar1, ar2, ar3)\
-	if (intrlv > 0) result.m[0] = oper(ar1.m[0], ar2.m[0], ar3.m[0]);\
-	if (intrlv > 1) result.m[1] = oper(ar1.m[1], ar2.m[1], ar3.m[1]); \
-	if (intrlv > 2) result.m[2] = oper(ar1.m[2], ar2.m[2], ar3.m[2]); \
-	if (intrlv > 3) result.m[3] = oper(ar1.m[3], ar2.m[3], ar3.m[3]); /*\
-	if (intrlv > 4) result.m[4] = oper(ar1.m[4], ar2.m[4], ar3.m[4]); \
-	if (intrlv > 5) result.m[5] = oper(ar1.m[5], ar2.m[5], ar3.m[5]); \
-	if (intrlv > 6) result.m[6] = oper(ar1.m[6], ar2.m[6], ar3.m[6]); \
-	if (intrlv > 7) result.m[7] = oper(ar1.m[7], ar2.m[7], ar3.m[7]); */
-
-
-	/* These macros generate the equivalent of
-	static vforceinline vec_float addps(const vec_float& q1, const vec_float& q2)
-	{
-		vec_float rv;
-		INTERLEAVED_UNROLL_2(rv, _mm_add_ps, q1, q2);
-		return rv;
-	};*/
-
-	// Three arguments (fmadd, fmsub)
-#define GENERATE_INTERLEAVED_FUNCTION_3ARG(func_alias, sseop) \
-	static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2, const vec_float& q3)   { vec_float rv; INTERLEAVED_UNROLL_3(rv, sseop, q1, q2, q3); return rv; }
-
-
-// One argument (eg. fabs, sin, floor)
-#define GENERATE_INTERLEAVED_FUNCTION_1ARG(func_alias, sseop) \
-	static vforceinline vec_float  func_alias(const vec_float& q1)   { vec_float rv; INTERLEAVED_UNROLL_1(rv, sseop, q1); return rv; }
-
-#define GENERATE_INTERLEAVED_FUNCTION_1ARG_II(func_alias, sseop) \
-	static vforceinline vec_float  func_alias(const vec_float& q1)   { vec_float rv; INTERLEAVED_UNROLL_1II(rv, sseop, q1); return rv; }
-
-// Two arguments (mul, add)
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG(func_alias, sseop) \
-	static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2)   { vec_float rv; INTERLEAVED_UNROLL_2(rv, sseop, q1, q2); return rv; }
-
-// Two arguments (mul, add) - integer args & result
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG_INT(func_alias, sseop) \
-	static vforceinline vec_int  func_alias(const vec_int& q1, const vec_int& q2)   { vec_int rv; INTERLEAVED_UNROLL_2(rv, sseop, q1, q2); return rv; }
-
-// Two arguments, return value reintepreted from int to float (NEON compare intrinsics)
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG_IFF(func_alias, sseop) \
-static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2)   { vec_float rv; INTERLEAVED_UNROLL_2I(rv, sseop, q1, q2); return rv; }
-
-// Two arguments, arguments and return value reintepreted from int to float (NEON compare intrinsics)
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG_III(func_alias, sseop) \
-static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2)   { vec_float rv;INTERLEAVED_UNROLL_2III(rv, sseop, q1, q2); return rv; }
+template <typename container_t, typename elem_t, elem_t(&lambda)(const elem_t&,  const elem_t&, const int32), int loop_max, int32 k> static inline container_t simd_funcgen_2op_k(const container_t& a, const container_t& b)
+{
+    container_t result;
+    if (loop_max > 0x0) result.m[0x0] = lambda(a.m[0x0], b.m[0x0], k);
+    if (loop_max > 0x1) result.m[0x1] = lambda(a.m[0x1], b.m[0x1], k);
+    if (loop_max > 0x2) result.m[0x2] = lambda(a.m[0x2], b.m[0x2], k);
+    if (loop_max > 0x3) result.m[0x3] = lambda(a.m[0x3], b.m[0x3], k);
+    if (loop_max > 0x4) result.m[0x4] = lambda(a.m[0x4], b.m[0x4], k);
+    if (loop_max > 0x5) result.m[0x5] = lambda(a.m[0x5], b.m[0x5], k);
+    if (loop_max > 0x6) result.m[0x6] = lambda(a.m[0x6], b.m[0x6], k);
+    if (loop_max > 0x7) result.m[0x7] = lambda(a.m[0x7], b.m[0x7], k);
+    if (loop_max > 0x8) result.m[0x8] = lambda(a.m[0x8], b.m[0x8], k);
+    if (loop_max > 0x9) result.m[0x9] = lambda(a.m[0x9], b.m[0x9], k);
+    if (loop_max > 0xA) result.m[0xA] = lambda(a.m[0xA], b.m[0xA], k);
+    if (loop_max > 0xB) result.m[0xB] = lambda(a.m[0xB], b.m[0xB], k);
+    if (loop_max > 0xC) result.m[0xC] = lambda(a.m[0xC], b.m[0xC], k);
+    if (loop_max > 0xD) result.m[0xD] = lambda(a.m[0xD], b.m[0xD], k);
+    if (loop_max > 0xE) result.m[0xE] = lambda(a.m[0xE], b.m[0xE], k);
+    if (loop_max > 0xF) result.m[0xF] = lambda(a.m[0xF], b.m[0xF], k);
+    return result;
+};
 
 
-// One operator argument
-#define GENERATE_INTERLEAVED_FUNCTION_OP(func_alias, op) \
-	static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2)   { vec_float rv; INTERLEAVED_UNROLL_OP(rv, op, q1, q2); return rv; }
 
-// Two arguments plus a constant (compare instructions with mode)
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG_K(func_alias, sseop, const_val) \
-	static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& q2)   { vec_float rv; INTERLEAVED_UNROLL_2K(rv, sseop, q1, q2, const_val); return rv; }
 
-// Double precision, two arguments (mul, add)
-#define GENERATE_INTERLEAVED_FUNCTION_2ARG_D(func_alias, sseop) \
-	static vforceinline vec_double  func_alias(const vec_double& q1, const vec_double& q2)   { vec_double rv; INTERLEAVED_UNROLL_2D(rv, sseop, q1, q2); return rv; }
+template <int loop_max_i, class container_t, class elem_t, elem_t(assign_func)(float)> class Interleaver
+{
+public:
+    static constexpr int loop_max = loop_max_i;
+    static inline void assignT(container_t& result, const container_t& a)
+    {
+        if (loop_max > 0x0) result.m[0x0] = a.m[0x0];
+        if (loop_max > 0x1) result.m[0x1] = a.m[0x1];
+        if (loop_max > 0x2) result.m[0x2] = a.m[0x2];
+        if (loop_max > 0x3) result.m[0x3] = a.m[0x3];
+        if (loop_max > 0x4) result.m[0x4] = a.m[0x4];
+        if (loop_max > 0x5) result.m[0x5] = a.m[0x5];
+        if (loop_max > 0x6) result.m[0x6] = a.m[0x6];
+        if (loop_max > 0x7) result.m[0x7] = a.m[0x7];
+        if (loop_max > 0x8) result.m[0x8] = a.m[0x8];
+        if (loop_max > 0x9) result.m[0x9] = a.m[0x9];
+        if (loop_max > 0xA) result.m[0xA] = a.m[0xA];
+        if (loop_max > 0xB) result.m[0xB] = a.m[0xB];
+        if (loop_max > 0xC) result.m[0xC] = a.m[0xC];
+        if (loop_max > 0xD) result.m[0xD] = a.m[0xD];
+        if (loop_max > 0xE) result.m[0xE] = a.m[0xE];
+        if (loop_max > 0xF) result.m[0xF] = a.m[0xF];
+        
+        
+        //    The proper way (MS compiler doesn't know how to do this,
+        //    #pragma unroll 4
+        //    for (int i = 0; i < loop_max; i++) result.m[i] = lambda(a.m[i], b.m[i]);
+    };
+    
+    static inline container_t assignE(const elem_t& a)
+    {
+        container_t result;
+        if (loop_max > 0x0) result.m[0x0] = a;
+        if (loop_max > 0x1) result.m[0x1] = a;
+        if (loop_max > 0x2) result.m[0x2] = a;
+        if (loop_max > 0x3) result.m[0x3] = a;
+        if (loop_max > 0x4) result.m[0x4] = a;
+        if (loop_max > 0x5) result.m[0x5] = a;
+        if (loop_max > 0x6) result.m[0x6] = a;
+        if (loop_max > 0x7) result.m[0x7] = a;
+        if (loop_max > 0x8) result.m[0x8] = a;
+        if (loop_max > 0x9) result.m[0x9] = a;
+        if (loop_max > 0xA) result.m[0xA] = a;
+        if (loop_max > 0xB) result.m[0xB] = a;
+        if (loop_max > 0xC) result.m[0xC] = a;
+        if (loop_max > 0xD) result.m[0xD] = a;
+        if (loop_max > 0xE) result.m[0xE] = a;
+        if (loop_max > 0xF) result.m[0xF] = a;
+        return result;
+    };
+    
+    static inline container_t assignS(float f)
+    {
+        elem_t a = assign_func(f);
+        container_t result;
+        if (loop_max > 0x0) result.m[0x0] = a;
+        if (loop_max > 0x1) result.m[0x1] = a;
+        if (loop_max > 0x2) result.m[0x2] = a;
+        if (loop_max > 0x3) result.m[0x3] = a;
+        if (loop_max > 0x4) result.m[0x4] = a;
+        if (loop_max > 0x5) result.m[0x5] = a;
+        if (loop_max > 0x6) result.m[0x6] = a;
+        if (loop_max > 0x7) result.m[0x7] = a;
+        if (loop_max > 0x8) result.m[0x8] = a;
+        if (loop_max > 0x9) result.m[0x9] = a;
+        if (loop_max > 0xA) result.m[0xA] = a;
+        if (loop_max > 0xB) result.m[0xB] = a;
+        if (loop_max > 0xC) result.m[0xC] = a;
+        if (loop_max > 0xD) result.m[0xD] = a;
+        if (loop_max > 0xE) result.m[0xE] = a;
+        if (loop_max > 0xF) result.m[0xF] = a;
+        return result;
+    };
+    
+    static inline container_t assignA(const elem_t (&a)[loop_max])
+    {
+        container_t result;
+        if (loop_max > 0x0) result.m[0x0] = a[0x0];
+        if (loop_max > 0x1) result.m[0x1] = a[0x1];
+        if (loop_max > 0x2) result.m[0x2] = a[0x2];
+        if (loop_max > 0x3) result.m[0x3] = a[0x3];
+        if (loop_max > 0x4) result.m[0x4] = a[0x4];
+        if (loop_max > 0x5) result.m[0x5] = a[0x5];
+        if (loop_max > 0x6) result.m[0x6] = a[0x6];
+        if (loop_max > 0x7) result.m[0x7] = a[0x7];
+        if (loop_max > 0x8) result.m[0x8] = a[0x8];
+        if (loop_max > 0x9) result.m[0x9] = a[0x9];
+        if (loop_max > 0xA) result.m[0xA] = a[0xA];
+        if (loop_max > 0xB) result.m[0xB] = a[0xB];
+        if (loop_max > 0xC) result.m[0xC] = a[0xC];
+        if (loop_max > 0xD) result.m[0xD] = a[0xD];
+        if (loop_max > 0xE) result.m[0xE] = a[0xE];
+        if (loop_max > 0xF) result.m[0xF] = a[0xF];
+        
+        return result;
+    };
+};
+
+
 
 
 // This provides typedef aliases from base class to make function definitions cleaner (required for gcc), and 'using' import definitions required by LLVM-Clang
@@ -264,8 +214,6 @@ static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& 
     typedef typename TIOAdapter::SampleOutputStream SampleOutputStream;\
     typedef TIOAdapter IOAdapterImpl;\
 	using TIOAdapter::set1ps;\
-	using TIOAdapter::set_random_seeds;\
-	using TIOAdapter::set1epi32;\
 	using TIOAdapter::zerops;\
 	using TIOAdapter::mulps;\
 	using TIOAdapter::divps;\
@@ -275,21 +223,9 @@ static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& 
 	using TIOAdapter::maxps;\
     using TIOAdapter::maskps;\
     using TIOAdapter::notps;\
-	using TIOAdapter::get_union_i32;\
 	using TIOAdapter::get_union_f;\
-	using TIOAdapter::mulepi32;\
-	using TIOAdapter::cvtps2epi32;\
-	using TIOAdapter::addepi32;\
 	using TIOAdapter::orps;\
-	using TIOAdapter::reinterpret_cast_ftoi;\
-	using TIOAdapter::reinterpret_cast_itof;\
 	using TIOAdapter::absps;\
-	using TIOAdapter::slliepi32_23;\
-	using TIOAdapter::srliepi32_9;\
-    using TIOAdapter::srliepi32_23;\
-	using TIOAdapter::cvtepi322ps;\
-	using TIOAdapter::fpow2ps_poly2;\
-	using TIOAdapter::fpow2ps_poly4;\
 	using TIOAdapter::vec_elem;\
     using TIOAdapter::cubeps;\
     using TIOAdapter::floorps;\
@@ -299,10 +235,6 @@ static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& 
     using TIOAdapter::clipps;\
     using TIOAdapter::rcpps;\
     using TIOAdapter::get_vector_f;\
-    using TIOAdapter::fma;\
-    using TIOAdapter::fms;\
-    using TIOAdapter::fms1;\
-    using TIOAdapter::issmallfps;\
     using TIOAdapter::loadps;\
     using TIOAdapter::sqrtps;\
     using TIOAdapter::cmpgeps;\
@@ -311,15 +243,236 @@ static vforceinline vec_float  func_alias(const vec_float& q1, const vec_float& 
     using TIOAdapter::cmpltps;\
     using TIOAdapter::cmpeqps;\
     using TIOAdapter::cmpneps;\
-    using TIOAdapter::vec_ftod;\
-    using TIOAdapter::vec_dtof;\
-    using TIOAdapter::vec_iszero;\
     using TIOAdapter::roundps;\
     using TIOAdapter::andnps;\
 
 
+/*using TIOAdapter::set_random_seeds;\
+using TIOAdapter::set1epi32;\
+ using TIOAdapter::vec_ftod;\
+ using TIOAdapter::vec_dtof;\
+ using TIOAdapter::vec_iszero;\
+	using TIOAdapter::slliepi32_23;\
+	using TIOAdapter::srliepi32_9;\
+ using TIOAdapter::srliepi32_23;\
+	using TIOAdapter::cvtepi322ps;\
+	using TIOAdapter::fpow2ps_poly2;\
+	using TIOAdapter::fpow2ps_poly4;\
+	using TIOAdapter::reinterpret_cast_ftoi;\
+	using TIOAdapter::reinterpret_cast_itof;\
+ using TIOAdapter::mulepi32;\
+	using TIOAdapter::cvtps2epi32;\
+	using TIOAdapter::addepi32;\
+ using TIOAdapter::get_union_i32;\
+
+ using TIOAdapter::fma;\
+ using TIOAdapter::fms;\
+ using TIOAdapter::fms1;\
+ using TIOAdapter::issmallfps;\
+ 
+ 
+ */
+
 //    using MATHOPS_IO::vec_union_f;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Vector float type - class vec_float
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+template <class MO, int32 interleave> class alignas(MO::alignment) vec_float_impl_t : public MO
+{
+public:
+    
+    typedef typename MO::vec_elem_t vec_elem_t;
+    typedef typename MO::Inter Inter;
+    typedef typename MO::vec_union_f vec_union_f;
+    
+    using MO::mulps;
+    using MO::addps;
+    using MO::subps;
+    using MO::divps;
+    using MO::minps;
+    using MO::maxps;
+    using MO::andps;
+    using MO::orps;
+    using MO::xorps;
+    using MO::cmpltps;
+    using MO::cmpgtps;
+    using MO::cmpleps;
+    using MO::cmpgeps;
+    using MO::cmpeqps;
+    using MO::cmpneps;
+    
+    vec_elem_t m[interleave];
+    // Default ctor doesn't initialize. standard c++.
+    vforceinline vec_float_impl_t() {};
+    
+    ////////////////////////////////
+    // Copy constructors and assignment operators
+    // Can take:- another vec_float_impl_t, a single vec_elem_t element which is copied to all, a single float copied to all.
+    vforceinline vec_float_impl_t(const vec_float_impl_t& f) { *this = f; };
+    vforceinline vec_float_impl_t(const vec_elem_t (&f)[interleave]) { *this = f; };
+    vforceinline vec_float_impl_t(const float& f) { *this = f; };
+    
+    vforceinline vec_float_impl_t& operator=(const vec_float_impl_t& f)
+    {
+        Inter::assignT(*this, f);
+        return *this;
+    };
+    
+    vforceinline vec_float_impl_t& operator=(const vec_elem_t (&f)[interleave])
+    {
+        *this = Inter::assignA(f);
+        return *this;
+    };
+    
+    vforceinline vec_float_impl_t&  operator=(const float f)
+    {
+        *this = Inter::assignS(f);
+        return *this;
+    };
+    
+    friend vforceinline vec_float_impl_t operator* (float lhs, vec_float_impl_t rhs) { vec_float_impl_t tmp = vec_float_impl_t::set1ps(lhs) * rhs; return tmp; };
+    friend vforceinline vec_float_impl_t operator+ (float lhs, vec_float_impl_t rhs) { vec_float_impl_t tmp = vec_float_impl_t::set1ps(lhs) + rhs; return tmp; };
+    friend vforceinline vec_float_impl_t operator- (float lhs, vec_float_impl_t rhs) { vec_float_impl_t tmp = vec_float_impl_t::set1ps(lhs) - rhs; return tmp; };
+
+    ////////////////////////////////
+    // Basic maths: +,-,* (no divide, it's slow. if you want divide, figure out a faster way).
+    vforceinline vec_float_impl_t   operator+(const vec_float_impl_t& m2) const
+    {
+        return addps(*this, m2);
+    };
+    vforceinline vec_float_impl_t   operator-(const vec_float_impl_t& m2) const
+    {
+        return subps(*this, m2);
+    };
+    vforceinline vec_float_impl_t   operator*(const vec_float_impl_t& m2) const
+    {
+        return 	mulps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator>(const vec_float_impl_t& m2) const
+    {
+        return 	cmpgtps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator>=(const vec_float_impl_t& m2) const
+    {
+        return 	cmpgeps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator<(const vec_float_impl_t& m2) const
+    {
+        return 	cmpltps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator<=(const vec_float_impl_t& m2) const
+    {
+        return 	cmpleps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator==(const vec_float_impl_t& m2) const
+    {
+        return 	cmpeqps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator!=(const vec_float_impl_t& m2) const
+    {
+        return 	cmpneps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t   operator&(const vec_float_impl_t& m2) const
+    {
+        return 	andps(*this, m2);
+    };
+    
+    vforceinline vec_float_impl_t&  operator!() const
+    {
+        return notps(*this);
+    };
+    
+    ////////////////////////////////
+    // In-place maths: +,-,* with assignment, vector versions.
+    vforceinline vec_float_impl_t&   operator+=(const vec_float_impl_t& f)
+    {
+        *this = addps(*this, f);
+        return *this;
+    };
+    vforceinline vec_float_impl_t&   operator-=(const vec_float_impl_t& f)
+    {
+        *this = subps(*this, f);
+        return *this;
+    };
+    vforceinline vec_float_impl_t&   operator*=(const vec_float_impl_t& f)
+    {
+        *this = mulps(*this, f);
+        return *this;
+    };
+    
+    ////////////////////////////////
+    // In-place maths: +,-,* with assignment, scalar constant versions
+    vforceinline vec_float_impl_t&  operator+=(const float f)
+    {
+        vec_float_impl_t tmp_f = f;
+        *this = addps(*this, tmp_f);
+        return *this;
+    };
+    
+    vforceinline vec_float_impl_t&  operator-=(const float f)
+    {
+        vec_float_impl_t tmp_f = f;
+        *this = subps(*this, tmp_f);
+        return *this;
+    };
+    
+    vforceinline vec_float_impl_t&  operator*=(const float f)
+    {
+        vec_float_impl_t tmp_f;
+        Inter::assignS(tmp_f, f);
+        *this = mulps(*this, tmp_f);
+        return *this;
+    };
+    
+    ////////////////////////////////
+    // In-place clip functions: with vector bounds, with scalar const bounds, with input & vector bounds, with input & scalar const bounds
+    vforceinline void  clip(const vec_float_impl_t& lo_lim, const vec_float_impl_t& hi_lim)
+    {
+        *this = minps( maxps(*this, lo_lim), hi_lim);
+    };
+    
+    vforceinline void  clip(const float lo_lim, const float hi_lim)
+    {
+        vec_float_impl_t hi_lim_v = hi_lim;
+        vec_float_impl_t lo_lim_v = lo_lim;
+        *this = minps( maxps(*this, lo_lim_v), hi_lim_v);
+    };
+    
+    vforceinline void clip_v(const vec_float_impl_t& val, const vec_float_impl_t& lo_lim, const vec_float_impl_t& hi_lim)
+    {
+        *this = minps( maxps(val, lo_lim), hi_lim);
+    };
+    
+    vforceinline void  clip_v(const vec_float_impl_t& val, const float lo_lim, const float hi_lim)
+    {
+        vec_float_impl_t hi_lim_v = hi_lim;
+        vec_float_impl_t lo_lim_v = lo_lim;
+        *this = minps( maxps(val, lo_lim_v), hi_lim_v);
+    };
+    
+    // Warning, SLOW. Use sparingly!
+    float  elem(int32 a) const
+    {
+        vec_union_f r_out = *this;
+        return r_out.f[a];
+    }
+    
+    // Warning, REALLY SLOW. Use sparingly!
+    void  set_elem(int32 a, float v)
+    {
+        vec_union_f *r_out = (vec_union_f*)this;
+        r_out->f[a] = v;
+    }
+};
 
 
 

@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "B5CEC2547DB1C77C428EAAAD8DA4CE651C1F1899",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B5CEC2547DB1C77C428EAAAD8DA4CE651C1F1899" : 9223372036854775807,
+    "7C0D2EABB78548D7CA2139CEB14F5CEFFF57BC69" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "FC9414AB-E2E4-4F84-B591-DF09B427DBC7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B5CEC2547DB1C77C428EAAAD8DA4CE651C1F1899" : "CleanVectorTest\/",
+    "7C0D2EABB78548D7CA2139CEB14F5CEFFF57BC69" : ".."
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "VectorTests",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "VectorTests.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:WeAreROLI\/fxpansion-synth.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7C0D2EABB78548D7CA2139CEB14F5CEFFF57BC69"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/angushewlett\/simdtest.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B5CEC2547DB1C77C428EAAAD8DA4CE651C1F1899"
+    }
+  ]
+}

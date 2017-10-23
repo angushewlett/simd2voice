@@ -1,0 +1,330 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */; settings = {COMPILER_FLAGS = "-fno-vectorize -fno-slp-vectorize"; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		92F272321F9657DB00DAB962 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		92CB8D611F96580F009D7BA7 /* XBasicAmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XBasicAmp.h; sourceTree = SOURCE_ROOT; };
+		92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VecDispatchTest.cpp; sourceTree = SOURCE_ROOT; };
+		92CB8D641F96580F009D7BA7 /* XDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDSP.h; sourceTree = SOURCE_ROOT; };
+		92CB8D651F96580F009D7BA7 /* XFilterLadder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFilterLadder.h; sourceTree = SOURCE_ROOT; };
+		92CB8D661F96580F009D7BA7 /* XFilterLadderTmpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFilterLadderTmpl.h; sourceTree = SOURCE_ROOT; };
+		92CB8D671F96580F009D7BA7 /* XHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHelpers.h; sourceTree = SOURCE_ROOT; };
+		92CB8D691F965816009D7BA7 /* IOAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOAdapter.h; sourceTree = SOURCE_ROOT; };
+		92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX.h; sourceTree = SOURCE_ROOT; };
+		92CB8D6B1F965816009D7BA7 /* MathOps_Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Common.h; sourceTree = SOURCE_ROOT; };
+		92CB8D6C1F965816009D7BA7 /* Prefix_FMA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix_FMA.h; sourceTree = SOURCE_ROOT; };
+		92CB8D7C1F967B2C009D7BA7 /* MathOps_SSE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_SSE.h; sourceTree = SOURCE_ROOT; };
+		92CB8D7D1F96C99A009D7BA7 /* XStopWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XStopWatch.h; sourceTree = SOURCE_ROOT; };
+		92CB8D7E1F96CBBD009D7BA7 /* CompilerExplorer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CompilerExplorer.cpp; sourceTree = SOURCE_ROOT; };
+		92CB8D7F1F96CEA5009D7BA7 /* MathOps_Scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Scalar.h; sourceTree = SOURCE_ROOT; };
+		92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX512.h; sourceTree = SOURCE_ROOT; };
+		92CB8D8B1F9E644E009D7BA7 /* XPannerAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPannerAmp.h; sourceTree = SOURCE_ROOT; };
+		92F272341F9657DB00DAB962 /* VectorTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VectorTests; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		92F272311F9657DB00DAB962 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		92CB8D6E1F965822009D7BA7 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				92CB8D611F96580F009D7BA7 /* XBasicAmp.h */,
+				92CB8D8B1F9E644E009D7BA7 /* XPannerAmp.h */,
+				92CB8D651F96580F009D7BA7 /* XFilterLadder.h */,
+				92CB8D661F96580F009D7BA7 /* XFilterLadderTmpl.h */,
+			);
+			name = Filters;
+			sourceTree = "<group>";
+		};
+		92CB8D6F1F965837009D7BA7 /* Architectures */ = {
+			isa = PBXGroup;
+			children = (
+				92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */,
+				92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */,
+				92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */,
+				92CB8D7C1F967B2C009D7BA7 /* MathOps_SSE.h */,
+				92CB8D7F1F96CEA5009D7BA7 /* MathOps_Scalar.h */,
+				92CB8D6C1F965816009D7BA7 /* Prefix_FMA.h */,
+			);
+			name = Architectures;
+			sourceTree = "<group>";
+		};
+		92CB8D711F96587F009D7BA7 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				92CB8D641F96580F009D7BA7 /* XDSP.h */,
+				92CB8D671F96580F009D7BA7 /* XHelpers.h */,
+				92CB8D691F965816009D7BA7 /* IOAdapter.h */,
+				92CB8D7D1F96C99A009D7BA7 /* XStopWatch.h */,
+				92CB8D6B1F965816009D7BA7 /* MathOps_Common.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		92F2722B1F9657DB00DAB962 = {
+			isa = PBXGroup;
+			children = (
+				92F272361F9657DB00DAB962 /* VectorTests */,
+				92F272351F9657DB00DAB962 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		92F272351F9657DB00DAB962 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92F272341F9657DB00DAB962 /* VectorTests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		92F272361F9657DB00DAB962 /* VectorTests */ = {
+			isa = PBXGroup;
+			children = (
+				92CB8D711F96587F009D7BA7 /* Common */,
+				92CB8D6F1F965837009D7BA7 /* Architectures */,
+				92CB8D6E1F965822009D7BA7 /* Filters */,
+				92CB8D7E1F96CBBD009D7BA7 /* CompilerExplorer.cpp */,
+			);
+			path = VectorTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		92F272331F9657DB00DAB962 /* VectorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92F2723B1F9657DB00DAB962 /* Build configuration list for PBXNativeTarget "VectorTests" */;
+			buildPhases = (
+				92F272301F9657DB00DAB962 /* Sources */,
+				92F272311F9657DB00DAB962 /* Frameworks */,
+				92F272321F9657DB00DAB962 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VectorTests;
+			productName = VectorTests;
+			productReference = 92F272341F9657DB00DAB962 /* VectorTests */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		92F2722C1F9657DB00DAB962 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Angus Hewlett";
+				TargetAttributes = {
+					92F272331F9657DB00DAB962 = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 92F2722F1F9657DB00DAB962 /* Build configuration list for PBXProject "VectorTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 92F2722B1F9657DB00DAB962;
+			productRefGroup = 92F272351F9657DB00DAB962 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				92F272331F9657DB00DAB962 /* VectorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		92F272301F9657DB00DAB962 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		92F272391F9657DB00DAB962 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					MACOSX,
+					ARCH_X64,
+					COMPILER_ALLOW_AVX,
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		92F2723A1F9657DB00DAB962 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MACOSX,
+					COMPILER_ALLOW_AVX,
+					ARCH_X64,
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		92F2723C1F9657DB00DAB962 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx2;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-march=haswell",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		92F2723D1F9657DB00DAB962 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx2;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-march=haswell",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		92F2722F1F9657DB00DAB962 /* Build configuration list for PBXProject "VectorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92F272391F9657DB00DAB962 /* Debug */,
+				92F2723A1F9657DB00DAB962 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92F2723B1F9657DB00DAB962 /* Build configuration list for PBXNativeTarget "VectorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92F2723C1F9657DB00DAB962 /* Debug */,
+				92F2723D1F9657DB00DAB962 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 92F2722C1F9657DB00DAB962 /* Project object */;
+}
