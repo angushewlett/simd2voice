@@ -220,7 +220,12 @@ int main(int argc, char *argv[])
 {
     //    DumbWorker::WakeUp();
     sleep(2); // Give Instruments time to attach cleanly
+#if MACOSX
     fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
+#elif LINUX
+    _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
+#else
+#endif
 
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");

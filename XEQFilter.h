@@ -145,6 +145,46 @@ public:
                     bs.y[0] = y0;
                     io_sample = y0;
                 }
+                if (numBands > 4)
+                {
+                    VecBandState& bs = bands[4];
+                    const vec_float y0 = bs.a[0] * io_sample + bs.a[1] * bs.x[0] + bs.a[2] * bs.x[1] - bs.a[3] * bs.y[0] - bs.a[4] * bs.y[1];
+                    bs.x[1] = bs.x[0];
+                    bs.x[0] = io_sample;
+                    bs.y[1] = bs.y[0];
+                    bs.y[0] = y0;
+                    io_sample = y0;
+                }
+                if (numBands > 5)
+                {
+                    VecBandState& bs = bands[5];
+                    const vec_float y0 = bs.a[0] * io_sample + bs.a[1] * bs.x[0] + bs.a[2] * bs.x[1] - bs.a[3] * bs.y[0] - bs.a[4] * bs.y[1];
+                    bs.x[1] = bs.x[0];
+                    bs.x[0] = io_sample;
+                    bs.y[1] = bs.y[0];
+                    bs.y[0] = y0;
+                    io_sample = y0;
+                }
+                if (numBands > 6)
+                {
+                    VecBandState& bs = bands[6];
+                    const vec_float y0 = bs.a[0] * io_sample + bs.a[1] * bs.x[0] + bs.a[2] * bs.x[1] - bs.a[3] * bs.y[0] - bs.a[4] * bs.y[1];
+                    bs.x[1] = bs.x[0];
+                    bs.x[0] = io_sample;
+                    bs.y[1] = bs.y[0];
+                    bs.y[0] = y0;
+                    io_sample = y0;
+                }
+                if (numBands > 7)
+                {
+                    VecBandState& bs = bands[7];
+                    const vec_float y0 = bs.a[0] * io_sample + bs.a[1] * bs.x[0] + bs.a[2] * bs.x[1] - bs.a[3] * bs.y[0] - bs.a[4] * bs.y[1];
+                    bs.x[1] = bs.x[0];
+                    bs.x[0] = io_sample;
+                    bs.y[1] = bs.y[0];
+                    bs.y[0] = y0;
+                    io_sample = y0;
+                }
                 
                  outstream << io_sample;
             }
