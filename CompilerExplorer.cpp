@@ -10,19 +10,20 @@
 #endif
 
 #include <immintrin.h>
-#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/MathOps_Common.h>
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XHelpers.h>
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XDSP.h>
+#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/MathOps_Common.h>
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/IOAdapter.h>
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XBasicAmp.h>
+#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XEQFilter.h>
 
 namespace MFMA
 {
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/MathOps_AVX.h>
 };
 
-#define TTestClass XBasicAmp
-#define TMathClass MFMA::MathOps<8>
+#define TTestClass XEQFilter<1>
+#define TMathClass MFMA::MathOps<1>
 
 void process(TTestClass::Node* node)
 {

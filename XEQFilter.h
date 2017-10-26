@@ -107,12 +107,11 @@ public:
                 // Would be nice to write as a compile time loop, but... MS compiler.
                  if (numBands > 0)
                  {
-                     VecBandState& bs = bands[0];
-                     const vec_float y0 = bs.a[0] * io_sample + bs.a[1] * bs.x[0] + bs.a[2] * bs.x[1] - bs.a[3] * bs.y[0] - bs.a[4] * bs.y[1];
-                     bs.x[1] = bs.x[0];
-                     bs.x[0] = io_sample;
-                     bs.y[1] = bs.y[0];
-                     bs.y[0] = y0;
+                     const vec_float y0 = bands[0].a[0] * io_sample + bands[0].a[1] * bands[0].x[0] + bands[0].a[2] * bands[0].x[1] - bands[0].a[3] * bands[0].y[0] - bands[0].a[4] * bands[0].y[1];
+                     bands[0].x[1] = bands[0].x[0];
+                     bands[0].x[0] = io_sample;
+                     bands[0].y[1] = bands[0].y[0];
+                     bands[0].y[0] = y0;
                      io_sample = y0;
                  }
                 if (numBands > 1)
