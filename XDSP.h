@@ -4,9 +4,7 @@
 
 #include <stdint.h>
 #include <vector>
-#if CEXCOMPILE
-#include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XHelpers.h>
-#else
+#ifndef CEXCOMPILE
 #include "XHelpers.h"
 #endif
 
