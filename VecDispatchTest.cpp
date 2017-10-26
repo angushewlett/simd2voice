@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
+#include <fenv.h>
 #include <list>
 
 // Enable additional instruction sets here
@@ -61,7 +62,7 @@ namespace M512
 #endif
 
 // The test class
-#include "XPannerAmp.h"
+#include "XEQFilter.h"
 
 
 #if MACOSX
@@ -79,8 +80,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     
     const int coalesce = 1;
     process_globals.block_length = 32 * coalesce;
-    const int32 nRunsPerTimer =256; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
-    const int32 nTimerPasses = 2048 / coalesce;
+    const int32 nRunsPerTimer = 16; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
+    const int32 nTimerPasses = 512 / coalesce; // /*2048*/;
     
     const int32 voiceCount = XDSP::kMaxVoices;
     const int32 bufferSize = XDSP::kMaxVoices * process_globals.block_length;
@@ -213,13 +214,14 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 }
 
 
-#define TEST_CLASS XPannerAmp
+#define TEST_CLASS XEQFilter<4>
 
 int main(int argc, char *argv[])
 {
     //    DumbWorker::WakeUp();
     sleep(2); // Give Instruments time to attach cleanly
-    
+    fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
+
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
     run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
@@ -248,6 +250,9 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,M512::MathOps<4>>("A512,  4");
     run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
 #endif
+ //   _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
+ //   run_test<TEST_CLASS,MAVX::MathOps<1>>("AVX,  1");
+    
     sleep(2); // Give Instruments time to detach cleanly
 }
 

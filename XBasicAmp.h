@@ -20,7 +20,6 @@ public:
         kNumAudioOutputs = 1,
     };
     
-    ////////
     // Forward declaration of templated Worker class
     template <class T> class Worker;
     
@@ -36,7 +35,6 @@ public:
             Voice defaultState;
             *this = defaultState;
         };
-        
         // Dummy method for anything not parallelisable
         vforceinline void PreProcessBuffer(const XDSP::ProcessGlobals& process_globals) {};
         
@@ -46,18 +44,15 @@ public:
     };
     
     ////////
-    // Type specific Node class: implements ProcessBuffer() to provide entry point for the node's processing.
+    // Type specific Node class, implementation via CRTP
     class Node : public XDSP::NodeTmpl<XBasicAmp>
     {
     public:
-        // Extended processing attributes (We don't have any)
-        class ProcessAttributes {};
-        ProcessAttributes m_pa;
-        const ProcessAttributes& GetProcessAttributes() {   return m_pa;  };
+        typedef XDSP::Node::ProcessAttributes ProcessAttributes;         // Pass default implementation back to the template.
     };
     
-    //#include "PerformanceCounterScope.h"
-    
+    ////////
+    // Worker does the actual processing
     template <class TIOAdapter> class Worker : public TIOAdapter
     {
     public:
@@ -69,21 +64,18 @@ public:
             //	PerformanceCounterScope perfScope(__FUNCTION__);
             //  printf("Interleave = %d, sizeof(vf) = %d\n", TIOAdapter::interleave, (int)sizeof(vec_float));
             //  printf("Fn %s\n", __PRETTY_FUNCTION__);
-            
             const int32 block_length = process_globals.block_length;
             vec_float next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
             SampleInputStream instream = voices.getInputStream(0);
-            SampleOutputStream outstream = voices.getOutputStream(0);
-            
+            SampleOutputStream outstream = voices.getOutputStream(0);            
             //#pragma unroll(1)
             for (int32 t=0; t<block_length; t++)
             {
                 *outstream++ = *instream++ * next_linear_gain;
             }
-        };
-    };	// end of class Worker
+        }; // ProcessBuffer()
+    };	// class Worker
 };
-
 #endif // __XBasicAmp_H__
 
 

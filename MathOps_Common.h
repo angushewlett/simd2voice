@@ -26,7 +26,7 @@
 
 #define GENERATE_INTERLEAVED_FUNCTION_2ARG(func_alias, sseop) SIMDFUNC func_alias(const vec_float& q1, const vec_float& q2)   { return simd_funcgen_2op<vec_float, vec_elem_t, sseop, interleave>(q1, q2); };
 #define GENERATE_INTERLEAVED_FUNCTION_2ARG_K(func_alias, sseop, K) SIMDFUNC func_alias(const vec_float& q1, const vec_float& q2)   { return simd_funcgen_2op_k<vec_float, vec_elem_t, sseop, interleave, K>(q1, q2); };
-#define GENERATE_INTERLEAVED_FUNCTION_1ARG(func_alias, sseop) SIMDFUNC func_alias(const vec_float& q1)   { return simd_funcgen_1op<vec_float, __m128, sseop, interleave>(q1); };
+#define GENERATE_INTERLEAVED_FUNCTION_1ARG(func_alias, sseop) SIMDFUNC func_alias(const vec_float& q1)   { return simd_funcgen_1op<vec_float, vec_elem_t, sseop, interleave>(q1); };
 
 
 // Macros to generate wrapper functions around the compiler SIMD intrinsics
@@ -57,6 +57,46 @@ template <typename container_t, typename elem_t, elem_t(&lambda)(const elem_t&),
     if (loop_max > 0xF) result.m[0xF] = lambda(a.m[0xF]);
     return result;
 };
+
+template <typename container_t, int interleave> class InterleaverNew
+{
+public:
+    typedef typename container_t::elem_t elem_t;
+    typedef elem_t(&TwoArgFunCall)(const elem_t&, const elem_t&);
+    template <TwoArgFunCall twoArg> static inline container_t simd_funcgen_2arg(const container_t& a, const container_t& b)
+    {
+        container_t result;
+        for (int i = 0; i < interleave; i++)
+        {
+            result.m[i] = twoArg(a.m[i], b.m[i]);
+        }
+        return result;
+    };
+};
+
+template <typename container_t,
+        typename container_t::elem_t(&lambda)(const typename container_t::elem_t&,  const typename container_t::elem_t&), int loop_max> static inline container_t simd_funcgen_2op(const container_t& a, const container_t& b)
+{
+    container_t result;
+    if (loop_max > 0x0) result.m[0x0] = lambda(a.m[0x0], b.m[0x0]);
+    if (loop_max > 0x1) result.m[0x1] = lambda(a.m[0x1], b.m[0x1]);
+    if (loop_max > 0x2) result.m[0x2] = lambda(a.m[0x2], b.m[0x2]);
+    if (loop_max > 0x3) result.m[0x3] = lambda(a.m[0x3], b.m[0x3]);
+    if (loop_max > 0x4) result.m[0x4] = lambda(a.m[0x4], b.m[0x4]);
+    if (loop_max > 0x5) result.m[0x5] = lambda(a.m[0x5], b.m[0x5]);
+    if (loop_max > 0x6) result.m[0x6] = lambda(a.m[0x6], b.m[0x6]);
+    if (loop_max > 0x7) result.m[0x7] = lambda(a.m[0x7], b.m[0x7]);
+    if (loop_max > 0x8) result.m[0x8] = lambda(a.m[0x8], b.m[0x8]);
+    if (loop_max > 0x9) result.m[0x9] = lambda(a.m[0x9], b.m[0x9]);
+    if (loop_max > 0xA) result.m[0xA] = lambda(a.m[0xA], b.m[0xA]);
+    if (loop_max > 0xB) result.m[0xB] = lambda(a.m[0xB], b.m[0xB]);
+    if (loop_max > 0xC) result.m[0xC] = lambda(a.m[0xC], b.m[0xC]);
+    if (loop_max > 0xD) result.m[0xD] = lambda(a.m[0xD], b.m[0xD]);
+    if (loop_max > 0xE) result.m[0xE] = lambda(a.m[0xE], b.m[0xE]);
+    if (loop_max > 0xF) result.m[0xF] = lambda(a.m[0xF], b.m[0xF]);
+    return result;
+};
+
 
 
 template <typename container_t, typename elem_t, elem_t(&lambda)(const elem_t&,  const elem_t&), int loop_max> static inline container_t simd_funcgen_2op(const container_t& a, const container_t& b)
@@ -427,8 +467,7 @@ public:
     
     vforceinline vec_float_impl_t&  operator*=(const float f)
     {
-        vec_float_impl_t tmp_f;
-        Inter::assignS(tmp_f, f);
+        vec_float_impl_t tmp_f = f;
         *this = mulps(*this, tmp_f);
         return *this;
     };

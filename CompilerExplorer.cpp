@@ -28,6 +28,5 @@ void process(TTestClass::Node* node)
 {
     XDSP::ProcessGlobals process_globals;
     XDSP::NodeTmpl<TTestClass>::template ProcessAllVoices<typename IOAdapter<TMathClass, TTestClass>::Worker>(process_globals, node);
-    
 }
 

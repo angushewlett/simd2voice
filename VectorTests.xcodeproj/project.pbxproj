@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */; settings = {COMPILER_FLAGS = "-fno-vectorize -fno-slp-vectorize"; }; };
+		92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */; settings = {COMPILER_FLAGS = "-march=haswell -mfma -O2"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,7 +27,6 @@
 		92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VecDispatchTest.cpp; sourceTree = SOURCE_ROOT; };
 		92CB8D641F96580F009D7BA7 /* XDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDSP.h; sourceTree = SOURCE_ROOT; };
 		92CB8D651F96580F009D7BA7 /* XFilterLadder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFilterLadder.h; sourceTree = SOURCE_ROOT; };
-		92CB8D661F96580F009D7BA7 /* XFilterLadderTmpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XFilterLadderTmpl.h; sourceTree = SOURCE_ROOT; };
 		92CB8D671F96580F009D7BA7 /* XHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHelpers.h; sourceTree = SOURCE_ROOT; };
 		92CB8D691F965816009D7BA7 /* IOAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOAdapter.h; sourceTree = SOURCE_ROOT; };
 		92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX.h; sourceTree = SOURCE_ROOT; };
@@ -39,6 +38,7 @@
 		92CB8D7F1F96CEA5009D7BA7 /* MathOps_Scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Scalar.h; sourceTree = SOURCE_ROOT; };
 		92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX512.h; sourceTree = SOURCE_ROOT; };
 		92CB8D8B1F9E644E009D7BA7 /* XPannerAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPannerAmp.h; sourceTree = SOURCE_ROOT; };
+		92CB8D8C1FA22421009D7BA7 /* XEQFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XEQFilter.h; sourceTree = SOURCE_ROOT; };
 		92F272341F9657DB00DAB962 /* VectorTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VectorTests; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -56,10 +56,10 @@
 		92CB8D6E1F965822009D7BA7 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
+				92CB8D8C1FA22421009D7BA7 /* XEQFilter.h */,
 				92CB8D611F96580F009D7BA7 /* XBasicAmp.h */,
 				92CB8D8B1F9E644E009D7BA7 /* XPannerAmp.h */,
 				92CB8D651F96580F009D7BA7 /* XFilterLadder.h */,
-				92CB8D661F96580F009D7BA7 /* XFilterLadderTmpl.h */,
 			);
 			name = Filters;
 			sourceTree = "<group>";
@@ -260,7 +260,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					MACOSX,
 					COMPILER_ALLOW_AVX,

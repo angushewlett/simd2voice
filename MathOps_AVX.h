@@ -129,8 +129,10 @@ public:
 	}
 
 	static vforceinline vec_float  absps(const vec_float& q1)
-	{ 
-		return andps(q1, _mm256_castsi256_ps(_mm256_set1_epi32(0x7FFFFFFF)));
+	{
+        int32 mask = 0x7FFFFFFF;
+        vec_float tmp = *(reinterpret_cast<float*>(&mask));
+		return andps(q1, tmp);
 	};
 
 	static vforceinline vec_float  notps(const vec_float& q1)

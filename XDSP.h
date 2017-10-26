@@ -95,6 +95,11 @@ public:
         float* m_audio_outs[kMaxAudioPorts];
     };
     
+    // Empty default implementation for process attributes.
+    class ProcessAttributes
+    {
+    };
+    
     /*
      * Prepare for streaming.. allocate buffers, etc.
      */
@@ -121,8 +126,11 @@ public:
      */
     std::vector<Voice*>& GetVoices() { return m_voices; };
     Voice* GetVoice(int32 voice) { return m_voices[voice]; };
+    const ProcessAttributes& GetProcessAttributes() {   return m_procAttr;  };
+
     
 protected:
+    ProcessAttributes m_procAttr;
     std::vector<Voice*> m_voices;
 };
     
@@ -336,7 +344,7 @@ public:
             for (int j = 0; j < TWorker::vec_elem; j++)
             {
                 typename T::Voice* voice = static_cast<typename T::Voice*>(node->GetVoice(i+j));
-                voice->PreProcessBuffer(process_globals);
+              //  voice->PreProcessBuffer(process_globals);
                 local_voices[j] = voice;
             }
             
@@ -375,7 +383,7 @@ template <class T> class VoiceTmpl : public Node::Voice
     
 };
 
-#endif // __XFilterLadder_H__
+#endif // __XDSP_H__
 
 
 

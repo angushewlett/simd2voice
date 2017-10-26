@@ -49,28 +49,22 @@ public:
     };
     
     ////////
-    // Type specific Node class: implements ProcessBuffer() to provide entry point for the node's processing.
+    // Node implementation via CRTP
     class Node : public XDSP::NodeTmpl<XPannerAmp>
     {
     public:
-        // Extended processing attributes (We don't have any)
-        class ProcessAttributes {};
-        ProcessAttributes m_pa;
-        const ProcessAttributes& GetProcessAttributes() {   return m_pa;  };
+        typedef XDSP::Node::ProcessAttributes ProcessAttributes;         // Pass default implementation back to the template.
     };
     
-    
+    ////////
+    // Worker does the processing   
     template <class TIOAdapter> class Worker : public TIOAdapter
     {
     public:
-        // Import the typedefs and usings from mathops base class
-        DEFINE_MATHOPS_IMPORTS;
+        DEFINE_MATHOPS_IMPORTS;      // Import the typedefs and usings from mathops base class
         
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
-            //	PerformanceCounterScope perfScope(__FUNCTION__);
-            
-            //static
             const int32 block_length = process_globals.block_length;
             vec_float next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
             vec_float next_cubic_gain  = voices.controlport_gather(C_GAIN_CUBIC);
@@ -108,11 +102,10 @@ public:
             voices.member_scatter(next_linear_gain,my_offsetof(m_linear_gain));
             voices.member_scatter(next_cubic_gain,my_offsetof(m_cubic_gain));
             voices.member_scatter(next_pan,my_offsetof(m_pan));
-        }; // end of process loop
-    };	// end of class Worker
+        }; // ProcessBuffer()
+    };	// class Worker
 };
-
-#endif // __XBasicAmp_H__
+#endif // __XPannerAmp_H__
 
 
 
