@@ -76,7 +76,7 @@ public:
             return *this;
         };
         
-        vforceinline SampleInputStream& operator++(int n)
+        vforceinline SampleInputStream operator++(int n)
         {
             SampleInputStream tmp(*this);
             m_buff_read += XDSP::kMaxVoices / vec_elem;
