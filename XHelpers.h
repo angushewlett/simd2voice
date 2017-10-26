@@ -7,6 +7,15 @@
 #include <windows.h>
 #endif
 
+typedef int32_t int32;
+typedef uint32_t uint32;
+
+#if WIN32
+#define vforceinline __forceinline
+#else
+#define vforceinline __inline__ __attribute__((always_inline))
+#endif
+
 #if CEXCOMPILE
 #define valigned_malloc(a, b) malloc(a)
 #define valigned_free(a) free(a)
