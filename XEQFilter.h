@@ -83,6 +83,7 @@ public:
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream = voices.getOutputStream(0);
             VecBandState bands[numBands];
+            VecBandState bands_0;
             
             // Gather - assume precomputed coefficients
             // nb: this is the outer loop, can forgive sloppy performance from compilers that don't unroll
@@ -97,6 +98,8 @@ public:
                     bands[i].a[j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
                 }
             }
+            
+            bands_0 = bands[0];
 
             
             for (int32 t=0; t<block_length; t++)
@@ -107,11 +110,11 @@ public:
                 // Would be nice to write as a compile time loop, but... MS compiler.
                  if (numBands > 0)
                  {
-                     const vec_float y0 = bands[0].a[0] * io_sample + bands[0].a[1] * bands[0].x[0] + bands[0].a[2] * bands[0].x[1] - bands[0].a[3] * bands[0].y[0] - bands[0].a[4] * bands[0].y[1];
-                     bands[0].x[1] = bands[0].x[0];
-                     bands[0].x[0] = io_sample;
-                     bands[0].y[1] = bands[0].y[0];
-                     bands[0].y[0] = y0;
+                     const vec_float y0 = bands_0.a[0] * io_sample + bands_0.a[1] * bands_0.x[0] + bands_0.a[2] * bands_0.x[1] - bands_0.a[3] * bands_0.y[0] - bands_0.a[4] * bands_0.y[1];
+                     bands_0.x[1] = bands_0.x[0];
+                     bands_0.x[0] = io_sample;
+                     bands_0.y[1] = bands_0.y[0];
+                     bands_0.y[0] = y0;
                      io_sample = y0;
                  }
                 if (numBands > 1)
