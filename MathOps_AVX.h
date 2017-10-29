@@ -36,8 +36,8 @@ public:
 	static constexpr int32 vec_elem = interleave * raw_vec_elem;
     static constexpr int alignment = 32;
 
-	typedef __m256 vec_elem_t;
-	typedef __m256i vec_int_t;
+	typedef __m256 vec_elem_t __attribute__ ((aligned (32)));
+	typedef __m256i vec_int_t __attribute__ ((aligned (32)));
 
     
     ARG2WRAPPER(__m256, _mm256_min_ps);
@@ -55,7 +55,7 @@ public:
     ARG1WRAPPER(__m256, _mm256_sqrt_ps);
     ARG1WRAPPER(__m256, _mm256_floor_ps);
 
-    typedef vec_float_impl_t<MathOps, interleave> vec_float;
+    typedef vec_float_impl_t<MathOps, interleave> vec_float  __attribute__ ((aligned (32)));
     typedef Interleaver<interleave, vec_float, __m256, _mm256_set1_ps> Inter;
 
 
@@ -200,6 +200,6 @@ public:
 		INTERLEAVED_INDEX_ASSIGN_T(result.m, obj.m);
 		return result;
 	};
-};
+} __attribute__ ((aligned (32)));
 
 #endif

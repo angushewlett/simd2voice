@@ -14,12 +14,17 @@
 #include <fenv.h>
 #include <list>
 
+#ifdef IACA_TEST
+#include "iacaMarks.h"
+#endif
+
 // Enable additional instruction sets here
 #define ENABLE_SSE 1
 #define ENABLE_AVX 1
 // #define ENABLE_AVX512 1
 
 #define DISPATCHTESTCOMPILE 1
+#define EXTRA_TEMP_COPY 1
 
 // XDSP
 #include "XDSP.h"
@@ -79,7 +84,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     XDSP::ProcessGlobals process_globals;
     
     const int coalesce = 1;
-    process_globals.block_length = 32 * coalesce;
+//    process_globals.block_length = 32 * coalesce;
     const int32 nRunsPerTimer = 16; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
     const int32 nTimerPasses = 512 / coalesce; // /*2048*/;
     
@@ -214,7 +219,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 }
 
 
-#define TEST_CLASS XEQFilter<4>
+#define TEST_CLASS XEQFilter<1>
 
 int main(int argc, char *argv[])
 {
@@ -226,7 +231,7 @@ int main(int argc, char *argv[])
     _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
 #else
 #endif
-
+/*
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
     run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
@@ -256,7 +261,14 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
 #endif
  //   _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
- //   run_test<TEST_CLASS,MAVX::MathOps<1>>("AVX,  1");
+#ifdef IACA_TEST
+    IACA_START;
+#endif*/
+    
+    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
+#ifdef IACA_TEST
+    IACA_END;
+#endif
     
     sleep(2); // Give Instruments time to detach cleanly
 }

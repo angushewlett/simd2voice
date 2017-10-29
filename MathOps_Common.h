@@ -511,7 +511,7 @@ public:
         vec_union_f *r_out = (vec_union_f*)this;
         r_out->f[a] = v;
     }
-};
+} __attribute__ ((aligned (MO::alignment)));
 
 
 

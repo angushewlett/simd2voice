@@ -23,7 +23,7 @@ namespace MFMA
 };
 
 #define TTestClass XEQFilter<1>
-#define TMathClass MFMA::MathOps<1>
+#define TMathClass MFMA::MathOps<2>
 
 void process(TTestClass::Node* node)
 {

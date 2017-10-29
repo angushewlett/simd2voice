@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */; settings = {COMPILER_FLAGS = "-march=haswell -mfma -O2"; }; };
+		92CB8D681F96580F009D7BA7 /* VecDispatchTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +39,7 @@
 		92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX512.h; sourceTree = SOURCE_ROOT; };
 		92CB8D8B1F9E644E009D7BA7 /* XPannerAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPannerAmp.h; sourceTree = SOURCE_ROOT; };
 		92CB8D8C1FA22421009D7BA7 /* XEQFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XEQFilter.h; sourceTree = SOURCE_ROOT; };
+		92CB8D8D1FA4F60F009D7BA7 /* iacaMarks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iacaMarks.h; sourceTree = SOURCE_ROOT; };
 		92F272341F9657DB00DAB962 /* VectorTests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VectorTests; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -80,6 +81,7 @@
 		92CB8D711F96587F009D7BA7 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				92CB8D8D1FA4F60F009D7BA7 /* iacaMarks.h */,
 				92CB8D641F96580F009D7BA7 /* XDSP.h */,
 				92CB8D671F96580F009D7BA7 /* XHelpers.h */,
 				92CB8D691F965816009D7BA7 /* IOAdapter.h */,
@@ -298,6 +300,8 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-march=haswell",
+					"-O3",
+					"-ffp-contract=fast",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -192,7 +192,7 @@ public:
 
     //////////////////////////////
     // Scatter for voice member variables
-	vforceinline void member_scatter(const vec_float& data, int32 offset)
+	vforceinline void member_scatter(const vec_float& data, size_t offset)
 	{
         vec_union_f loader;
         const char* base = reinterpret_cast<const char*>(m_voices[0]);
@@ -201,6 +201,7 @@ public:
         for (int32 i = 0; i < interleave; i++)
         {
             loader.m[i] = data.m[i];
+            
         }
         
         #pragma unroll (vec_elem)
