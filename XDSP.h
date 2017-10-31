@@ -79,6 +79,7 @@ public:
         void SetAudioOut(int32 audio_port_index, float* buffer) { m_audio_outs[audio_port_index] = buffer; };
         
         virtual void PrepareStream (const ProcessGlobals& process_globals) {};
+        virtual void Reset() {};
     protected:
         float* m_control_ins[kMaxControlPorts];
         float* m_audio_ins[kMaxAudioPorts];

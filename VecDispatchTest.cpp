@@ -109,12 +109,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     float* input_buffer = (float*)valigned_malloc(bufferSize * sizeof(float), 64);
     float* output_buffer = (float*)valigned_malloc(bufferSize * sizeof(float), 64);
     
-    srand ((unsigned int)time(NULL));
-    for (int32 k = 0; k < bufferSize; k++)
-    {
-        input_buffer[k] = randf();
-        output_buffer[k] = randf();
-    }
+    srand (5);
     
     ////////
     // Set up for the node and its voices. (The first element for each voice is the nth element in the buffer, buffer is kMaxVoices wide).
@@ -128,6 +123,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
         {
             node->GetVoice(i)->SetAudioOut(a, (output_buffer + i));
         }
+        node->GetVoice(i)->Reset();
     }
     
     ////////
@@ -160,6 +156,14 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     for (int32 t = 0; t < nTimerPasses; t++)
     {
      //   float t0 = (float)iterTimer.GetElapsedTime();
+        
+        for (int32 k = 0; k < bufferSize; k++)
+        {
+            input_buffer[k] = randf();
+            output_buffer[k] = randf();
+        }
+        
+        
         StopWatch runTimer;
     
         for (int32 i = 0; i < nRunsPerTimer; i++)
@@ -195,6 +199,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     float mIterationsPerSecond = (XDSP::kMaxVoices * process_globals.block_length * (1.0f / audioBlockAverage)) / k10e6;
     float xRealtime = (k10e6 * mIterationsPerSecond / 64.f) / 44100.f;
 
+    printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], output_buffer[64]);
     // Print the result
     printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t(%0.2f-%0.2f)\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
             TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6, loTime * k10e6, hiTime * k10e6,
@@ -231,7 +236,7 @@ int main(int argc, char *argv[])
     _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
 #else
 #endif
-/*
+
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
     run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
@@ -263,9 +268,9 @@ int main(int argc, char *argv[])
  //   _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #ifdef IACA_TEST
     IACA_START;
-#endif*/
+#endif
     
-    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
+//    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
 #ifdef IACA_TEST
     IACA_END;
 #endif

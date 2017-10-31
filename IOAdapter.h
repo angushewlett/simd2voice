@@ -179,7 +179,7 @@ public:
         #pragma unroll (vec_elem)
         for (int32 i = 0; i < vec_elem; i++)
         {
-            loader.f[i] = member_access(base, 0, offset);
+            loader.f[i] = member_access(base, i, offset);
         }
         
         #pragma unroll (interleave)
@@ -188,7 +188,56 @@ public:
             result.m[i] = loader.m[i];
         }
         return result;
+        
+        /*
+        vec_float res0;         
+        constexpr int32 voice_shift = (((sizeof(typename DSPNode_t::Voice) >> 6) + 1) << 6);
+        const char* base = reinterpret_cast<const char*>(m_voices[0]);
+        char* wx = reinterpret_cast<char*>(&res0);
+#pragma unroll (vec_elem)        
+        for (int32 i = 0; i < vec_elem; i++)
+        {
+            *(((float*)wx)+i) = *(float*)(base + offset + (i * voice_shift));
+        }
+        vec_float result = res0;
+        return result;
+         */
 	};
+    /*
+    //////////////////////////////
+    // Gather for voice member variables
+    vforceinline void member_gather(vec_float& result, size_t offset)
+    {
+     
+        vec_union_f loader;
+        const char* base = reinterpret_cast<const char*>(m_voices[0]);
+        
+#pragma unroll (vec_elem)
+        for (int32 i = 0; i < vec_elem; i++)
+        {
+            loader.f[i] = member_access(base, i, offset);
+        }
+        
+#pragma unroll (interleave)
+        for (int32 i = 0; i < interleave; i++)
+        {
+            result.m[i] = loader.m[i];
+        }
+        
+         vec_float res0;
+         constexpr int32 voice_shift = (((sizeof(typename DSPNode_t::Voice) >> 6) + 1) << 6);
+         const char* base = reinterpret_cast<const char*>(m_voices[0]);
+         char* wx = reinterpret_cast<char*>(&res0);
+         #pragma unroll (vec_elem)
+         for (int32 i = 0; i < vec_elem; i++)
+         {
+         *(((float*)wx)+i) = *(float*)(base + offset + (i * voice_shift));
+         }
+         result = res0;
+         //return result;
+        
+    };*/
+    
 
     //////////////////////////////
     // Scatter for voice member variables
@@ -207,7 +256,7 @@ public:
         #pragma unroll (vec_elem)
         for (int32 i = 0; i < vec_elem; i++)
         {
-            member_access(base, 0, offset) = loader.f[i];
+            member_access(base, i, offset) = loader.f[i];
         }
         
     };

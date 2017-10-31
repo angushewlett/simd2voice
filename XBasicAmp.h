@@ -32,8 +32,6 @@ public:
         virtual ~Voice() {};
         virtual void Reset ()
         {
-            Voice defaultState;
-            *this = defaultState;
         };
         // Dummy method for anything not parallelisable
         vforceinline void PreProcessBuffer(const XDSP::ProcessGlobals& process_globals) {};
