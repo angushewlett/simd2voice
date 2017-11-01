@@ -67,7 +67,9 @@ namespace M512
 #endif
 
 // The test class
-#include "XEQFilter.h"
+//#include "XEQFilter.h"
+#include "XFilterLadder.h"
+
 
 
 #if MACOSX
@@ -85,7 +87,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     
     const int coalesce = 1;
 //    process_globals.block_length = 32 * coalesce;
-    const int32 nRunsPerTimer = 16; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
+    const int32 nRunsPerTimer = 4; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
     const int32 nTimerPasses = 512 / coalesce; // /*2048*/;
     
     const int32 voiceCount = XDSP::kMaxVoices;
@@ -226,7 +228,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 }
 
 
-#define TEST_CLASS XEQFilter<1>
+#define TEST_CLASS XFilterLadder
+// XEQFilter<4>
 
 int main(int argc, char *argv[])
 {

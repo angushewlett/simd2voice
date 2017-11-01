@@ -205,7 +205,9 @@ public:
     
     static vforceinline vec_float  absps(const vec_float& q1)
     {
-        return andps(q1, _mm512_castsi512_ps(_mm512_set1_epi32(0x7FFFFFFF)));
+	int32 mask = 0x7FFFFFFF;
+	float msk = *reinterpret_cast<float*>(&mask);
+        return andps(q1, msk); //_mm512_castsi512_ps(_mm512_set1_epi32(0x7FFFFFFF)));
     };
     
     static vforceinline vec_float  notps(const vec_float& q1)
