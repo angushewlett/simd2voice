@@ -96,6 +96,66 @@ public:
         if (intrlv > 0xF) rv.m[0xF] = _mm256_loadu_ps(&(q1[120]));
         return rv;
     };
+    
+    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    {
+//        printf("%d\n", (const int32)increment);
+        const __m256i scale_base = _mm256_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07);
+        vec_float rv;
+        if (intrlv > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + ((increment * 0x08)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x2) rv.m[0x2] = _mm256_i32gather_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x3) rv.m[0x3] = _mm256_i32gather_ps(base_address + ((increment * 0x18)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x4) rv.m[0x4] = _mm256_i32gather_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x5) rv.m[0x5] = _mm256_i32gather_ps(base_address + ((increment * 0x28)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x6) rv.m[0x6] = _mm256_i32gather_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x7) rv.m[0x7] = _mm256_i32gather_ps(base_address + ((increment * 0x38)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x8) rv.m[0x8] = _mm256_i32gather_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x9) rv.m[0x9] = _mm256_i32gather_ps(base_address + ((increment * 0x48)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xA) rv.m[0xA] = _mm256_i32gather_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xB) rv.m[0xB] = _mm256_i32gather_ps(base_address + ((increment * 0x58)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xC) rv.m[0xC] = _mm256_i32gather_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xD) rv.m[0xD] = _mm256_i32gather_ps(base_address + ((increment * 0x68)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xE) rv.m[0xE] = _mm256_i32gather_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + ((increment * 0x78)/sizeof(float)), scale_base, (const int32)increment);
+        return rv;
+    }
+    
+    
+    template <int __N> vforceinline float _mm256_extract_ps (const __m256& __X)
+    {
+          __m128 __Y = _mm256_extractf128_ps (__X, __N >> 2);
+          return _mm_extract_ps (__Y, __N % 4);
+    }
+    
+    template <size_t increment> vforceinline void storeps(const __m256& data, float* e0)
+    {
+        *(e0 + (increment * 0x00)) = _mm256_extract_ps<0x0>(data);
+        *(e0 + (increment * 0x01)) = _mm256_extract_ps<0x1>(data);
+        *(e0 + (increment * 0x02)) = _mm256_extract_ps<0x2>(data);
+        *(e0 + (increment * 0x03)) = _mm256_extract_ps<0x3>(data);
+        *(e0 + (increment * 0x04)) = _mm256_extract_ps<0x4>(data);
+        *(e0 + (increment * 0x05)) = _mm256_extract_ps<0x5>(data);
+        *(e0 + (increment * 0x06)) = _mm256_extract_ps<0x6>(data);
+        *(e0 + (increment * 0x07)) = _mm256_extract_ps<0x7>(data);
+    };
+    
+    
+    template <size_t increment> vforceinline vec_float scatter(const vec_float& rv, float* base_address)
+    {
+        //        printf("%d\n", (const int32)increment);
+//        const __m256i scale_base = _mm256_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07);
+        if (intrlv > 0x0) storeps<increment / sizeof(float)>(rv.m[0x0],  base_address + ((increment * 0x00)/sizeof(float)));
+        if (intrlv > 0x1) storeps<increment / sizeof(float)>(rv.m[0x1],  base_address + ((increment * 0x08)/sizeof(float)));
+        if (intrlv > 0x2) storeps<increment / sizeof(float)>(rv.m[0x2],  base_address + ((increment * 0x10)/sizeof(float)));
+        if (intrlv > 0x3) storeps<increment / sizeof(float)>(rv.m[0x3],  base_address + ((increment * 0x18)/sizeof(float)));
+        if (intrlv > 0x4) storeps<increment / sizeof(float)>(rv.m[0x4],  base_address + ((increment * 0x20)/sizeof(float)));
+        if (intrlv > 0x5) storeps<increment / sizeof(float)>(rv.m[0x5],  base_address + ((increment * 0x28)/sizeof(float)));
+        if (intrlv > 0x6) storeps<increment / sizeof(float)>(rv.m[0x6],  base_address + ((increment * 0x30)/sizeof(float)));
+        if (intrlv > 0x7) storeps<increment / sizeof(float)>(rv.m[0x7],  base_address + ((increment * 0x38)/sizeof(float)));
+        return rv;
+    }
+    
 	
 	//////////////////////////////////////
 	// Float operations - add, sub, mul, min, max, bitwise or, bitwise and, abs

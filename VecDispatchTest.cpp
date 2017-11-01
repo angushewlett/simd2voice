@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
     IACA_START;
 #endif
     
-//    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
+    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
 #ifdef IACA_TEST
     IACA_END;
 #endif

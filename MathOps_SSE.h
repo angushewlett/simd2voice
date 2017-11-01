@@ -103,6 +103,81 @@ public:
         return rv;
     };
     
+    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    {
+        //        printf("%d\n", (const int32)increment);
+        vec_float rv;
+        int32 fc = increment / sizeof(float);
+        const float* ba = base_address;
+        
+        if (intrlv > 0x0) rv.m[0x0] = _mm_set_ps(*(ba + (fc * 0x00)), *(ba + (fc * 0x01)), *(ba + (fc * 0x02)), *(ba + (fc * 0x03)));
+        if (intrlv > 0x1) rv.m[0x1] = _mm_set_ps(*(ba + (fc * 0x04)), *(ba + (fc * 0x05)), *(ba + (fc * 0x06)), *(ba + (fc * 0x07)));
+        if (intrlv > 0x2) rv.m[0x2] = _mm_set_ps(*(ba + (fc * 0x08)), *(ba + (fc * 0x09)), *(ba + (fc * 0x0A)), *(ba + (fc * 0x0B)));
+        if (intrlv > 0x3) rv.m[0x3] = _mm_set_ps(*(ba + (fc * 0x0C)), *(ba + (fc * 0x0D)), *(ba + (fc * 0x0E)), *(ba + (fc * 0x0F)));
+
+        if (intrlv > 0x4) rv.m[0x4] = _mm_set_ps(*(ba + (fc * 0x10)), *(ba + (fc * 0x11)), *(ba + (fc * 0x12)), *(ba + (fc * 0x13)));
+        if (intrlv > 0x5) rv.m[0x5] = _mm_set_ps(*(ba + (fc * 0x14)), *(ba + (fc * 0x15)), *(ba + (fc * 0x16)), *(ba + (fc * 0x17)));
+        if (intrlv > 0x6) rv.m[0x6] = _mm_set_ps(*(ba + (fc * 0x18)), *(ba + (fc * 0x19)), *(ba + (fc * 0x1A)), *(ba + (fc * 0x1B)));
+        if (intrlv > 0x7) rv.m[0x7] = _mm_set_ps(*(ba + (fc * 0x1C)), *(ba + (fc * 0x1D)), *(ba + (fc * 0x1E)), *(ba + (fc * 0x1F)));
+
+        if (intrlv > 0x8) rv.m[0x8] = _mm_set_ps(*(ba + (fc * 0x20)), *(ba + (fc * 0x21)), *(ba + (fc * 0x22)), *(ba + (fc * 0x23)));
+        if (intrlv > 0x9) rv.m[0x9] = _mm_set_ps(*(ba + (fc * 0x24)), *(ba + (fc * 0x25)), *(ba + (fc * 0x26)), *(ba + (fc * 0x27)));
+        if (intrlv > 0xA) rv.m[0xA] = _mm_set_ps(*(ba + (fc * 0x28)), *(ba + (fc * 0x29)), *(ba + (fc * 0x2A)), *(ba + (fc * 0x2B)));
+        if (intrlv > 0xB) rv.m[0xB] = _mm_set_ps(*(ba + (fc * 0x2C)), *(ba + (fc * 0x2D)), *(ba + (fc * 0x2E)), *(ba + (fc * 0x2F)));
+
+        if (intrlv > 0xC) rv.m[0xC] = _mm_set_ps(*(ba + (fc * 0x30)), *(ba + (fc * 0x31)), *(ba + (fc * 0x32)), *(ba + (fc * 0x33)));
+        if (intrlv > 0xD) rv.m[0xD] = _mm_set_ps(*(ba + (fc * 0x34)), *(ba + (fc * 0x35)), *(ba + (fc * 0x36)), *(ba + (fc * 0x37)));
+        if (intrlv > 0xE) rv.m[0xE] = _mm_set_ps(*(ba + (fc * 0x38)), *(ba + (fc * 0x39)), *(ba + (fc * 0x3A)), *(ba + (fc * 0x3B)));
+        if (intrlv > 0xF) rv.m[0xF] = _mm_set_ps(*(ba + (fc * 0x3C)), *(ba + (fc * 0x3D)), *(ba + (fc * 0x3E)), *(ba + (fc * 0x3F)));
+        
+        return rv;
+    }
+    
+    struct alff
+    {
+        float data[4];
+    } __attribute__((aligned(16)));
+    
+    vforceinline void mystore_ps(const __m128& data, float& a, float& b, float& c, float& d)
+    {
+        alff x;
+        _mm_store_ps(&x.data[0], data);
+        a = x.data[0];
+        b = x.data[1];
+        c = x.data[2];
+        d = x.data[3];
+    }
+    
+    template <size_t increment> vforceinline vec_float scatter(const vec_float& rv, float* base_address)
+    {
+        //        printf("%d\n", (const int32)increment);
+        int32 fc = increment / sizeof(float);
+        float* ba = base_address;
+        
+        if (intrlv > 0x0) mystore_ps(rv.m[0x0], *(ba + (fc * 0x00)), *(ba + (fc * 0x01)), *(ba + (fc * 0x02)), *(ba + (fc * 0x03)));
+        if (intrlv > 0x1) mystore_ps(rv.m[0x1], *(ba + (fc * 0x04)), *(ba + (fc * 0x05)), *(ba + (fc * 0x06)), *(ba + (fc * 0x07)));
+        if (intrlv > 0x2) mystore_ps(rv.m[0x2], *(ba + (fc * 0x08)), *(ba + (fc * 0x09)), *(ba + (fc * 0x0A)), *(ba + (fc * 0x0B)));
+        if (intrlv > 0x3) mystore_ps(rv.m[0x3], *(ba + (fc * 0x0C)), *(ba + (fc * 0x0D)), *(ba + (fc * 0x0E)), *(ba + (fc * 0x0F)));
+        
+        if (intrlv > 0x4) mystore_ps(rv.m[0x4], *(ba + (fc * 0x10)), *(ba + (fc * 0x11)), *(ba + (fc * 0x12)), *(ba + (fc * 0x13)));
+        if (intrlv > 0x5) mystore_ps(rv.m[0x5], *(ba + (fc * 0x14)), *(ba + (fc * 0x15)), *(ba + (fc * 0x16)), *(ba + (fc * 0x17)));
+        if (intrlv > 0x6) mystore_ps(rv.m[0x6], *(ba + (fc * 0x18)), *(ba + (fc * 0x19)), *(ba + (fc * 0x1A)), *(ba + (fc * 0x1B)));
+        if (intrlv > 0x7) mystore_ps(rv.m[0x7], *(ba + (fc * 0x1C)), *(ba + (fc * 0x1D)), *(ba + (fc * 0x1E)), *(ba + (fc * 0x1F)));
+        
+        if (intrlv > 0x8) mystore_ps(rv.m[0x8], *(ba + (fc * 0x20)), *(ba + (fc * 0x21)), *(ba + (fc * 0x22)), *(ba + (fc * 0x23)));
+        if (intrlv > 0x9) mystore_ps(rv.m[0x9], *(ba + (fc * 0x24)), *(ba + (fc * 0x25)), *(ba + (fc * 0x26)), *(ba + (fc * 0x27)));
+        if (intrlv > 0xA) mystore_ps(rv.m[0xA], *(ba + (fc * 0x28)), *(ba + (fc * 0x29)), *(ba + (fc * 0x2A)), *(ba + (fc * 0x2B)));
+        if (intrlv > 0xB) mystore_ps(rv.m[0xB], *(ba + (fc * 0x2C)), *(ba + (fc * 0x2D)), *(ba + (fc * 0x2E)), *(ba + (fc * 0x2F)));
+        
+        if (intrlv > 0xC) mystore_ps(rv.m[0xC], *(ba + (fc * 0x30)), *(ba + (fc * 0x31)), *(ba + (fc * 0x32)), *(ba + (fc * 0x33)));
+        if (intrlv > 0xD) mystore_ps(rv.m[0xD], *(ba + (fc * 0x34)), *(ba + (fc * 0x35)), *(ba + (fc * 0x36)), *(ba + (fc * 0x37)));
+        if (intrlv > 0xE) mystore_ps(rv.m[0xE], *(ba + (fc * 0x38)), *(ba + (fc * 0x39)), *(ba + (fc * 0x3A)), *(ba + (fc * 0x3B)));
+        if (intrlv > 0xF) mystore_ps(rv.m[0xF], *(ba + (fc * 0x3C)), *(ba + (fc * 0x3D)), *(ba + (fc * 0x3E)), *(ba + (fc * 0x3F)));
+        
+        return rv;
+    };
+    
+    
     //////////////////////////////////////
     // Float operations - add, sub, mul, min, max, bitwise or, bitwise and, abs
     GENERATE_INTERLEAVED_FUNCTION_2ARG(mulps, wrap__mm_mul_ps);

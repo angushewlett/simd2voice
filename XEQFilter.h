@@ -75,91 +75,33 @@ public:
 
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream = voices.getOutputStream(0);
-//            VecBandState bands; //[numBands];
-          //  static VecBandState bands __attribute__((aligned(32)));
-          //  static VecBandState bands_out __attribute__((aligned(32)));
-            static VecBandState bands; //  __attribute__((aligned(32)));
-         //   VecBandState bands_out; // __attribute__((aligned(32)));
+            VecBandState bands, bands_out;
+
+	// __asm__("int $3");
             
-//            VecBandState bands_0;
-            // Gather - assume precomputed coefficients
-            // nb: this is the outer loop, can forgive sloppy performance from compilers that don't unroll
-          /*  for (int32 i = 0; i < numBands; i++)
+#pragma unroll(numBands)
+            for (int32 i = 0; i < numBands; i++)
             {
-                bands[i].x[0] = voices.member_gather(my_offsetof(m_bandState[i].x[0]));
-                bands[i].x[1] = voices.member_gather(my_offsetof(m_bandState[i].x[1]));
-                bands[i].y[0] = voices.member_gather(my_offsetof(m_bandState[i].y[0]));
-                bands[i].y[1] = voices.member_gather(my_offsetof(m_bandState[i].y[1]));
+                bands.x[i][0] = voices.member_gather(my_offsetof(m_bandState[i].x[0]));
+                bands.x[i][1] = voices.member_gather(my_offsetof(m_bandState[i].x[1]));
+                bands.y[i][0] = voices.member_gather(my_offsetof(m_bandState[i].y[0]));
+                bands.y[i][1] = voices.member_gather(my_offsetof(m_bandState[i].y[1]));
+#pragma unroll(5)                
                 for (int32 j = 0; j < 5; j++)
                 {
-                    bands[i].a[j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
+                    bands.a[i][j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
                 }
-            }*/
-            
-            /*
-            for (int32 i = 0; i < numBands; i++)
-             {
-             voices.member_gather(bands.x[i][0], my_offsetof(m_bandState[i].x[0]));
-             voices.member_gather(bands.x[i][1], my_offsetof(m_bandState[i].x[1]));
-             voices.member_gather(bands.y[i][0], my_offsetof(m_bandState[i].y[0]));
-             voices.member_gather(bands.y[i][1], my_offsetof(m_bandState[i].y[1]));
-             for (int32 j = 0; j < 5; j++)
-             {
-              voices.member_gather(bands.a[i][j], my_offsetof(m_bandState[i].a[j]));
-             }
-             }*/
-            
-          
-		static bool init = false;
-		if (!init)
-		{
-             for (int32 i = 0; i < numBands; i++)
-             {
-             bands.x[i][0] = voices.member_gather(my_offsetof(m_bandState[i].x[0]));
-             bands.x[i][1] = voices.member_gather(my_offsetof(m_bandState[i].x[1]));
-             bands.y[i][0] = voices.member_gather(my_offsetof(m_bandState[i].y[0]));
-             bands.y[i][1] = voices.member_gather(my_offsetof(m_bandState[i].y[1]));
-             for (int32 j = 0; j < 5; j++)
-             {
-             bands.a[i][j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
-             }
-             }
-             init = true;
-              }
-//std::raise(SIGABRT);
-	// __asm__("int $3");
-
-            /*
-            static VecBandState b0; // = 0;
-            static bool init = false;
-            if (!init)
-            {
-                memset(&b0, 0, sizeof(VecBandState));
             }
-            bands = b0;
-            */
-            
-         //   static VecBandState band_store;
-         //   bands = band_store;
-            VecBandState bands_out;
             
 #if 1 // EXTRA_TEMP_COPY
 VecBandState bs = bands;
 #else
 #define bs bands
 #endif
-        /*    if (memcmp(&bands, &bs, sizeof(VecBandState) ))
-            {
-                printf("e");
-            }*/
 
-//            printf("%p\n", (void*)&bs);
-            
-//#pragma unroll(1)
             for (int32 t=0; t<block_length; t++)
             {
                  vec_float io_sample;
-//                 printf("%p\n", (void*)&io_sample);
                 
                  instream >> io_sample;
                 
@@ -203,63 +145,25 @@ VecBandState bs = bands;
                     bs.y[bd][0] = y0;
                     io_sample = y0;
                 }
-/*        if (t != block_length - 1)
-        {
-            
-            
-        }
-                else
-       {
-         bands_out = bs;
-       }*/
 
-            
-                 outstream << io_sample;
+                outstream << io_sample;
                 
+                // Fix for aggressive stores (post-checked loop): keep local scope for temporary.
                 if (t == block_length - 1)
                 {
                     bands_out = bs;
                 }
-                
-                // Fix for aggressive stores (post-checked loop): keep local scope for temporary.
             }
-	//	bands_out = bs;
-//                    bands_out = bs;
-        bands = bands_out;    
-//            static VecBandState bands_out2;
-//            bands_out2 = bands_out;
-            
-            
-          //  band_store = bs;
-            // Scatter
-            /*
-                for (int32 i = 0; i < numBands; i++)
-                {
-                    voices.member_scatter(bands_out[0].x[0], my_offsetof(m_bandState[i].x[0]));
-                    voices.member_scatter(bands_out[0].x[1], my_offsetof(m_bandState[i].x[1]));
-                    voices.member_scatter(bands_out[0].y[0], my_offsetof(m_bandState[i].y[0]));
-                    voices.member_scatter(bands_out[0].y[1], my_offsetof(m_bandState[i].y[1]));
-                    for (int32 j = 0; j < 5; j++)
-                    {
-                        voices.member_scatter(bands_out[0].a[j], my_offsetof(m_bandState[i].a[j]));
-                    }
-                }
-             */
-            
+        
              for (int32 i = 0; i < numBands; i++)
              {
              voices.member_scatter(bands_out.x[i][0], my_offsetof(m_bandState[i].x[0]));
              voices.member_scatter(bands_out.x[i][1], my_offsetof(m_bandState[i].x[1]));
              voices.member_scatter(bands_out.y[i][0], my_offsetof(m_bandState[i].y[0]));
              voices.member_scatter(bands_out.y[i][1], my_offsetof(m_bandState[i].y[1]));
-             /*for (int32 j = 0; j < 5; j++)
-             {
-             voices.member_scatter(bands_out.a[i][j], my_offsetof(m_bandState[i].a[j]));
-             }*/
+             // for (int32 j = 0; j < 5; j++)             voices.member_scatter(bands_out.a[i][j], my_offsetof(m_bandState[i].a[j]));
              }
-            
-            
-            
+    
             
         }; // ProcessBuffer()
     };	// class Worker

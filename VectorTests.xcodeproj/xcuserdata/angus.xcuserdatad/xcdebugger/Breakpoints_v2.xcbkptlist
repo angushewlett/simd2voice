@@ -277,11 +277,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "XEQFilter.h"
-            timestampString = "531081828.17122"
+            timestampString = "531234427.188542"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "ProcessBuffer (const XDSP::ProcessGlobals&amp; process_globals, TIOAdapter&amp; voices, const typename Node::ProcessAttributes&amp; pa)"
             landmarkType = "7">
             <Locations>
@@ -1417,28 +1417,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "XEQFilter.h"
-            timestampString = "530965929.62159"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "ProcessBuffer (const XDSP::ProcessGlobals&amp; process_globals, TIOAdapter&amp; voices, const typename Node::ProcessAttributes&amp; pa)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "IOAdapter.h"
-            timestampString = "530965955.289909"
+            timestampString = "531233633.088447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "member_gather(size_t offset)"
             landmarkType = "7">
             <Locations>
@@ -1526,115 +1510,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "IOAdapter.h"
-            timestampString = "531005532.522762"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
-            landmarkName = "member_gather(size_t offset)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
-                  moduleName = "VectorTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/IOAdapter.h"
-                  timestampString = "530965987.364957"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "708">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
-                  moduleName = "VectorTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/IOAdapter.h"
-                  timestampString = "530965987.367331"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "1221">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
-                  moduleName = "VectorTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/IOAdapter.h"
-                  timestampString = "530965987.369623"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "1723">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
-                  moduleName = "VectorTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/IOAdapter.h"
-                  timestampString = "530965987.372313"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "2230">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MAVX::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
-                  moduleName = "VectorTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/IOAdapter.h"
-                  timestampString = "530965987.374568"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "191"
-                  endingLineNumber = "191"
-                  offsetFromSymbolStart = "2787">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "XEQFilter.h"
-            timestampString = "531081753.254487"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "ProcessBuffer (const XDSP::ProcessGlobals&amp; process_globals, TIOAdapter&amp; voices, const typename Node::ProcessAttributes&amp; pa)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "XEQFilter.h"
             timestampString = "531070932.144417"
             startingColumnNumber = "9223372036854775807"
@@ -1675,6 +1550,324 @@
             endingLineNumber = "120"
             landmarkName = "run_test(const char* messagePrefix)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MathOps_Scalar.h"
+            timestampString = "531256337.255598"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "scatter(const vec_float&amp; rv, float* base_address)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.21174"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3317">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.213522"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3497">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.215045"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3669">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;1&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.216513"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3843">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.217943"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3499">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.220074"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3708">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.222118"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3909">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;2&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.223851"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4112">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.225369"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "3782">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.226703"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4052">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.227906"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4314">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;4&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.2291"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4578">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.23028"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4300">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.231454"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "4686">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.23262"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "5064">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;8&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.234073"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "5444">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.235337"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "5324">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.237094"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "5942">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.238768"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "6552">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "XEQFilter&lt;1&gt;::Worker&lt;IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt; &gt;::ProcessBuffer(XDSP::ProcessGlobals const&amp;, IOAdapter&lt;MSCL::MathOps&lt;16&gt;, XEQFilter&lt;1&gt; &gt;&amp;, XDSP::Node::ProcessAttributes const&amp;)"
+                  moduleName = "VectorTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/angus/Desktop/synthsquad.git.CLEAN/FXpansion/CleanVectorTest/MathOps_Scalar.h"
+                  timestampString = "531256349.240216"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "149"
+                  endingLineNumber = "149"
+                  offsetFromSymbolStart = "7164">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

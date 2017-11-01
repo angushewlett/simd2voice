@@ -117,6 +117,54 @@ public:
         return rv;
     };
     
+    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    {
+        //        printf("%d\n", (const int32)increment);
+        const __m512i scale_base = _mm512_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F);
+        vec_float rv;
+        if (intrlv > 0x0) rv.m[0x0] = _mm512_i32gather_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x1) rv.m[0x1] = _mm512_i32gather_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x2) rv.m[0x2] = _mm512_i32gather_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x3) rv.m[0x3] = _mm512_i32gather_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x4) rv.m[0x4] = _mm512_i32gather_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x5) rv.m[0x5] = _mm512_i32gather_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x6) rv.m[0x6] = _mm512_i32gather_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x7) rv.m[0x7] = _mm512_i32gather_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x8) rv.m[0x8] = _mm512_i32gather_ps(base_address + ((increment * 0x80)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x9) rv.m[0x9] = _mm512_i32gather_ps(base_address + ((increment * 0x90)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xA) rv.m[0xA] = _mm512_i32gather_ps(base_address + ((increment * 0xA0)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xB) rv.m[0xB] = _mm512_i32gather_ps(base_address + ((increment * 0xB0)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xC) rv.m[0xC] = _mm512_i32gather_ps(base_address + ((increment * 0xC0)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xD) rv.m[0xD] = _mm512_i32gather_ps(base_address + ((increment * 0xD0)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xE) rv.m[0xE] = _mm512_i32gather_ps(base_address + ((increment * 0xE0)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xF) rv.m[0xF] = _mm512_i32gather_ps(base_address + ((increment * 0xF0)/sizeof(float)), scale_base, (const int32)increment);
+        return rv;
+    }
+    
+    template <size_t increment> vforceinline void scatter(const vec_float& data, float* base_address)
+    {
+        //        printf("%d\n", (const int32)increment);
+        const __m512i scale_base = _mm512_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F);
+        vec_float rv;
+        if (intrlv > 0x0) _mm512_i32scatter_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, rv.m[0x0], (const int32)increment);
+        if (intrlv > 0x1) _mm512_i32scatter_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, rv.m[0x1], (const int32)increment);
+        if (intrlv > 0x2) _mm512_i32scatter_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, rv.m[0x2], (const int32)increment);
+        if (intrlv > 0x3) _mm512_i32scatter_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, rv.m[0x3], (const int32)increment);
+        if (intrlv > 0x4) _mm512_i32scatter_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, rv.m[0x4], (const int32)increment);
+        if (intrlv > 0x5) _mm512_i32scatter_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, rv.m[0x5], (const int32)increment);
+        if (intrlv > 0x6) _mm512_i32scatter_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, rv.m[0x6], (const int32)increment);
+        if (intrlv > 0x7) _mm512_i32scatter_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, rv.m[0x7], (const int32)increment);
+        if (intrlv > 0x8) _mm512_i32scatter_ps(base_address + ((increment * 0x80)/sizeof(float)), scale_base, rv.m[0x8], (const int32)increment);
+        if (intrlv > 0x9) _mm512_i32scatter_ps(base_address + ((increment * 0x90)/sizeof(float)), scale_base, rv.m[0x9], (const int32)increment);
+        if (intrlv > 0xA) _mm512_i32scatter_ps(base_address + ((increment * 0xA0)/sizeof(float)), scale_base, rv.m[0xA], (const int32)increment);
+        if (intrlv > 0xB) _mm512_i32scatter_ps(base_address + ((increment * 0xB0)/sizeof(float)), scale_base, rv.m[0xB], (const int32)increment);
+        if (intrlv > 0xC) _mm512_i32scatter_ps(base_address + ((increment * 0xC0)/sizeof(float)), scale_base, rv.m[0xC], (const int32)increment);
+        if (intrlv > 0xD) _mm512_i32scatter_ps(base_address + ((increment * 0xD0)/sizeof(float)), scale_base, rv.m[0xD], (const int32)increment);
+        if (intrlv > 0xE) _mm512_i32scatter_ps(base_address + ((increment * 0xE0)/sizeof(float)), scale_base, rv.m[0xE], (const int32)increment);
+        if (intrlv > 0xF) _mm512_i32scatter_ps(base_address + ((increment * 0xF0)/sizeof(float)), scale_base, rv.m[0xF], (const int32)increment);
+    }
+    
+    
     //////////////////////////////////////
     // Float operations - add, sub, mul, min, max, bitwise or, bitwise and, abs
     GENERATE_INTERLEAVED_FUNCTION_2ARG(mulps, wrap__mm512_mul_ps);

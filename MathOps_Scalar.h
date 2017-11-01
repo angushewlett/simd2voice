@@ -103,24 +103,67 @@ public:
     static vforceinline vec_float  loadps(const float* q1)
     {
         vec_float rv;
-        if (intrlv > 0x0) rv.m[0x0] = _mm_load_ss(&(q1[0]));
-        if (intrlv > 0x1) rv.m[0x1] = _mm_load_ss(&(q1[1]));
-        if (intrlv > 0x2) rv.m[0x2] = _mm_load_ss(&(q1[2]));
-        if (intrlv > 0x3) rv.m[0x3] = _mm_load_ss(&(q1[3]));
-        if (intrlv > 0x4) rv.m[0x4] = _mm_load_ss(&(q1[4]));
-        if (intrlv > 0x5) rv.m[0x5] = _mm_load_ss(&(q1[5]));
-        if (intrlv > 0x6) rv.m[0x6] = _mm_load_ss(&(q1[6]));
-        if (intrlv > 0x7) rv.m[0x7] = _mm_load_ss(&(q1[7]));
-        if (intrlv > 0x8) rv.m[0x8] = _mm_load_ss(&(q1[8]));
-        if (intrlv > 0x9) rv.m[0x9] = _mm_load_ss(&(q1[9]));
-        if (intrlv > 0xA) rv.m[0xA] = _mm_load_ss(&(q1[10]));
-        if (intrlv > 0xB) rv.m[0xB] = _mm_load_ss(&(q1[11]));
-        if (intrlv > 0xC) rv.m[0xC] = _mm_load_ss(&(q1[12]));
-        if (intrlv > 0xD) rv.m[0xD] = _mm_load_ss(&(q1[13]));
-        if (intrlv > 0xE) rv.m[0xE] = _mm_load_ss(&(q1[14]));
-        if (intrlv > 0xF) rv.m[0xF] = _mm_load_ss(&(q1[15]));
+        if (intrlv > 0x0) rv.m[0x0] = q1[0];
+        if (intrlv > 0x1) rv.m[0x1] = q1[1];
+        if (intrlv > 0x2) rv.m[0x2] = q1[2];
+        if (intrlv > 0x3) rv.m[0x3] = q1[3];
+        if (intrlv > 0x4) rv.m[0x4] = q1[4];
+        if (intrlv > 0x5) rv.m[0x5] = q1[5];
+        if (intrlv > 0x6) rv.m[0x6] = q1[6];
+        if (intrlv > 0x7) rv.m[0x7] = q1[7];
+        if (intrlv > 0x8) rv.m[0x8] = q1[8];
+        if (intrlv > 0x9) rv.m[0x9] = q1[9];
+        if (intrlv > 0xA) rv.m[0xA] = q1[10];
+        if (intrlv > 0xB) rv.m[0xB] = q1[11];
+        if (intrlv > 0xC) rv.m[0xC] = q1[12];
+        if (intrlv > 0xD) rv.m[0xD] = q1[13];
+        if (intrlv > 0xE) rv.m[0xE] = q1[14];
+        if (intrlv > 0xF) rv.m[0xF] = q1[15];
         return rv;
     };
+    
+    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    {
+        vec_float rv;
+        if (intrlv > 0x0) rv.m[0x0] = *(base_address + ((increment * 0x00)/ sizeof(float)));
+        if (intrlv > 0x1) rv.m[0x1] = *(base_address + ((increment * 0x01)/ sizeof(float)));
+        if (intrlv > 0x2) rv.m[0x2] = *(base_address + ((increment * 0x02)/ sizeof(float)));
+        if (intrlv > 0x3) rv.m[0x3] = *(base_address + ((increment * 0x03)/ sizeof(float)));
+        if (intrlv > 0x4) rv.m[0x4] = *(base_address + ((increment * 0x04)/ sizeof(float)));
+        if (intrlv > 0x5) rv.m[0x5] = *(base_address + ((increment * 0x05)/ sizeof(float)));
+        if (intrlv > 0x6) rv.m[0x6] = *(base_address + ((increment * 0x06)/ sizeof(float)));
+        if (intrlv > 0x7) rv.m[0x7] = *(base_address + ((increment * 0x07)/ sizeof(float)));
+        if (intrlv > 0x8) rv.m[0x8] = *(base_address + ((increment * 0x08)/ sizeof(float)));
+        if (intrlv > 0x9) rv.m[0x9] = *(base_address + ((increment * 0x09)/ sizeof(float)));
+        if (intrlv > 0xA) rv.m[0xA] = *(base_address + ((increment * 0x0A)/ sizeof(float)));
+        if (intrlv > 0xB) rv.m[0xB] = *(base_address + ((increment * 0x0B)/ sizeof(float)));
+        if (intrlv > 0xC) rv.m[0xC] = *(base_address + ((increment * 0x0C)/ sizeof(float)));
+        if (intrlv > 0xD) rv.m[0xD] = *(base_address + ((increment * 0x0D)/ sizeof(float)));
+        if (intrlv > 0xE) rv.m[0xE] = *(base_address + ((increment * 0x0E)/ sizeof(float)));
+        if (intrlv > 0xF) rv.m[0xF] = *(base_address + ((increment * 0x0F)/ sizeof(float)));
+        return rv;
+    }
+    
+    template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
+    {
+        if (intrlv > 0x0) *(base_address + ((increment * 0x00)/ sizeof(float))) = rv.m[0x0];
+        if (intrlv > 0x1) *(base_address + ((increment * 0x01)/ sizeof(float))) = rv.m[0x1];
+        if (intrlv > 0x2) *(base_address + ((increment * 0x02)/ sizeof(float))) = rv.m[0x2];
+        if (intrlv > 0x3) *(base_address + ((increment * 0x03)/ sizeof(float))) = rv.m[0x3];
+        if (intrlv > 0x4) *(base_address + ((increment * 0x04)/ sizeof(float))) = rv.m[0x4];
+        if (intrlv > 0x5) *(base_address + ((increment * 0x05)/ sizeof(float))) = rv.m[0x5];
+        if (intrlv > 0x6) *(base_address + ((increment * 0x06)/ sizeof(float))) = rv.m[0x6];
+        if (intrlv > 0x7) *(base_address + ((increment * 0x07)/ sizeof(float))) = rv.m[0x7];
+        if (intrlv > 0x8) *(base_address + ((increment * 0x08)/ sizeof(float))) = rv.m[0x8];
+        if (intrlv > 0x9) *(base_address + ((increment * 0x09)/ sizeof(float))) = rv.m[0x9];
+        if (intrlv > 0xA) *(base_address + ((increment * 0x0A)/ sizeof(float))) = rv.m[0xA];
+        if (intrlv > 0xB) *(base_address + ((increment * 0x0B)/ sizeof(float))) = rv.m[0xB];
+        if (intrlv > 0xC) *(base_address + ((increment * 0x0C)/ sizeof(float))) = rv.m[0xC];
+        if (intrlv > 0xD) *(base_address + ((increment * 0x0D)/ sizeof(float))) = rv.m[0xD];
+        if (intrlv > 0xE) *(base_address + ((increment * 0x0E)/ sizeof(float))) = rv.m[0xE];
+        if (intrlv > 0xF) *(base_address + ((increment * 0x0F)/ sizeof(float))) = rv.m[0xF];
+    }
+    
     
     //////////////////////////////////////
     // Float operations - add, sub, mul, min, max, bitwise or, bitwise and, abs
