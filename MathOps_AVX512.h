@@ -57,7 +57,7 @@ public:
     static constexpr int32 vec_elem = interleave * raw_vec_elem;
     static constexpr int alignment = 64;
     
-    typedef __m512 vec_elem_t;
+    typedef __m512 vec_elem_t __attribute__((aligned(64)));
     typedef __m512i vec_int_t;
     
     
@@ -75,7 +75,7 @@ public:
     ARG1WRAPPER(__m512, _mm512_sqrt_ps);
     ARG1WRAPPER(__m512, _mm512_floor_ps);
     
-    typedef vec_float_impl_t<MathOps, interleave> vec_float;
+    typedef vec_float_impl_t<MathOps, interleave> vec_float __attribute__((aligned(64)));
     typedef Interleaver<interleave, vec_float, __m512, _mm512_set1_ps> Inter;
     
     

@@ -20,7 +20,7 @@ namespace XDSP
 class ProcessGlobals
 {
 public:
-    static constexpr int32 block_length = 64;
+    static constexpr int32 block_length = 256;
     int32 block_length_norm = block_length;
     float analog_noise[2];
     float srscale = 1.f;
@@ -245,6 +245,7 @@ public:
             char* voiceMem = ((char*) m_voiceMemory) + (i * s_voiceSize);
             m_voices[i] = new(voiceMem) TVoice();
         }
+//	printf("VS %d a %d\n", s_voiceSize, s_memAlign);
     };
     
     ////////////////////////////////
@@ -257,7 +258,11 @@ public:
         }
         valigned_free(m_voiceMemory);
     };
-    
+
+    virtual TVoice* GetVoiceTyped(int32 voice)
+    {
+	return static_cast<TVoice*>(m_voices[voice]);
+    };    
     
     ////////////////////////////////
     //

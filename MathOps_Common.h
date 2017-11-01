@@ -356,6 +356,10 @@ public:
     
     vforceinline vec_float_impl_t& operator=(const vec_float_impl_t& f)
     {
+/*	if (((((size_t)(char*)this) % MO::alignment) != 0) || ((((size_t)(char*)&f) % MO::alignment) != 0))	
+	{
+		printf("!");
+	}*/
         Inter::assignT(*this, f);
         return *this;
     };

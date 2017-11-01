@@ -1,5 +1,8 @@
 #ifndef __XEQFilter_H__
 #define __XEQFilter_H__
+//#include <csignal>
+
+
 
 ////////////////
 // A basic amp with linear & cubic gain controls and panning.
@@ -29,11 +32,15 @@ public:
     class BandState
     {
     public:
+	BandState()
+        {
+		// printf("A4 %f\n", a[4]);
+	};
         float m_freq = 0.5f;
         float m_gain = 1.f;
         float m_q = 0.5f;
         
-        float a[5] = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f};   // Coefficients
+        float a[5] = {0.2f, 0.1f, 0.2f, 0.1f, 0.2f};   // Coefficients
         float x[2] = {0.f, 0.f};   // Input memory
         float y[2] = {0.f, 0.f};   // Output memory
     };
@@ -55,7 +62,7 @@ public:
     public:
         DEFINE_MATHOPS_IMPORTS;      // Import the typedefs and usings from mathops base class
         
-        class alignas(32) VecBandState
+        class alignas(64) VecBandState
         {
         public:
             vec_float m_freq, m_gain, m_q;
@@ -71,7 +78,7 @@ public:
 //            VecBandState bands; //[numBands];
           //  static VecBandState bands __attribute__((aligned(32)));
           //  static VecBandState bands_out __attribute__((aligned(32)));
-            VecBandState bands; //  __attribute__((aligned(32)));
+            static VecBandState bands; //  __attribute__((aligned(32)));
          //   VecBandState bands_out; // __attribute__((aligned(32)));
             
 //            VecBandState bands_0;
@@ -103,6 +110,9 @@ public:
              }*/
             
           
+		static bool init = false;
+		if (!init)
+		{
              for (int32 i = 0; i < numBands; i++)
              {
              bands.x[i][0] = voices.member_gather(my_offsetof(m_bandState[i].x[0]));
@@ -114,6 +124,10 @@ public:
              bands.a[i][j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
              }
              }
+             init = true;
+              }
+//std::raise(SIGABRT);
+	// __asm__("int $3");
 
             /*
             static VecBandState b0; // = 0;
@@ -129,7 +143,7 @@ public:
          //   bands = band_store;
             VecBandState bands_out;
             
-#if EXTRA_TEMP_COPY
+#if 1 // EXTRA_TEMP_COPY
 VecBandState bs = bands;
 #else
 #define bs bands
@@ -141,7 +155,7 @@ VecBandState bs = bands;
 
 //            printf("%p\n", (void*)&bs);
             
-#pragma unroll(1)
+//#pragma unroll(1)
             for (int32 t=0; t<block_length; t++)
             {
                  vec_float io_sample;
@@ -189,18 +203,18 @@ VecBandState bs = bands;
                     bs.y[bd][0] = y0;
                     io_sample = y0;
                 }
-                
-                if (t == block_length - 1)
-                {
-                    bands_out = bs;
-                }
-
+        if (t == block_length - 1)
+       {
+         bands_out = bs;
+       }
 
             
                  outstream << io_sample;
                 // Fix for aggressive stores (post-checked loop): keep local scope for temporary.
             }
-            
+	//	bands_out = bs;
+//                    bands_out = bs;
+        bands = bands_out;    
 //            static VecBandState bands_out2;
 //            bands_out2 = bands_out;
             
@@ -227,10 +241,10 @@ VecBandState bs = bands;
              voices.member_scatter(bands_out.x[i][1], my_offsetof(m_bandState[i].x[1]));
              voices.member_scatter(bands_out.y[i][0], my_offsetof(m_bandState[i].y[0]));
              voices.member_scatter(bands_out.y[i][1], my_offsetof(m_bandState[i].y[1]));
-             for (int32 j = 0; j < 5; j++)
+             /*for (int32 j = 0; j < 5; j++)
              {
              voices.member_scatter(bands_out.a[i][j], my_offsetof(m_bandState[i].a[j]));
-             }
+             }*/
              }
             
             
@@ -255,16 +269,16 @@ VecBandState bs = bands;
             {
                 for (int32 j = 0; j < 5; j++)
                 {
-                    m_bandState[i].a[j] = randf();
+//                    m_bandState[i].a[j] = randf();
                 }
             }
         };
         // Dummy method for anything not parallelisable
         vforceinline void PreProcessBuffer(const XDSP::ProcessGlobals& process_globals) {};
-        
-    protected:
         template <class TIOAdapter> friend class Worker;
         BandState m_bandState[numBands];
+        
+    protected:
     };
 };
 #endif // __XEQFilter_H__

@@ -172,6 +172,7 @@ public:
     // Gather for voice member variables
 	vforceinline vec_float member_gather(size_t offset)
 	{
+// printf("%d\n", offset);
         vec_float result;
         vec_union_f loader;
         const char* base = reinterpret_cast<const char*>(m_voices[0]);
@@ -180,6 +181,7 @@ public:
         for (int32 i = 0; i < vec_elem; i++)
         {
             loader.f[i] = member_access(base, i, offset);
+// printf("%f\n", loader.f[i]);
         }
         
         #pragma unroll (interleave)
@@ -188,8 +190,8 @@ public:
             result.m[i] = loader.m[i];
         }
         return result;
+/*        
         
-        /*
         vec_float res0;         
         constexpr int32 voice_shift = (((sizeof(typename DSPNode_t::Voice) >> 6) + 1) << 6);
         const char* base = reinterpret_cast<const char*>(m_voices[0]);
@@ -201,7 +203,7 @@ public:
         }
         vec_float result = res0;
         return result;
-         */
+  */       
 	};
     /*
     //////////////////////////////

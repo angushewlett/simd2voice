@@ -24,7 +24,7 @@
 // #define ENABLE_AVX512 1
 
 #define DISPATCHTESTCOMPILE 1
-//#define EXTRA_TEMP_COPY 1
+#define EXTRA_TEMP_COPY 1
 
 // XDSP
 #include "XDSP.h"
@@ -161,7 +161,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
         {
             input_buffer[k] = randf();
             output_buffer[k] = randf();
-	if (input_buffer[k] != input_buffer[k]) printf("NaN");
+//	if (input_buffer[k] != input_buffer[k]) printf("NaN");
         }
         
         
@@ -200,8 +200,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     float mIterationsPerSecond = (XDSP::kMaxVoices * process_globals.block_length * (1.0f / audioBlockAverage)) / k10e6;
     float xRealtime = (k10e6 * mIterationsPerSecond / 64.f) / 44100.f;
 
-    // printf("%f %f %f %f\n", input_buffer[0], input_buffer[7], input_buffer[63], input_buffer[64]);
-    // printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], node->GetVoiceTyped(0)->m_bandState[0].a[0]);
+    printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], output_buffer[64]);
     // Print the result
     printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t(%0.2f-%0.2f)\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
             TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6, loTime * k10e6, hiTime * k10e6,
@@ -226,7 +225,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 }
 
 
-#define TEST_CLASS XEQFilter<1>
+#define TEST_CLASS XEQFilter<4>
 
 int main(int argc, char *argv[])
 {
