@@ -126,47 +126,49 @@ public:
 						    0x08 * increment, 0x09 * increment, 0x0A * increment, 0x0B * increment, 0x0C * increment, 0x0D * increment, 0x0E * increment, 0x0F * increment);
 
         if (intrlv > 0x0) rv.m[0x0] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x00), 1);
-/*        if (intrlv > 0x1) rv.m[0x1] = _mm512_i32gather_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x2) rv.m[0x2] = _mm512_i32gather_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x3) rv.m[0x3] = _mm512_i32gather_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x4) rv.m[0x4] = _mm512_i32gather_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x5) rv.m[0x5] = _mm512_i32gather_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x6) rv.m[0x6] = _mm512_i32gather_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x7) rv.m[0x7] = _mm512_i32gather_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x8) rv.m[0x8] = _mm512_i32gather_ps(base_address + ((increment * 0x80)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x9) rv.m[0x9] = _mm512_i32gather_ps(base_address + ((increment * 0x90)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xA) rv.m[0xA] = _mm512_i32gather_ps(base_address + ((increment * 0xA0)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xB) rv.m[0xB] = _mm512_i32gather_ps(base_address + ((increment * 0xB0)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xC) rv.m[0xC] = _mm512_i32gather_ps(base_address + ((increment * 0xC0)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xD) rv.m[0xD] = _mm512_i32gather_ps(base_address + ((increment * 0xD0)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xE) rv.m[0xE] = _mm512_i32gather_ps(base_address + ((increment * 0xE0)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xF) rv.m[0xF] = _mm512_i32gather_ps(base_address + ((increment * 0xF0)/sizeof(float)), scale_base, (const int32)increment);*/
+        if (intrlv > 0x1) rv.m[0x1] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x10), 1);
+        if (intrlv > 0x2) rv.m[0x2] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x20), 1);
+        if (intrlv > 0x3) rv.m[0x3] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x30), 1);
+        if (intrlv > 0x4) rv.m[0x4] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x40), 1);
+        if (intrlv > 0x5) rv.m[0x5] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x50), 1);
+        if (intrlv > 0x6) rv.m[0x6] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x60), 1);
+        if (intrlv > 0x7) rv.m[0x7] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x70), 1);
+        if (intrlv > 0x8) rv.m[0x8] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x80), 1);
+        if (intrlv > 0x9) rv.m[0x9] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0x90), 1);
+        if (intrlv > 0xA) rv.m[0xA] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xA0), 1);
+        if (intrlv > 0xB) rv.m[0xB] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xB0), 1);
+        if (intrlv > 0xC) rv.m[0xC] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xC0), 1);
+        if (intrlv > 0xD) rv.m[0xD] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xD0), 1);
+        if (intrlv > 0xE) rv.m[0xE] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xE0), 1);
+        if (intrlv > 0xF) rv.m[0xF] = _mm512_i32gather_ps(scale_base, base_address + (inc_f * 0xF0), 1);
         return rv;
     }
     
     template <size_t increment> vforceinline void scatter(const vec_float& data, float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
-	constexpr int32 inc_f = increment / sizeof(float);
-        const __m512i scale_base = _mm512_set_epi32(0x00 * increment, 0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment,
-						    0x08 * increment, 0x09 * increment, 0x0A * increment, 0x0B * increment, 0x0C * increment, 0x0D * increment, 0x0E * increment, 0x0F * increment);
+        constexpr int32 inc_f = increment / sizeof(float);
+        const __m512i scale_base = _mm512_set_epi32(
+                            0x00 * increment, 0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment,
+						    0x08 * increment, 0x09 * increment, 0x0A * increment, 0x0B * increment, 0x0C * increment, 0x0D * increment, 0x0E * increment, 0x0F * increment
+                                                    );
 
         if (intrlv > 0x0) _mm512_i32scatter_ps(base_address + (inc_f * 0x00), scale_base, data.m[0x0], 1);
-/*        if (intrlv > 0x1) _mm512_i32scatter_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, rv.m[0x1], (const int32)increment);
-        if (intrlv > 0x2) _mm512_i32scatter_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, rv.m[0x2], (const int32)increment);
-        if (intrlv > 0x3) _mm512_i32scatter_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, rv.m[0x3], (const int32)increment);
-        if (intrlv > 0x4) _mm512_i32scatter_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, rv.m[0x4], (const int32)increment);
-        if (intrlv > 0x5) _mm512_i32scatter_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, rv.m[0x5], (const int32)increment);
-        if (intrlv > 0x6) _mm512_i32scatter_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, rv.m[0x6], (const int32)increment);
-        if (intrlv > 0x7) _mm512_i32scatter_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, rv.m[0x7], (const int32)increment);
-        if (intrlv > 0x8) _mm512_i32scatter_ps(base_address + ((increment * 0x80)/sizeof(float)), scale_base, rv.m[0x8], (const int32)increment);
-        if (intrlv > 0x9) _mm512_i32scatter_ps(base_address + ((increment * 0x90)/sizeof(float)), scale_base, rv.m[0x9], (const int32)increment);
-        if (intrlv > 0xA) _mm512_i32scatter_ps(base_address + ((increment * 0xA0)/sizeof(float)), scale_base, rv.m[0xA], (const int32)increment);
-        if (intrlv > 0xB) _mm512_i32scatter_ps(base_address + ((increment * 0xB0)/sizeof(float)), scale_base, rv.m[0xB], (const int32)increment);
-        if (intrlv > 0xC) _mm512_i32scatter_ps(base_address + ((increment * 0xC0)/sizeof(float)), scale_base, rv.m[0xC], (const int32)increment);
-        if (intrlv > 0xD) _mm512_i32scatter_ps(base_address + ((increment * 0xD0)/sizeof(float)), scale_base, rv.m[0xD], (const int32)increment);
-        if (intrlv > 0xE) _mm512_i32scatter_ps(base_address + ((increment * 0xE0)/sizeof(float)), scale_base, rv.m[0xE], (const int32)increment);
-        if (intrlv > 0xF) _mm512_i32scatter_ps(base_address + ((increment * 0xF0)/sizeof(float)), scale_base, rv.m[0xF], (const int32)increment);*/
+        if (intrlv > 0x1) _mm512_i32scatter_ps(base_address + (inc_f * 0x10), scale_base, data.m[0x1], 1);
+        if (intrlv > 0x2) _mm512_i32scatter_ps(base_address + (inc_f * 0x20), scale_base, data.m[0x2], 1);
+        if (intrlv > 0x3) _mm512_i32scatter_ps(base_address + (inc_f * 0x30), scale_base, data.m[0x3], 1);
+        if (intrlv > 0x4) _mm512_i32scatter_ps(base_address + (inc_f * 0x40), scale_base, data.m[0x4], 1);
+        if (intrlv > 0x5) _mm512_i32scatter_ps(base_address + (inc_f * 0x50), scale_base, data.m[0x5], 1);
+        if (intrlv > 0x6) _mm512_i32scatter_ps(base_address + (inc_f * 0x60), scale_base, data.m[0x6], 1);
+        if (intrlv > 0x7) _mm512_i32scatter_ps(base_address + (inc_f * 0x70), scale_base, data.m[0x7], 1);
+        if (intrlv > 0x8) _mm512_i32scatter_ps(base_address + (inc_f * 0x80), scale_base, data.m[0x8], 1);
+        if (intrlv > 0x9) _mm512_i32scatter_ps(base_address + (inc_f * 0x90), scale_base, data.m[0x9], 1);
+        if (intrlv > 0xA) _mm512_i32scatter_ps(base_address + (inc_f * 0xA0), scale_base, data.m[0xA], 1);
+        if (intrlv > 0xB) _mm512_i32scatter_ps(base_address + (inc_f * 0xB0), scale_base, data.m[0xB], 1);
+        if (intrlv > 0xC) _mm512_i32scatter_ps(base_address + (inc_f * 0xC0), scale_base, data.m[0xC], 1);
+        if (intrlv > 0xD) _mm512_i32scatter_ps(base_address + (inc_f * 0xD0), scale_base, data.m[0xD], 1);
+        if (intrlv > 0xE) _mm512_i32scatter_ps(base_address + (inc_f * 0xE0), scale_base, data.m[0xE], 1);
+        if (intrlv > 0xF) _mm512_i32scatter_ps(base_address + (inc_f * 0xF0), scale_base, data.m[0xF], 1);
     }
     
     

@@ -99,25 +99,25 @@ public:
     
     template <size_t increment> vforceinline vec_float gather(const float* base_address)
     {
-//        printf("%d\n", (const int32)increment);
         const __m256i scale_base = _mm256_set_epi32(0x00 * increment,0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment);
         vec_float rv;
-        if (intrlv > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, 1);
-/*        if (intrlv > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + ((increment * 0x08)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x2) rv.m[0x2] = _mm256_i32gather_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x3) rv.m[0x3] = _mm256_i32gather_ps(base_address + ((increment * 0x18)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x4) rv.m[0x4] = _mm256_i32gather_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x5) rv.m[0x5] = _mm256_i32gather_ps(base_address + ((increment * 0x28)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x6) rv.m[0x6] = _mm256_i32gather_ps(base_address + ((increment * 0x30)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x7) rv.m[0x7] = _mm256_i32gather_ps(base_address + ((increment * 0x38)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x8) rv.m[0x8] = _mm256_i32gather_ps(base_address + ((increment * 0x40)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x9) rv.m[0x9] = _mm256_i32gather_ps(base_address + ((increment * 0x48)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xA) rv.m[0xA] = _mm256_i32gather_ps(base_address + ((increment * 0x50)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xB) rv.m[0xB] = _mm256_i32gather_ps(base_address + ((increment * 0x58)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xC) rv.m[0xC] = _mm256_i32gather_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xD) rv.m[0xD] = _mm256_i32gather_ps(base_address + ((increment * 0x68)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xE) rv.m[0xE] = _mm256_i32gather_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + ((increment * 0x78)/sizeof(float)), scale_base, (const int32)increment);*/
+        constexpr int32 inc_f = increment / sizeof(float);
+        if (intrlv > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + (inc_f * 0x00), scale_base, 1);
+        if (intrlv > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + (inc_f * 0x08), scale_base, 1);
+        if (intrlv > 0x2) rv.m[0x2] = _mm256_i32gather_ps(base_address + (inc_f * 0x10), scale_base, 1);
+        if (intrlv > 0x3) rv.m[0x3] = _mm256_i32gather_ps(base_address + (inc_f * 0x18), scale_base, 1);
+        if (intrlv > 0x4) rv.m[0x4] = _mm256_i32gather_ps(base_address + (inc_f * 0x20), scale_base, 1);
+        if (intrlv > 0x5) rv.m[0x5] = _mm256_i32gather_ps(base_address + (inc_f * 0x28), scale_base, 1);
+        if (intrlv > 0x6) rv.m[0x6] = _mm256_i32gather_ps(base_address + (inc_f * 0x30), scale_base, 1);
+        if (intrlv > 0x7) rv.m[0x7] = _mm256_i32gather_ps(base_address + (inc_f * 0x38), scale_base, 1);
+        if (intrlv > 0x8) rv.m[0x8] = _mm256_i32gather_ps(base_address + (inc_f * 0x40), scale_base, 1);
+        if (intrlv > 0x9) rv.m[0x9] = _mm256_i32gather_ps(base_address + (inc_f * 0x48), scale_base, 1);
+        if (intrlv > 0xA) rv.m[0xA] = _mm256_i32gather_ps(base_address + (inc_f * 0x50), scale_base, 1);
+        if (intrlv > 0xB) rv.m[0xB] = _mm256_i32gather_ps(base_address + (inc_f * 0x58), scale_base, 1);
+        if (intrlv > 0xC) rv.m[0xC] = _mm256_i32gather_ps(base_address + (inc_f * 0x60), scale_base, 1);
+        if (intrlv > 0xD) rv.m[0xD] = _mm256_i32gather_ps(base_address + (inc_f * 0x68), scale_base, 1);
+        if (intrlv > 0xE) rv.m[0xE] = _mm256_i32gather_ps(base_address + (inc_f * 0x70), scale_base, 1);
+        if (intrlv > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + (inc_f * 0x78), scale_base, 1);
         return rv;
     }
     
@@ -143,16 +143,23 @@ public:
     
     template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
     {
-        //        printf("%d\n", (const int32)increment);
-//        const __m256i scale_base = _mm256_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07);
-        if (intrlv > 0x0) storeps<increment / sizeof(float)>(rv.m[0x0],  base_address + ((increment * 0x00)/sizeof(float)));
-        if (intrlv > 0x1) storeps<increment / sizeof(float)>(rv.m[0x1],  base_address + ((increment * 0x08)/sizeof(float)));
-        if (intrlv > 0x2) storeps<increment / sizeof(float)>(rv.m[0x2],  base_address + ((increment * 0x10)/sizeof(float)));
-        if (intrlv > 0x3) storeps<increment / sizeof(float)>(rv.m[0x3],  base_address + ((increment * 0x18)/sizeof(float)));
-        if (intrlv > 0x4) storeps<increment / sizeof(float)>(rv.m[0x4],  base_address + ((increment * 0x20)/sizeof(float)));
-        if (intrlv > 0x5) storeps<increment / sizeof(float)>(rv.m[0x5],  base_address + ((increment * 0x28)/sizeof(float)));
-        if (intrlv > 0x6) storeps<increment / sizeof(float)>(rv.m[0x6],  base_address + ((increment * 0x30)/sizeof(float)));
-        if (intrlv > 0x7) storeps<increment / sizeof(float)>(rv.m[0x7],  base_address + ((increment * 0x38)/sizeof(float)));
+        constexpr int32 inc_f = increment / sizeof(float);
+        if (intrlv > 0x0) storeps<inc_f>(rv.m[0x0],  base_address + (inc_f * 0x00));
+        if (intrlv > 0x1) storeps<inc_f>(rv.m[0x1],  base_address + (inc_f * 0x08));
+        if (intrlv > 0x2) storeps<inc_f>(rv.m[0x2],  base_address + (inc_f * 0x10));
+        if (intrlv > 0x3) storeps<inc_f>(rv.m[0x3],  base_address + (inc_f * 0x18));
+        if (intrlv > 0x4) storeps<inc_f>(rv.m[0x4],  base_address + (inc_f * 0x20));
+        if (intrlv > 0x5) storeps<inc_f>(rv.m[0x5],  base_address + (inc_f * 0x28));
+        if (intrlv > 0x6) storeps<inc_f>(rv.m[0x6],  base_address + (inc_f * 0x30));
+        if (intrlv > 0x7) storeps<inc_f>(rv.m[0x7],  base_address + (inc_f * 0x38));
+        if (intrlv > 0x8) storeps<inc_f>(rv.m[0x8],  base_address + (inc_f * 0x40));
+        if (intrlv > 0x9) storeps<inc_f>(rv.m[0x9],  base_address + (inc_f * 0x48));
+        if (intrlv > 0xA) storeps<inc_f>(rv.m[0xA],  base_address + (inc_f * 0x50));
+        if (intrlv > 0xB) storeps<inc_f>(rv.m[0xB],  base_address + (inc_f * 0x58));
+        if (intrlv > 0xC) storeps<inc_f>(rv.m[0xC],  base_address + (inc_f * 0x60));
+        if (intrlv > 0xD) storeps<inc_f>(rv.m[0xD],  base_address + (inc_f * 0x68));
+        if (intrlv > 0xE) storeps<inc_f>(rv.m[0xE],  base_address + (inc_f * 0x70));
+        if (intrlv > 0xF) storeps<inc_f>(rv.m[0xF],  base_address + (inc_f * 0x78));
     }
     
 	
