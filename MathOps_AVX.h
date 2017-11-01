@@ -100,10 +100,10 @@ public:
     template <size_t increment> vforceinline vec_float gather(const float* base_address)
     {
 //        printf("%d\n", (const int32)increment);
-        const __m256i scale_base = _mm256_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07);
+        const __m256i scale_base = _mm256_set_epi32(0x00 * increment,0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment);
         vec_float rv;
-        if (intrlv > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + ((increment * 0x08)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + ((increment * 0x00)/sizeof(float)), scale_base, 1);
+/*        if (intrlv > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + ((increment * 0x08)/sizeof(float)), scale_base, (const int32)increment);
         if (intrlv > 0x2) rv.m[0x2] = _mm256_i32gather_ps(base_address + ((increment * 0x10)/sizeof(float)), scale_base, (const int32)increment);
         if (intrlv > 0x3) rv.m[0x3] = _mm256_i32gather_ps(base_address + ((increment * 0x18)/sizeof(float)), scale_base, (const int32)increment);
         if (intrlv > 0x4) rv.m[0x4] = _mm256_i32gather_ps(base_address + ((increment * 0x20)/sizeof(float)), scale_base, (const int32)increment);
@@ -117,7 +117,7 @@ public:
         if (intrlv > 0xC) rv.m[0xC] = _mm256_i32gather_ps(base_address + ((increment * 0x60)/sizeof(float)), scale_base, (const int32)increment);
         if (intrlv > 0xD) rv.m[0xD] = _mm256_i32gather_ps(base_address + ((increment * 0x68)/sizeof(float)), scale_base, (const int32)increment);
         if (intrlv > 0xE) rv.m[0xE] = _mm256_i32gather_ps(base_address + ((increment * 0x70)/sizeof(float)), scale_base, (const int32)increment);
-        if (intrlv > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + ((increment * 0x78)/sizeof(float)), scale_base, (const int32)increment);
+        if (intrlv > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + ((increment * 0x78)/sizeof(float)), scale_base, (const int32)increment);*/
         return rv;
     }
     
@@ -141,7 +141,7 @@ public:
     };
     
     
-    template <size_t increment> vforceinline vec_float scatter(const vec_float& rv, float* base_address)
+    template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
 //        const __m256i scale_base = _mm256_set_epi32(0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07);
@@ -153,7 +153,6 @@ public:
         if (intrlv > 0x5) storeps<increment / sizeof(float)>(rv.m[0x5],  base_address + ((increment * 0x28)/sizeof(float)));
         if (intrlv > 0x6) storeps<increment / sizeof(float)>(rv.m[0x6],  base_address + ((increment * 0x30)/sizeof(float)));
         if (intrlv > 0x7) storeps<increment / sizeof(float)>(rv.m[0x7],  base_address + ((increment * 0x38)/sizeof(float)));
-        return rv;
     }
     
 	
