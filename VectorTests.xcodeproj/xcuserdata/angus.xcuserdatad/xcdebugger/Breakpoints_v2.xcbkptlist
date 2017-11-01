@@ -1641,7 +1641,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
             endingLineNumber = "70"
-            landmarkName = "ProcessBuffer (const XDSP::ProcessGlobals&amp; process_globals, TIOAdapter&amp; voices, const typename Node::ProcessAttributes&amp; pa)"
+            landmarkName = "alignas(64)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

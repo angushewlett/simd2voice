@@ -203,13 +203,24 @@ VecBandState bs = bands;
                     bs.y[bd][0] = y0;
                     io_sample = y0;
                 }
-        if (t == block_length - 1)
+/*        if (t != block_length - 1)
+        {
+            
+            
+        }
+                else
        {
          bands_out = bs;
-       }
+       }*/
 
             
                  outstream << io_sample;
+                
+                if (t == block_length - 1)
+                {
+                    bands_out = bs;
+                }
+                
                 // Fix for aggressive stores (post-checked loop): keep local scope for temporary.
             }
 	//	bands_out = bs;
