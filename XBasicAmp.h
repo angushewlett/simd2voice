@@ -59,6 +59,8 @@ public:
         
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
+        //    fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
+            
             //	PerformanceCounterScope perfScope(__FUNCTION__);
             //  printf("Interleave = %d, sizeof(vf) = %d\n", TIOAdapter::interleave, (int)sizeof(vec_float));
             //  printf("Fn %s\n", __PRETTY_FUNCTION__);
@@ -67,10 +69,22 @@ public:
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream = voices.getOutputStream(0);            
             //#pragma unroll(1)
+#ifdef IACA_TEST
+            IACA_START;
+#endif
+            
             for (int32 t=0; t<block_length; t++)
             {
-                *outstream++ = *instream++ * next_linear_gain;
+		vec_float sample;
+		instream >> sample;
+		outstream << (sample * next_linear_gain);
+                //*outstream++ = *instream++ * next_linear_gain;
             }
+      //      fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
+#ifdef IACA_TEST
+            IACA_END;
+#endif
+            
         }; // ProcessBuffer()
     };	// class Worker
 };

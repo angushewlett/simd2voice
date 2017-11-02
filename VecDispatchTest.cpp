@@ -67,8 +67,9 @@ namespace M512
 #endif
 
 // The test class
-//#include "XEQFilter.h"
-#include "XFilterLadder.h"
+//  #include "XEQFilter.h"
+//  #include "XFilterLadder.h"
+#include "XBasicAmp.h"
 
 
 
@@ -100,8 +101,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
         return;
     }
     
-//    const int32 nSamplesPerTimer = bufferSize * nRunsPerTimer;
- //   const float totalSamples = (float)nRunsPerTimer * (float)nTimerPasses * XDSP::kMaxVoices * process_globals.block_length;\
+//  const int32 nSamplesPerTimer = bufferSize * nRunsPerTimer;
+//  const float totalSamples = (float)nRunsPerTimer * (float)nTimerPasses * XDSP::kMaxVoices * process_globals.block_length;\
     
     // Create the DSP node object to do all our processing
     TNode* node = new TNode();
@@ -163,12 +164,9 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
         {
             input_buffer[k] = randf();
             output_buffer[k] = randf();
-	if (input_buffer[k] != input_buffer[k]) printf("NaN");
         }
         
-        
         StopWatch runTimer;
-    
         for (int32 i = 0; i < nRunsPerTimer; i++)
         {
             // DumbWorker::WaitForCompletion();
@@ -228,7 +226,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 }
 
 
-#define TEST_CLASS XFilterLadder
+#define TEST_CLASS XBasicAmp
+// #define TEST_CLASS XFilterLadder
 // XEQFilter<4>
 
 int main(int argc, char *argv[])
@@ -239,9 +238,10 @@ int main(int argc, char *argv[])
     fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
 #elif LINUX
     _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
-#else
+#elif WIN32
+    _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
-
+/*
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
     run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
@@ -269,16 +269,9 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,M512::MathOps<2>>("A512,  2");
     run_test<TEST_CLASS,M512::MathOps<4>>("A512,  4");
     run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
-#endif
- //   _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
-#ifdef IACA_TEST
-    IACA_START;
-#endif
-    
+#endif*/
+
     run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
-#ifdef IACA_TEST
-    IACA_END;
-#endif
     
     sleep(2); // Give Instruments time to detach cleanly
 }

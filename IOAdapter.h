@@ -67,7 +67,6 @@ public:
             m_buff_read = m_buff_start = buff_start;
         };
         void ResetIterator() { m_buff_read = m_buff_start; };
-        //friend SampleInputStream & operator >> (SampleInputStream &instr,  vec_float& f);
         
         vforceinline SampleInputStream & operator >> (vec_float& f)
         {
