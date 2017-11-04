@@ -20,7 +20,7 @@ namespace XDSP
 class ProcessGlobals
 {
 public:
-    static constexpr int32 block_length = 64;
+    int32 block_length = 64;
     int32 block_length_norm = block_length;
     float analog_noise[2];
     float srscale = 1.f;

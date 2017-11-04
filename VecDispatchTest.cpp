@@ -14,31 +14,35 @@
 #include <time.h>
 #include <fenv.h>
 #include <list>
-//#include <cpuid.h>
-
 
 #ifdef IACA_TEST
 #include "iacaMarks.h"
 #endif
 
 // Enable additional instruction sets here
+#if __SSE__
 #define ENABLE_SSE 1
-// #define ENABLE_AVX 1
-// #define ENABLE_AVX512 1
+#endif
+
+#if __AVX__
+#define ENABLE_AVX 1
+#endif
+
+#if __AVX512__
+#define ENABLE_AVX512 1
+#endif
 
 #define DISPATCHTESTCOMPILE 1
 //#define EXTRA_TEMP_COPY 1
 
-// XDSP
 #include "XDSP.h"
 #include "XHelpers.h"
 #include "XStopWatch.h"
-
+#include "XBenchmark.h"
 // Macros & interleaver
 #include "MathOps_Common.h"
-
 // I/O adapter
-#include "IOAdapter.h"
+#include "XIOAdapter.h"
 
 // Wrap math operations for each architecture in a namespace.
 // We do this externally so this can be defined in the dispatch file.
@@ -70,9 +74,9 @@ namespace M512
 #endif
 
 // The test class
-//  #include "XEQFilter.h"
-#include "XFilterLadder.h"
-// #include "XBasicAmp.h"
+#include "YEQFilter.h"
+//#include "YFilterLadder.h"
+// #include "YBasicAmp.h"
 
 
 
@@ -85,15 +89,17 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 {
     ////////
     // Basic set up
-
     typedef typename TTestClass::Node TNode;
     XDSP::ProcessGlobals process_globals;
-    
     const int coalesce = 1;
-//    process_globals.block_length = 32 * coalesce;
-    const int32 nRunsPerTimer = 4; // This should be big enough to get an accurate timer read, small enough to make thread interrupts unlikely.
-    const int32 nTimerPasses = 512 / coalesce; // /*2048*/;
-    
+    // Note - affects L1 / L2 fit for processing data.
+    process_globals.block_length = 64 * coalesce;
+    // nRunsPerTimer requires some hand tuning: we want the amount of iterations sampled to be
+    // >10us, <100us to increase timer resolution on the one hand, but be smaller than the
+    // OS scheduler quantum so that the task isn't regularly getting put to sleep.
+    const int32 nRunsPerTimer = 8;
+    const int32 nTotalIterations = 1 << 20; // ~1M iterations
+    const int32 nTimerPasses = nTotalIterations / (nRunsPerTimer * process_globals.block_length); // /*2048*/;
     const int32 voiceCount = XDSP::kMaxVoices;
     const int32 bufferSize = XDSP::kMaxVoices * process_globals.block_length;
 
@@ -103,9 +109,6 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
         printf("%s %s%s\n", TTestClass::GetDescription(), messagePrefix ,": Failed to interleave (larger than voice count)");
         return;
     }
-    
-//  const int32 nSamplesPerTimer = bufferSize * nRunsPerTimer;
-//  const float totalSamples = (float)nRunsPerTimer * (float)nTimerPasses * XDSP::kMaxVoices * process_globals.block_length;\
     
     // Create the DSP node object to do all our processing
     TNode* node = new TNode();
@@ -121,14 +124,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     // Set up for the node and its voices. (The first element for each voice is the nth element in the buffer, buffer is kMaxVoices wide).
     for (int32 i = 0; i < voiceCount; i++)
     {
-        for (int a = 0; a < node->AudioInCount(); a++)
-        {
-            node->GetVoice(i)->SetAudioIn(a, (input_buffer + i));
-        }
-        for (int a = 0; a < node->AudioOutCount(); a++)
-        {
-            node->GetVoice(i)->SetAudioOut(a, (output_buffer + i));
-        }
+        for (int a = 0; a < node->AudioInCount(); a++)  node->GetVoice(i)->SetAudioIn(a, (input_buffer + i));
+        for (int a = 0; a < node->AudioOutCount(); a++) node->GetVoice(i)->SetAudioOut(a, (output_buffer + i));
         node->GetVoice(i)->Reset();
     }
     
@@ -143,33 +140,22 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
             control_buffer[(i * XDSP::kMaxVoices) + v] = control_params[i];
             node->GetVoice(v)->SetControlIn(i, &control_buffer[(i * XDSP::kMaxVoices) + v]);
         }
-    
     }
     
-    ////////
-    // Set up for the timing run
-    StopWatch::StaticInit();
-    
-    StopWatch wallclock;
-    double tt0 = wallclock.GetElapsedTime();
-    //  dbgiter = 0;
-    
-    std::list<float> liTimes;       // in msec
     node->PrepareStream(process_globals);
+    Benchmarker bench;
     
     ////////
     // Run the process for (nTimerPasses * nRunsPerTimer) times
     for (int32 t = 0; t < nTimerPasses; t++)
     {
-     //   float t0 = (float)iterTimer.GetElapsedTime();
-        
         for (int32 k = 0; k < bufferSize; k++)
         {
             input_buffer[k] = randf();
             output_buffer[k] = randf();
         }
-        
-        StopWatch runTimer;
+
+        bench.BeginRun();
         for (int32 i = 0; i < nRunsPerTimer; i++)
         {
             // DumbWorker::WaitForCompletion();
@@ -179,60 +165,45 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
             // Test template-argument-specific dispatching
             XDSP::NodeTmpl<TTestClass>::template ProcessAllVoices<typename IOAdapter<TMathClass, TTestClass>::Worker>(process_globals, node);
         }
-        liTimes.push_back((float)runTimer.GetElapsedTime());
+        bench.EndRun();
     }
     
     ////////
-    // Process the results & print the average execution time.
-    liTimes.sort();
-    float topTimes = 0.f;
-    auto a = liTimes.begin();
-    
-    // We sample the middle 50% of times.
-    for (int k = 0; k < (liTimes.size() / 4); a++, k++) {};                 // Ignore the first 25%
-    float loTime = *a / nRunsPerTimer;           // Get the fastest (25th percentile) time
-    
-    for (int32 k = 0; k < (liTimes.size() / 2); a++, k++)  topTimes += *a;  // Take the next 50%
-    float hiTime = *a  / nRunsPerTimer;           // Get the slowest (75th percentile) time
-    
-    float timerPassAverage = topTimes / (liTimes.size() / 2.f);             // average execution time for a timer-block
+    // Process the results & print the average execution time.    
+    float timerPassAverage = bench.GetAverageTime();
     float audioBlockAverage = (timerPassAverage  / nRunsPerTimer);          // average execution time for a single audio block
-   
     float k10e6 = 1000000.f;
-    
     float mIterationsPerSecond = (XDSP::kMaxVoices * process_globals.block_length * (1.0f / audioBlockAverage)) / k10e6;
     float xRealtime = (k10e6 * mIterationsPerSecond / 64.f) / 44100.f;
 
-    // printf("%f %f %f %f\n", input_buffer[0], input_buffer[7], input_buffer[63], input_buffer[64]);
-    // printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], node->GetVoiceTyped(0)->m_bandState[0].a[0]);
     // Print the result
-    printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t(%0.2f-%0.2f)\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
-            TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6, loTime * k10e6, hiTime * k10e6,
+    printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
+            TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6,
             mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_vec_elem, mIterationsPerSecond / TMathClass::vec_elem, xRealtime);
     
     ////////////////
-    // Sanity check
+    // Sanity checks
+    // printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], node->GetVoiceTyped(0)->m_bandState[0].a[0]);
     // Get the sum of all times
     // float sumTimes = 0.f;
     // auto b = liTimes.begin();
     // for (int k = 0; k < liTimes.size() ; a++, k++) sumTimes += *b;                 // Ignore the first 25%
     // dbgiter /= 10e6;
     // float walltime = wallclock.GetElapsedTime() - tt0;
-    
     // printf ("Execution time: %f s; sum time: %f s; dbg_iter 0.2%f ; MIter/s %0.2f; total samps %0.2f\n", (float)walltime, (float)sumTimes, (float)dbgiter, ((float)totalSamples/(float)walltime) / k10e6, totalSamples);
-    ////////
-    // Clean up
     // DumbWorker::GoToSleep();
 
+    ////////
+    // Clean up
     delete node;
     valigned_free(input_buffer);
     valigned_free(output_buffer);
 }
 
 
-// #define TEST_CLASS XBasicAmp
-#define TEST_CLASS XFilterLadder
-// XEQFilter<4>
+// #define TEST_CLASS YBasicAmp
+// #define TEST_CLASS YFilterLadder
+#define TEST_CLASS YEQFilter<4>
 
 int main(int argc, char *argv[])
 {
@@ -276,7 +247,6 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
 #endif
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
-
 //    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
     
     sleep(2); // Give Instruments time to detach cleanly

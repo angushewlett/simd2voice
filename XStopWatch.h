@@ -14,13 +14,18 @@
 #endif
 
 
-
 ////////////////////////////////
 // High resolution stopwatch timer wrapper class
 class StopWatch
 {
 public:
     StopWatch ()
+    {
+        if (!s_bDidInit) StaticInit();
+        Reset();
+    };
+    
+    void Reset()
     {
 #if WIN32
         QueryPerformanceCounter ((LARGE_INTEGER*)&m_count1);
@@ -95,7 +100,9 @@ public:
 #if MACOSX
         mach_timebase_info(&sTimebaseInfo);
 #endif
+        s_bDidInit = true;
     };
+    
 private:
     uint64_t       m_count1;			/**< Timer count */
 #if MACOSX
@@ -104,8 +111,10 @@ private:
 #if WIN32
     static double s_freq_inv;		/**< Sampling frequency */
 #endif
-    
+    static bool s_bDidInit;
 };
+
+bool StopWatch::s_bDidInit = false;
 
 
 #endif
