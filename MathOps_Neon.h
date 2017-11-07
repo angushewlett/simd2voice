@@ -179,7 +179,7 @@ public:
 	
     vforceinline float32x4_t myload_ps(const float& a, const float& b, const float& c, const float& d)
     {
-		float32x4_t data,
+		float32x4_t data;
         aligned_f x;
         x.data[0] = a;
         x.data[1] = b;
