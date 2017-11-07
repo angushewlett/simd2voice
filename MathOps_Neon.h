@@ -103,7 +103,7 @@ public:
 
 	class op_andn_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return op_and_f::op(vmvnq_f32(a), b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return op_and_f::op(op_not_f::op(a), b); };
 	};
 
 	class op_xor_f
@@ -113,7 +113,7 @@ public:
 
 	class op_not_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return vmvnq_f32(a); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return return vreinterpretq_f32_u32(vmvnq_u32(vreinterpretq_u32_f32(a))); };
 	};
 
 	class op_cmpge_f
