@@ -113,7 +113,7 @@ public:
 
 	class op_not_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return return vreinterpretq_f32_u32(vmvnq_u32(vreinterpretq_u32_f32(a))); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return vreinterpretq_f32_u32(vmvnq_u32(vreinterpretq_u32_f32(a))); };
 	};
 
 	class op_cmpge_f
