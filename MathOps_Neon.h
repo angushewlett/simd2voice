@@ -177,14 +177,16 @@ public:
         float data[4];
 	} ALIGN_POST(16);
 	
-    vforceinline void myload_ps(float32x4_t& data, const float& a, const float& b, const float& c, const float& d)
+    vforceinline float32x4_t myload_ps(const float& a, const float& b, const float& c, const float& d)
     {
+		float32x4_t data,
         aligned_f x;
         x.data[0] = a;
         x.data[1] = b;
         x.data[2] = c;
         x.data[3] = d;		
         data = vld1q_f32(&x.data[0]);
+		return data;
     };
 	
     vforceinline void mystore_ps(const float32x4_t& data, float& a, float& b, float& c, float& d)
