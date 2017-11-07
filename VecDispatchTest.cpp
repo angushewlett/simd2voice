@@ -207,8 +207,8 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 
 //#define TEST_CLASS YBasicAmp
 // #define TEST_CLASS YPannerAmp
-// #define TEST_CLASS YFilterLadder
-#define TEST_CLASS YEQFilter<4>
+#define TEST_CLASS YFilterLadder
+// #define TEST_CLASS YEQFilter<1>
 
 int main(int argc, char *argv[])
 {

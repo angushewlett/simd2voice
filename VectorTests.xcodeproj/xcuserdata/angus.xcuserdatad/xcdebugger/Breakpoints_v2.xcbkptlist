@@ -965,9 +965,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "359"
-            endingLineNumber = "359"
-            landmarkName = "operator=(const vec_float_impl_t&amp; f)"
-            landmarkType = "9">
+            endingLineNumber = "359">
             <Locations>
                <Location
                   shouldBeEnabled = "No"

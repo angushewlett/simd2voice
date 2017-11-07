@@ -13,7 +13,7 @@
 #endif
 #include <immintrin.h>
 
-template <const int interleave_i> class MathOps_AVX_v : public MathBase<MathOps_AVX_v<interleave_i>, __m128, interleave_i>
+template <const int interleave_i> class MathOps_AVX_v : public MathBase<MathOps_AVX_v<interleave_i>, __m256, interleave_i>
 {
 public:
 	static constexpr int raw_vec_elem = 8;
@@ -100,32 +100,32 @@ public:
 
 	class op_cmpge_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmpge_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_GE_OS); };
 	};
 
 	class op_cmpgt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmpgt_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_GT_OS); };
 	};
 
 	class op_cmple_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmple_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_LE_OS); };
 	};
 
 	class op_cmplt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmplt_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_LT_OS); };
 	};
 
 	class op_cmpeq_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmpeq_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_EQ_OS); };
 	};
 
 	class op_cmpne_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmpneq_ps(a,b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm256_cmp_ps(a,b, _CMP_NEQ_OS); };
 	};
              
     ////////////////////////////////
