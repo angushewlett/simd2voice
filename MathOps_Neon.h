@@ -29,13 +29,13 @@ public:
 
     typedef float32x4_t vec_elem_t;
 	typedef int32x4_t vec_int_t;
-	typedef vf_t<MathOps_SSE_v, interleave> vec_float;
+	typedef vf_t<MathOps_NEON, interleave> vec_float;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
 	class op_set_f
 	{
-	public: static vforceinline vec_elem_t op(float a) { return vld1q_dup_f32(a); };
+	public: static vforceinline vec_elem_t op(float a) { return vld1q_dup_f32(&a); };
 	};
 
 	class op_add_f
@@ -93,7 +93,7 @@ public:
 
 	class op_and_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vandq_f32(a, b); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vandu_f32(vreinterpretq_u32_f32(a), vreinterpretq_u32_f32(b))); };
 	};
 
 	class op_or_f
