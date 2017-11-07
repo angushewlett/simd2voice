@@ -36,6 +36,8 @@ typedef uint32_t uint32;
 #define valigned_free(a) free(a)
 #else
 
+#ifndef TARGET_TYPE_APP
+
 ////////////////////////////////
 // aligned malloc() wrapper
 inline void *valigned_malloc( size_t size, size_t align )
@@ -59,6 +61,7 @@ inline void valigned_free( void *mem )
     free(mem);
 #endif
 }
+#endif
 #endif
 
 ////////////////////////////////

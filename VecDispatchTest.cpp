@@ -35,6 +35,10 @@ void sleep(int s)
 #include "iacaMarks.h"
 #endif
 
+#if ARCH_ARM
+#else
+
+
 // Enable additional instruction sets here
 #if 1 // __SSE__
 #define ENABLE_SSE 1
@@ -46,6 +50,8 @@ void sleep(int s)
 
 #if 0 //__AVX512__
 #define ENABLE_AVX512 1
+#endif
+
 #endif
 
 #define DISPATCHTESTCOMPILE 1
@@ -77,6 +83,11 @@ void sleep(int s)
 
 #if  ENABLE_AVX512
 #include "MathOps_AVX512.h"
+#endif
+
+#if ARCH_ARM
+#define ENABLE_NEON 1
+#include "MathOps_Neon.h"
 #endif
 
 
@@ -176,10 +187,16 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     float xRealtime = (k10e6 * mIterationsPerSecond / 64.f) / 44100.f;
 
     // Print the result
+
+#ifdef TARGET_TYPE_APP
+    fprintf (stderr, "Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
+            TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6,
+            mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_vec_elem, mIterationsPerSecond / TMathClass::vec_elem, xRealtime);
+#else
     printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
             TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6,
             mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_vec_elem, mIterationsPerSecond / TMathClass::vec_elem, xRealtime);
-    
+#endif
     ////////////////
     // Sanity checks
     // printf("%f %f %f %f\n", output_buffer[0], output_buffer[7], output_buffer[63], node->GetVoiceTyped(0)->m_bandState[0].a[0]);
@@ -210,11 +227,15 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 #define TEST_CLASS YFilterLadder
 // #define TEST_CLASS YEQFilter<1>
 
+#if TARGET_TYPE_APP
+int test_auto_simd()
+#else
 int main(int argc, char *argv[])
+#endif
 {
     //    DumbWorker::WakeUp();
     sleep(2); // Give Instruments time to attach cleanly
-#if MACOSX
+#if MACOSX && !ARCH_ARM
     fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
 #elif LINUX
     _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
@@ -238,6 +259,15 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_SSE4<16>>("SSE, 16");
 #endif
     
+#if ENABLE_NEON
+    run_test<TEST_CLASS,MathOps_NEON<1>>("NEON,  1");
+    run_test<TEST_CLASS,MathOps_NEON<2>>("NEON,  2");
+    run_test<TEST_CLASS,MathOps_NEON<4>>("NEON,  4");
+    run_test<TEST_CLASS,MathOps_NEON<8>>("NEON,  8");
+    run_test<TEST_CLASS,MathOps_NEON<16>>("NEON, 16");
+#endif
+    
+    
 #if ENABLE_AVX
     run_test<TEST_CLASS,MathOps_AVX2<1>>("AVX,  1");
     run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");
@@ -258,5 +288,6 @@ int main(int argc, char *argv[])
 //	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
 
     sleep(2); // Give Instruments time to detach cleanly
+    return 0;
 }
 
