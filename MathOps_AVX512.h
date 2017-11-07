@@ -1,100 +1,137 @@
 #ifndef MATHOPS_AVX512_H
 #define MATHOPS_AVX512_H
 
-///////////////////////////////////
-// Math ops for 8-way AVX code
+////////////////////////////////
+// File: MathOps_AVX512.h
+// Defines math operations for AVX512 SIMD floating point.
 // Author: Angus F. Hewlett
-// Copyright FXpansion Audio UK Ltd. 2012
-///////////////////////////////////
-
-////////////////////////////////
-// This file provides:-
-// * Typedefs for n-way AVX (8x32) containers
-// ** interleave amount configured by template parameter - can be any power of 2
-// ** vec_float & vec_int - float32 and int32 respectively
-// * copy constructors, assignment and basic math operators for those containers
-// * General intrinsic-function-style math operations for 8-way AVX data ("addps()" etc.) operating on vec_float & vec_int types
-// ** (as static functions in Mathops_AVXxN class - inherit to win)
-// * typedefs / conversion routines for packing/unpacking to plain vectors of floats/ints
+// Copyright FXpansion Audio UK Ltd. 2012-2017
 ////////////////////////////////
 
-#include <immintrin.h>
 #ifndef CEXCOMPILE
 #include "MathOps_Common.h"
 #endif
+#include <zmmintrin.h>
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// class Mathops_AVX
-// Math operations for interleaved N-way SSE data
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-#define GENERATE_INTERLEAVED_FUNCTION_MASK(func_alias, mask_op) \
-static vforceinline vec_float func_alias(const vec_float& q1, const vec_float& q2) \
-	{\
-		vec_float rv; \
-		if (intrlv > 0) rv.m[0] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[0], q2.m[0], mask_op), 0xFFFFFFFF));\
-		if (intrlv > 1) rv.m[1] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[1], q2.m[1], mask_op), 0xFFFFFFFF)); \
-		if (intrlv > 2) rv.m[2] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[2], q2.m[2], mask_op), 0xFFFFFFFF)); \
-		if (intrlv > 3) rv.m[3] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[3], q2.m[3], mask_op), 0xFFFFFFFF)); \
-		if (intrlv > 4) rv.m[4] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[4], q2.m[4], mask_op), 0xFFFFFFFF));\
-		if (intrlv > 5) rv.m[5] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[5], q2.m[5], mask_op), 0xFFFFFFFF)); \
-		if (intrlv > 6) rv.m[6] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[6], q2.m[6], mask_op), 0xFFFFFFFF)); \
-		if (intrlv > 7) rv.m[7] = _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(q1.m[7], q2.m[7], mask_op), 0xFFFFFFFF)); \
-	return rv; \
-	}; 
-
-
-
-
-
-template <const int intrlv> class MathOps
+template <const int interleave_i> class MathOps_AVX512 : public MathBase<MathOps_AVX512<interleave_i>, __m256, interleave_i>
 {
 public:
     static constexpr int raw_vec_elem = 16;
     static constexpr int raw_vec_2pow = 4;
-    static constexpr int interleave = intrlv;
-    static constexpr int32 vec_elem = interleave * raw_vec_elem;
+    static constexpr int vec_elem = interleave_i * raw_vec_elem;
     static constexpr int alignment = 64;
+	static constexpr int interleave = interleave_i;
     
-    typedef __m512 vec_elem_t __attribute__((aligned(64)));
-    typedef __m512i vec_int_t;
+    typedef __m512 vec_elem_t ALIGN_POST(64);
+    typedef __m512i vec_int_t ALIGN_POST(64);    
+	typedef vf_t<MathOps_AVX_v, interleave> vec_float;
     
-    
-    ARG2WRAPPER(__m512, _mm512_min_ps);
-    ARG2WRAPPER(__m512, _mm512_max_ps);
-    ARG2WRAPPER(__m512, _mm512_add_ps);
-    ARG2WRAPPER(__m512, _mm512_sub_ps);
-    ARG2WRAPPER(__m512, _mm512_mul_ps);
-    ARG2WRAPPER(__m512, _mm512_div_ps);
-    ARG2WRAPPER(__m512, _mm512_or_ps);
-    ARG2WRAPPER(__m512, _mm512_and_ps);
-    ARG2WRAPPER(__m512, _mm512_andnot_ps);
-    ARG2WRAPPER(__m512, _mm512_xor_ps);
-    ARG1WRAPPER(__m512, _mm512_rcp14_ps);
-    ARG1WRAPPER(__m512, _mm512_sqrt_ps);
-    ARG1WRAPPER(__m512, _mm512_floor_ps);
-    
-    typedef vec_float_impl_t<MathOps, interleave> vec_float __attribute__((aligned(64)));
-    typedef Interleaver<interleave, vec_float, __m512, _mm512_set1_ps> Inter;
-    
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    // Intrinsic-style functions for f32 & i32 vector operations
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    //////////////////////////////////////
-    // Initialization - zeroes, set1float, set1int
-    static vforceinline vec_float  zerops()
-    {
-        return Inter::assignE(_mm512_setzero_ps());
-    };
-    
-    static vforceinline vec_float  set1ps(float q1)
-    {
-        return Inter::assignS(q1);
-    };
-    
+    ////////////////////////////////
+    // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
+	class op_set_f
+	{
+	public: static vforceinline vec_elem_t op(float a) { return _mm512_set1_ps(a); };
+	};
+
+	class op_add_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_add_ps(a , b); };
+	};
+
+	class op_sub_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_sub_ps(a , b); };
+	};
+
+	class op_mul_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_mul_ps(a, b); };
+	};
+
+	class op_div_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_div_ps(a, b); };
+	};
+
+	class op_min_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_min_ps(a , b); };
+	};
+
+	class op_max_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_max_ps(a, b); };
+	};
+
+	class op_rcp_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return _mm512_rcp14_ps(a); };
+	};
+
+	class op_abs_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { const int32 mask = 0x7FFFFFFF; return  _mm512_and_ps(a, _mm512_set1_ps(mask)); };
+	};
+
+	class op_and_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_and_ps(a, b); };
+	};
+
+	class op_or_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_or_ps(a, b); };
+	};
+
+	class op_andn_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_andnot_ps(a, b); };
+	};
+
+	class op_xor_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_xor_ps(a, b); };
+	};
+
+	class op_not_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return _mm512_xor_ps(a, _mm512_set1_epi32(0xFFFFFFFF)); };
+	};
+
+	class op_cmpge_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_GE_OS); };
+	};
+
+	class op_cmpgt_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_GT_OS); };
+	};
+
+	class op_cmple_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_LE_OS); };
+	};
+
+	class op_cmplt_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_LT_OS); };
+	};
+
+	class op_cmpeq_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_EQ_OS); };
+	};
+
+	class op_cmpne_f
+	{
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps(a,b, _CMP_NEQ_OS); };
+	};
+             
+    ////////////////////////////////
+    // Load, gather, scatter
+
+    // Load
     static vforceinline vec_float  loadps(const float* q1)
     {
         vec_float rv;
@@ -117,11 +154,12 @@ public:
         return rv;
     };
     
+    // Gather
     template <size_t increment> vforceinline vec_float gather(const float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
         vec_float rv;
-	constexpr int32 inc_f = increment / sizeof(float);
+		constexpr int32 inc_f = increment / sizeof(float);
         const __m512i scale_base = _mm512_set_epi32(0x00 * increment, 0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment,
 						    0x08 * increment, 0x09 * increment, 0x0A * increment, 0x0B * increment, 0x0C * increment, 0x0D * increment, 0x0E * increment, 0x0F * increment);
 
@@ -144,6 +182,7 @@ public:
         return rv;
     }
     
+	// Scatter
     template <size_t increment> vforceinline void scatter(const vec_float& data, float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
@@ -170,111 +209,6 @@ public:
         if (intrlv > 0xE) _mm512_i32scatter_ps(base_address + (inc_f * 0xE0), scale_base, data.m[0xE], 1);
         if (intrlv > 0xF) _mm512_i32scatter_ps(base_address + (inc_f * 0xF0), scale_base, data.m[0xF], 1);
     }
-    
-    
-    //////////////////////////////////////
-    // Float operations - add, sub, mul, min, max, bitwise or, bitwise and, abs
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(mulps, wrap__mm512_mul_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(addps, wrap__mm512_add_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(subps, wrap__mm512_sub_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(divps, wrap__mm512_div_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(minps, wrap__mm512_min_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(maxps, wrap__mm512_max_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(orps, wrap__mm512_or_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(andps, wrap__mm512_and_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(andnps, wrap__mm512_andnot_ps);
-    GENERATE_INTERLEAVED_FUNCTION_2ARG(xorps, wrap__mm512_xor_ps);
-    
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpgeps, _CMP_GE_OS);
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpgtps, _CMP_GT_OS);
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpleps, _CMP_LE_OS);
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpltps, _CMP_LT_OS);
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpeqps, _CMP_EQ_OS);
-	GENERATE_INTERLEAVED_FUNCTION_MASK(cmpneps, _CMP_NEQ_OS);
-    
-    GENERATE_INTERLEAVED_FUNCTION_1ARG(rcpps, wrap__mm512_rcp14_ps);
-    GENERATE_INTERLEAVED_FUNCTION_1ARG(sqrtps, wrap__mm512_sqrt_ps);
-    GENERATE_INTERLEAVED_FUNCTION_1ARG(floorps, wrap__mm512_floor_ps);
-    
-    static vforceinline vec_float  roundps(const vec_float& q1)
-    {
-        // this assumes ROUND_DOWN. TODO: replace with proper controlword-based rounding
-        vec_float rup = (q1 + 0.5f);
-        return floorps(rup);
-    }
-    
-    static vforceinline vec_float  absps(const vec_float& q1)
-    {
-	int32 mask = 0x7FFFFFFF;
-	float msk = *reinterpret_cast<float*>(&mask);
-        return andps(q1, msk); //_mm512_castsi512_ps(_mm512_set1_epi32(0x7FFFFFFF)));
-    };
-    
-    static vforceinline vec_float  notps(const vec_float& q1)
-    {
-        return xorps(q1, _mm512_castsi512_ps(_mm512_set1_epi32(0xFFFFFFFF)));
-    };
-    
-    static vforceinline vec_float  clipps(const vec_float& val, const vec_float& lo_lim, const vec_float& hi_lim)
-    {
-        return maxps(lo_lim, minps(val, hi_lim));
-    };
-    
-    static vforceinline vec_float  cubeps(const vec_float& q1)
-    {
-        return mulps(q1, mulps(q1,q1));
-    };
-    
-    static vforceinline vec_float  clip01ps(const vec_float& q1)
-    {
-        return maxps(minps(q1, set1ps(1.f)), 0.f);
-    };
-    
-    static vforceinline vec_float  maskps(const vec_float& maskee, const vec_float& conditional_mask)
-    {
-        return andps(maskee, conditional_mask);
-    };
-    
-    
-    //////////////////////////////////////
-    // Types and conversions for extracting to raw data
-    //////////////////////////////////////
-    
-    union vec_union_i32
-    {
-        vec_int_t mi[interleave];
-        int32 i[vec_elem];
-        float f[vec_elem];
-        uint32 u[vec_elem];
-        vec_elem_t m[interleave];
-    };
-    
-    union vec_union_f
-    {
-        float f[vec_elem];
-        uint32 u[vec_elem];
-        int32 i[vec_elem];
-        vec_elem_t m[interleave];
-        vec_int_t mi[interleave];
-        vec_float mv;
-        vec_union_f() {};
-        vec_union_f(const vec_float& other) { mv = other; };
-        vec_union_f(const vec_union_f& other) { mv = other.mv; };
-        ~vec_union_f() {};
-    };
-    
-    
-    static vforceinline void  get_union_f(const vec_float& obj, vec_union_f& result)
-    {
-        INTERLEAVED_INDEX_ASSIGN_T(result.m, obj.m);
-    };
-    
-    static vforceinline vec_float  get_vector_f(const vec_union_f& obj)
-    {
-        vec_float result;
-        INTERLEAVED_INDEX_ASSIGN_T(result.m, obj.m);
-        return result;
-    };
 };
 
 

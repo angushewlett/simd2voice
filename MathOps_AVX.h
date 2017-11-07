@@ -198,7 +198,7 @@ public:
         *(e0 + (increment * 0x07)) = _mm256_extract_ps<0x7>(data);
     };
     
-    
+    // Scatter
     template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
     {
         constexpr int32 inc_f = increment / sizeof(float);
