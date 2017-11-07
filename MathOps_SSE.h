@@ -12,9 +12,9 @@
 #include "MathOps_Common.h"
 #endif
 #include <xmmintrin.h>
-#include <immintrin.h>
+#include <emmintrin.h>
 
-template <const int interleave_i> class MathOps : public MathBase<MathOps<interleave_i>, __m128, interleave_i>
+template <const int interleave_i> class MathOps_SSE_v : public MathBase<MathOps_SSE_v<interleave_i>, __m128, interleave_i>
 {
 public:
     static constexpr int raw_vec_elem = 4;
@@ -25,7 +25,7 @@ public:
 
     typedef __m128 vec_elem_t;
     typedef __m128i vec_int_t;
-	typedef vf_t<MathOps, interleave> vec_float;
+	typedef vf_t<MathOps_SSE_v, interleave> vec_float;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).

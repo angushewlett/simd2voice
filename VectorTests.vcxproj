@@ -116,7 +116,7 @@
     <ClCompile>
       <OmitFramePointers>true</OmitFramePointers>
       <AssemblerOutput>AssemblyCode</AssemblerOutput>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>

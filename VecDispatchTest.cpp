@@ -40,7 +40,7 @@ void sleep(int s)
 #define ENABLE_SSE 1
 #endif
 
-#if 0 //__AVX__
+#if 1 //__AVX__
 #define ENABLE_AVX 1
 #endif
 
@@ -63,35 +63,32 @@ void sleep(int s)
 // Wrap math operations for each architecture in a namespace.
 // We do this externally so this can be defined in the dispatch file.
 
-namespace MSCL
-{
 #include "MathOps_Scalar.h"
-};
 
 #if ENABLE_SSE
-namespace MSSE
-{
+#define MathOps_SSE_v MathOps_SSE4
 #include "MathOps_SSE.h"
-};
 #endif
 
 #if  ENABLE_AVX
-namespace MAVX
-{
+#define MathOps_AVX_v MathOps_AVX2
 #include "MathOps_AVX.h"
-};
 #endif
 
 #if  ENABLE_AVX512
-namespace M512
-{
 #include "MathOps_AVX512.h"
-};
 #endif
 
 
 template <class TTestClass, class TMathClass> void run_test(const char* messagePrefix)
 {
+	// Reject interleave sizes larger than the number of voices.
+	if (TMathClass::vec_elem > XDSP::kMaxVoices)
+	{
+		printf("%s %s%s\n", TTestClass::GetDescription(), messagePrefix, ": Failed to interleave (larger than voice count)");
+		return;
+	}
+
     ////////
     // Basic set up
     typedef typename TTestClass::Node TNode;
@@ -108,12 +105,6 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     const int32 voiceCount = XDSP::kMaxVoices;
     const int32 bufferSize = XDSP::kMaxVoices * process_globals.block_length;
 
-    // Reject interleave sizes larger than the number of voices.
-    if (TMathClass::vec_elem > XDSP::kMaxVoices)
-    {
-        printf("%s %s%s\n", TTestClass::GetDescription(), messagePrefix ,": Failed to interleave (larger than voice count)");
-        return;
-    }
     
     // Create the DSP node object to do all our processing
     TNode* node = new TNode();
@@ -230,40 +221,41 @@ int main(int argc, char *argv[])
 #elif WIN32
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
-	run_test<TEST_CLASS, MSCL::MathOps<1>>("fpu,  1");
-//	run_test<TEST_CLASS, MSCL::MathOps<1>>("fpu,  1");
-    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
-    run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
-    run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
-    run_test<TEST_CLASS,MSCL::MathOps<8>>("fpu,  8");
-    run_test<TEST_CLASS,MSCL::MathOps<16>>("fpu, 16");
-//    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
+	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
+//	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
+    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
+    run_test<TEST_CLASS,MathOps_FPU<2>>("fpu,  2");
+    run_test<TEST_CLASS,MathOps_FPU<4>>("fpu,  4");
+    run_test<TEST_CLASS,MathOps_FPU<8>>("fpu,  8");
+    run_test<TEST_CLASS,MathOps_FPU<16>>("fpu, 16");
+//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
     
 #if ENABLE_SSE
-    run_test<TEST_CLASS,MSSE::MathOps<1>>("SSE,  1");
-    run_test<TEST_CLASS,MSSE::MathOps<2>>("SSE,  2");
-    run_test<TEST_CLASS,MSSE::MathOps<4>>("SSE,  4");
-    run_test<TEST_CLASS,MSSE::MathOps<8>>("SSE,  8");
-    run_test<TEST_CLASS,MSSE::MathOps<16>>("SSE, 16");
+    run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
+    run_test<TEST_CLASS,MathOps_SSE4<2>>("SSE,  2");
+    run_test<TEST_CLASS,MathOps_SSE4<4>>("SSE,  4");
+    run_test<TEST_CLASS,MathOps_SSE4<8>>("SSE,  8");
+    run_test<TEST_CLASS,MathOps_SSE4<16>>("SSE, 16");
 #endif
     
 #if ENABLE_AVX
-    run_test<TEST_CLASS,MAVX::MathOps<1>>("AVX,  1");
-    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
-    run_test<TEST_CLASS,MAVX::MathOps<4>>("AVX,  4");
-    run_test<TEST_CLASS,MAVX::MathOps<8>>("AVX,  8");
-    run_test<TEST_CLASS,MAVX::MathOps<16>>("AVX,  16");
+    run_test<TEST_CLASS,MathOps_AVX2<1>>("AVX,  1");
+    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");
+    run_test<TEST_CLASS,MathOps_AVX2<4>>("AVX,  4");
+    run_test<TEST_CLASS,MathOps_AVX2<8>>("AVX,  8");
+    run_test<TEST_CLASS,MathOps_AVX2<16>>("AVX,  16");
+	//- Won't compile on windows
 #endif
     
 #if ENABLE_AVX512
-    run_test<TEST_CLASS,M512::MathOps<1>>("A512,  1");
-    run_test<TEST_CLASS,M512::MathOps<2>>("A512,  2");
-    run_test<TEST_CLASS,M512::MathOps<4>>("A512,  4");
-    run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
+    run_test<TEST_CLASS,MathOps_A512<1>>("A512,  1");
+    run_test<TEST_CLASS,MathOps_A512<2>>("A512,  2");
+    run_test<TEST_CLASS,MathOps_A512<4>>("A512,  4");
+    run_test<TEST_CLASS,MathOps_A512<8>>("A512,  8");
 #endif
-//    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
-//    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");    
-//	  run_test<TEST_CLASS,MSSE::MathOps<1>>("SSE,  1");
+//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
+//    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");    
+//	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
 
     sleep(2); // Give Instruments time to detach cleanly
 }

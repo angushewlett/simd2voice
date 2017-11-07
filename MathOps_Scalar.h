@@ -12,7 +12,7 @@
 #include "MathOps_Common.h"
 #endif
 
-template <const int interleave_i> class MathOps : public MathBase<MathOps<interleave_i>, float, interleave_i>
+template <const int interleave_i> class MathOps_FPU : public MathBase<MathOps_FPU<interleave_i>, float, interleave_i>
 {
 public:
     static constexpr int raw_vec_elem = 1;
@@ -23,7 +23,7 @@ public:
     
     typedef float vec_elem_t;
     typedef int vec_int_t;
-	typedef vf_t<MathOps, interleave> vec_float;
+	typedef vf_t<MathOps_FPU, interleave> vec_float;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).

@@ -185,7 +185,7 @@ public:
     };
     
 protected:
-    Job m_job_queue[kQSize];
+    Job m_job_queue[kQSize > 0 ? kQSize : 1];
     int32 m_q_pos;
 
 public:
