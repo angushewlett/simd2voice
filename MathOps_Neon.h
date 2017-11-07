@@ -98,7 +98,7 @@ public:
 
 	class op_or_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vorrq_u32(vreinterpretq_u32_f32(a), vreinterpretq_u32_f32(b)));
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vorrq_u32(vreinterpretq_u32_f32(a), vreinterpretq_u32_f32(b))); };
 	};
 
 	class op_andn_f
@@ -108,7 +108,7 @@ public:
 
 	class op_xor_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(veorq_f32(vreinterpretq_u32_f32(a), vreinterpretq_u32_f32(b))); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(veorq_u32(vreinterpretq_u32_f32(a), vreinterpretq_u32_f32(b))); };
 	};
 
 	class op_not_f
@@ -118,27 +118,27 @@ public:
 
 	class op_cmpge_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcge_f32(a,b)); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcgeq_f32(a,b)); };
 	};
 
 	class op_cmpgt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcgt_f32(a,b)); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcgtq_f32(a,b)); };
 	};
 
 	class op_cmple_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcle_f32(a,b)); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcleq_f32(a,b)); };
 	};
 
 	class op_cmplt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vclt_f32(a,b)); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vcltq_f32(a,b)); };
 	};
 
 	class op_cmpeq_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vceq_f32(a,b)); };
+	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return vreinterpretq_f32_u32(vceqq_f32(a,b)); };
 	};
 
 	class op_cmpne_f
