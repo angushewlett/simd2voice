@@ -248,10 +248,10 @@ int main(int argc, char *argv[])
 #endif
     
 #if ENABLE_AVX512
-    run_test<TEST_CLASS,MathOps_A512<1>>("A512,  1");
-    run_test<TEST_CLASS,MathOps_A512<2>>("A512,  2");
-    run_test<TEST_CLASS,MathOps_A512<4>>("A512,  4");
-    run_test<TEST_CLASS,MathOps_A512<8>>("A512,  8");
+    run_test<TEST_CLASS,MathOps_AVX512<1>>("AVX512,  1");
+    run_test<TEST_CLASS,MathOps_AVX512<2>>("AVX512,  2");
+    run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
+    run_test<TEST_CLASS,MathOps_AVX512<8>>("AVX512,  8");
 #endif
 //    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
 //    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");    
