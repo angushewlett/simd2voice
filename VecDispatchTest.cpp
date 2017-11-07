@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
     sleep(2); // Give Instruments time to attach cleanly
 #if MACOSX && !ARCH_ARM
     fesetenv(FE_DFL_DISABLE_SSE_DENORMS_ENV);
-#elif LINUX
+#elif LINUX && !ARCH_ARM
     _mm_setcsr(_mm_getcsr() | (_MM_DENORMALS_ZERO_ON));
 #elif WIN32
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
