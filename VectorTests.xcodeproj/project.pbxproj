@@ -27,10 +27,10 @@
 		92CB39691FAE0FB70039418F /* YEQFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YEQFilter.h; sourceTree = SOURCE_ROOT; };
 		92CB396A1FAE0FB70039418F /* YFilterLadder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YFilterLadder.h; sourceTree = SOURCE_ROOT; };
 		92CB396B1FAE0FB70039418F /* YPannerAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YPannerAmp.h; sourceTree = SOURCE_ROOT; };
+		92CB396C1FAE12630039418F /* XIOAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XIOAdapter.h; sourceTree = SOURCE_ROOT; };
 		92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VecDispatchTest.cpp; sourceTree = SOURCE_ROOT; };
 		92CB8D641F96580F009D7BA7 /* XDSP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDSP.h; sourceTree = SOURCE_ROOT; };
 		92CB8D671F96580F009D7BA7 /* XHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHelpers.h; sourceTree = SOURCE_ROOT; };
-		92CB8D691F965816009D7BA7 /* IOAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOAdapter.h; sourceTree = SOURCE_ROOT; };
 		92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_AVX.h; sourceTree = SOURCE_ROOT; };
 		92CB8D6B1F965816009D7BA7 /* MathOps_Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Common.h; sourceTree = SOURCE_ROOT; };
 		92CB8D6C1F965816009D7BA7 /* Prefix_FMA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix_FMA.h; sourceTree = SOURCE_ROOT; };
@@ -84,7 +84,7 @@
 				92CB8D8D1FA4F60F009D7BA7 /* iacaMarks.h */,
 				92CB8D641F96580F009D7BA7 /* XDSP.h */,
 				92CB8D671F96580F009D7BA7 /* XHelpers.h */,
-				92CB8D691F965816009D7BA7 /* IOAdapter.h */,
+				92CB396C1FAE12630039418F /* XIOAdapter.h */,
 				92CB8D7D1F96C99A009D7BA7 /* XStopWatch.h */,
 				92CB8D6B1F965816009D7BA7 /* MathOps_Common.h */,
 			);
@@ -301,6 +301,8 @@
 					"-march=haswell",
 					"-O3",
 					"-ffp-contract=fast",
+					"-fno-vectorize",
+					"-fno-slp-vectorize",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

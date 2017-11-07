@@ -1,10 +1,25 @@
 #ifndef XHELPERS_H
 #define XHELPERS_H
+////////////////////////////////
+// File: XHelpers
+// Helper functions for MathOps & XDSP
+// Author: Angus F. Hewlett
+// Copyright FXpansion Audio UK Ltd. 2012-2017
+////////////////////////////////
+
+////////////////////////////////
+// This file provides:-
+//
+// * int32 & uint32 - integer types
+// * vforceinline macro - forced inlining
+// * valigned_malloc & valigned_free - x-platform aligned malloc/free
+// * randf() - float pseudorandom
+////////////////////////////////
 
 #include <stdlib.h>
 #include <stdint.h>
 #if WIN32 && !CEXCOMPILE
-#include <windows.h>
+#include <malloc.h>
 #endif
 
 typedef int32_t int32;
@@ -26,7 +41,7 @@ typedef uint32_t uint32;
 inline void *valigned_malloc( size_t size, size_t align )
 {
 #if WIN32
-    _aligned_malloc (size, align);
+    return _aligned_malloc (size, align);
 #else
     void* mem = 0;
     posix_memalign(&mem, align, size);
@@ -39,7 +54,7 @@ inline void *valigned_malloc( size_t size, size_t align )
 inline void valigned_free( void *mem )
 {
 #if WIN32
-    _aligned_free(mem);
+    return _aligned_free(mem);
 #else
     free(mem);
 #endif

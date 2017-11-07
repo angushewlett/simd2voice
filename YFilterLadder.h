@@ -44,8 +44,6 @@ public:
     public:
         virtual void Reset ()
         {
-            Voice defaultState;
-            *this = defaultState;
         };
         
         vforceinline void PreProcessBuffer(const XDSP::ProcessGlobals& process_globals)
@@ -76,9 +74,10 @@ public:
     {
     public:
         DEFINE_MATHOPS_IMPORTS;      // Import the typedefs and usings from mathops base class
-        
-        static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
+
+		static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
+
             const int32 block_length = process_globals.block_length;
             vec_float drv = 0.5f * clipps( voices.controlport_gather(C_DRIVE), 0.f, 10.f);
             vec_float inv_drv = divps(1.f, drv);
@@ -116,7 +115,7 @@ public:
             {
                 xmix_t[m] = (m == 0) ? 1.f : 0.f;
                 xmix_m[m] = voices.member_gather(my_offsetof(m_xmix) + (m * sizeof(float)));
-                xmix_d[m] = (xmix_t[m] - xmix_m[m]) * set1ps(process_globals.block_length_norm_inv * 0.1f);
+                xmix_d[m] = (xmix_t[m] - xmix_m[m]) * (process_globals.block_length_norm_inv * 0.1f);
                 y[m] = voices.member_gather(my_offsetof(m_y) + (m * sizeof(float)));
             }
             
@@ -148,7 +147,7 @@ public:
             
             for (int32 t=0; t<block_length; t++)
             {
-                 _mm_mfence();
+//                 _mm_mfence();
                 // ------------------------------------------------------------
                 // interpolations, basic coeffs, input
                 f1 += f1_inc;
@@ -207,7 +206,7 @@ public:
                     xx = (g0 * y[1]) + t1;
                     xx = maxps(ptnxb, minps(ptpxb, xx));
                     xx = addps(xx, mulps(mulps(xx, xx), mulps(xx, addps(ptx3, mulps(absps(xx), ptx4)))));
-                    xx = addps(xx, mulps(set1ps(-0.47f * ptxs), mulps(xx, xx)));
+                    xx = addps(xx, mulps((-0.47f * ptxs), mulps(xx, xx)));
                     y[2] = addps(y[2], mulps(g, xx));
                     //			cleandiff2 += absps(y2 - y2_linear);
                 
@@ -220,7 +219,7 @@ public:
                     xx = addps(mulps(g0, y[2]), t2);
                     xx = maxps(ptnxb, minps(ptpxb, xx));
                     xx = addps(xx, mulps(mulps(xx, xx), mulps(xx, addps(ptx3, mulps(absps(xx), ptx4)))));
-                    xx = addps(xx, mulps(set1ps(-0.5f * ptxs), mulps(xx, xx)));
+                    xx = addps(xx, mulps((-0.5f * ptxs), mulps(xx, xx)));
                     y[3] = addps(y[3], mulps(g, xx)); // FMA
                     //			cleandiff3 += absps(y3 - y3_linear);
                 
@@ -231,7 +230,7 @@ public:
                     xx = addps(mulps(g0, y[3]), t3);
                     xx = maxps(ptnxb, minps(ptpxb, xx));
                     xx = addps(xx, mulps(mulps(xx, xx), mulps(xx, addps(ptx3, mulps(absps(xx), ptx4)))));
-                    xx = addps(xx, mulps(set1ps(-0.49f * ptxs), mulps(xx, xx)));
+                    xx = addps(xx, mulps((-0.49f * ptxs), mulps(xx, xx)));
                     y[4] = addps(y[4], mulps(g, xx)); // FMA
                     //			cleandiff4 += absps(y4 - y4_linear);
                 vec_float y4m = xmix_m[4] * y[4];
@@ -250,8 +249,8 @@ public:
                 xmix_m[4] += xmix_d[4];
                 
                 limit_f = limit_f * 0.999f;
-                limit_f = addps(limit_f, mulps(0.001f, subps(maxps(absps(mulps(out_hp, set1ps(1.1f))), limit_f), limit_f)));
-                out_hp = mulps(out_hp, rcpps(maxps(set1ps(1.f), limit_f)));
+                limit_f = addps(limit_f, mulps(0.001f, subps(maxps(absps(mulps(out_hp, 1.1f)), limit_f), limit_f)));
+                out_hp = mulps(out_hp, rcpps(maxps(1.f, limit_f)));
                 
                 out_hp *= 0.125f;
                 // y = x - (x^2 / 4)
@@ -262,7 +261,7 @@ public:
                 dcv += (dc_f * out_hp);
                 
                 outstream << out_hp + (input * bleed);
-                _mm_mfence();
+//                _mm_mfence();
             }
             
             // Store members

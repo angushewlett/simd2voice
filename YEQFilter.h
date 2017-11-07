@@ -1,8 +1,5 @@
 #ifndef __YEQFilter_H__
 #define __YEQFilter_H__
-//#include <csignal>
-
-
 
 ////////////////
 // A basic amp with linear & cubic gain controls and panning.
@@ -61,13 +58,16 @@ public:
     {
     public:
         DEFINE_MATHOPS_IMPORTS;      // Import the typedefs and usings from mathops base class
-        
-        class alignas(64) VecBandState
+		//using TIOAdapter::vec_float;
+
+		class VecBandState
         {
-        public:
-            vec_float m_freq, m_gain, m_q;
+		public:
+			typedef typename TIOAdapter::vec_float vec_float;
+			vec_float m_freq;
+			vec_float m_gain, m_q;
             vec_float a[numBands][5], x[numBands][2], y[numBands][2];
-        } __attribute__ ((aligned (TIOAdapter::alignment)));
+        } ALIGN_POST(TIOAdapter::alignment);
         
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const typename Node::ProcessAttributes& pa)
         {
@@ -79,14 +79,14 @@ public:
 
 	// __asm__("int $3");
             
-#pragma unroll(numBands)
+//#pragma unroll(numBands)
             for (int32 i = 0; i < numBands; i++)
             {
                 bands.x[i][0] = voices.member_gather(my_offsetof(m_bandState[i].x[0]));
                 bands.x[i][1] = voices.member_gather(my_offsetof(m_bandState[i].x[1]));
                 bands.y[i][0] = voices.member_gather(my_offsetof(m_bandState[i].y[0]));
                 bands.y[i][1] = voices.member_gather(my_offsetof(m_bandState[i].y[1]));
-#pragma unroll(5)                
+//#pragma unroll(5)                
                 for (int32 j = 0; j < 5; j++)
                 {
                     bands.a[i][j] = voices.member_gather(my_offsetof(m_bandState[i].a[j]));
@@ -177,16 +177,6 @@ VecBandState bs = bands;
         virtual ~Voice() {};
         virtual void Reset ()
         {
-            // Don't do this.
-//            Voice defaultState;
-//            *this = defaultState;
-            for (int32 i = 0; i < numBands; i++)
-            {
-                for (int32 j = 0; j < 5; j++)
-                {
-//                    m_bandState[i].a[j] = randf();
-                }
-            }
         };
         // Dummy method for anything not parallelisable
         vforceinline void PreProcessBuffer(const XDSP::ProcessGlobals& process_globals) {};

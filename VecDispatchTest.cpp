@@ -4,31 +4,47 @@
 // Dispatcher for FMA optimized processbuffer loops (Haswell / Broadwell)
 //////////////////////////////////////////////////////////
 
+#ifdef _MSC_VER
+#define WIN32 1
+#define NOMINMAX 1
+class IUnknown;
+#include <windows.h>
+#include <stdint.h>
+
 // System headers
-#include <immintrin.h>
+WINBASEAPI VOID WINAPI Sleep(_In_ DWORD dwMilliseconds);
+void sleep(int s)
+{
+	Sleep(s * 1000);
+}
+
+#else
+#include <unistd.h>
+#endif
+
 #include <math.h>
 #include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <time.h>
 #include <fenv.h>
 #include <list>
+#include <algorithm>
 
 #ifdef IACA_TEST
 #include "iacaMarks.h"
 #endif
 
 // Enable additional instruction sets here
-#if __SSE__
+#if 1 // __SSE__
 #define ENABLE_SSE 1
 #endif
 
-#if __AVX__
+#if 0 //__AVX__
 #define ENABLE_AVX 1
 #endif
 
-#if __AVX512__
+#if 0 //__AVX512__
 #define ENABLE_AVX512 1
 #endif
 
@@ -73,17 +89,6 @@ namespace M512
 };
 #endif
 
-// The test class
-#include "YEQFilter.h"
-//#include "YFilterLadder.h"
-// #include "YBasicAmp.h"
-
-
-
-#if MACOSX
-mach_timebase_info_data_t    StopWatch::sTimebaseInfo;
-#endif
-
 
 template <class TTestClass, class TMathClass> void run_test(const char* messagePrefix)
 {
@@ -124,7 +129,10 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     // Set up for the node and its voices. (The first element for each voice is the nth element in the buffer, buffer is kMaxVoices wide).
     for (int32 i = 0; i < voiceCount; i++)
     {
-        for (int a = 0; a < node->AudioInCount(); a++)  node->GetVoice(i)->SetAudioIn(a, (input_buffer + i));
+		for (int a = 0; a < node->AudioInCount(); a++)
+		{
+			node->GetVoice(i)->SetAudioIn(a, (input_buffer + i));
+		}
         for (int a = 0; a < node->AudioOutCount(); a++) node->GetVoice(i)->SetAudioOut(a, (output_buffer + i));
         node->GetVoice(i)->Reset();
     }
@@ -200,8 +208,14 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     valigned_free(output_buffer);
 }
 
+// The test class
+#include "YBasicAmp.h"
+#include "YPannerAmp.h"
+#include "YEQFilter.h"
+#include "YFilterLadder.h"
 
-// #define TEST_CLASS YBasicAmp
+//#define TEST_CLASS YBasicAmp
+// #define TEST_CLASS YPannerAmp
 // #define TEST_CLASS YFilterLadder
 #define TEST_CLASS YEQFilter<4>
 
@@ -216,13 +230,14 @@ int main(int argc, char *argv[])
 #elif WIN32
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
-
+	run_test<TEST_CLASS, MSCL::MathOps<1>>("fpu,  1");
+//	run_test<TEST_CLASS, MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     run_test<TEST_CLASS,MSCL::MathOps<2>>("fpu,  2");
     run_test<TEST_CLASS,MSCL::MathOps<4>>("fpu,  4");
     run_test<TEST_CLASS,MSCL::MathOps<8>>("fpu,  8");
     run_test<TEST_CLASS,MSCL::MathOps<16>>("fpu, 16");
-    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
+//    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
     
 #if ENABLE_SSE
     run_test<TEST_CLASS,MSSE::MathOps<1>>("SSE,  1");
@@ -246,9 +261,10 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,M512::MathOps<4>>("A512,  4");
     run_test<TEST_CLASS,M512::MathOps<8>>("A512,  8");
 #endif
-    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
-//    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");
-    
+//    run_test<TEST_CLASS,MSCL::MathOps<1>>("fpu,  1");
+//    run_test<TEST_CLASS,MAVX::MathOps<2>>("AVX,  2");    
+//	  run_test<TEST_CLASS,MSSE::MathOps<1>>("SSE,  1");
+
     sleep(2); // Give Instruments time to detach cleanly
 }
 

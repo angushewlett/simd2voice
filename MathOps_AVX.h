@@ -36,8 +36,8 @@ public:
 	static constexpr int32 vec_elem = interleave * raw_vec_elem;
     static constexpr int alignment = 32;
 
-	typedef __m256 vec_elem_t __attribute__ ((aligned (32)));
-	typedef __m256i vec_int_t __attribute__ ((aligned (32)));
+	typedef __m256 vec_elem_t ALIGN_POST(32);
+	typedef __m256i vec_int_t ALIGN_POST(32);
 
     
     ARG2WRAPPER(__m256, _mm256_min_ps);
@@ -266,6 +266,9 @@ public:
 		INTERLEAVED_INDEX_ASSIGN_T(result.m, obj.m);
 		return result;
 	};
-} __attribute__ ((aligned (32)));
-
+}
+#if !WIN32
+__attribute__((aligned(32)))
+#endif
+;
 #endif

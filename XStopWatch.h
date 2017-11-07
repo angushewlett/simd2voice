@@ -1,18 +1,21 @@
-#ifndef STOPWATCH_H
-#define STOPWATCH_H
+#ifndef XSTOPWATCH_H
+#define XSTOPWATCH_H
+
+////////////////////////////////
+// File: XStopWatch.h
+// Simple high-res runtime stopwatch.
+// Author: Angus F. Hewlett
+// Copyright FXpansion Audio UK Ltd. 2014-2017
+////////////////////////////////
 
 #include <stdlib.h>
 #include <stdint.h>
-#if WIN32
-#include <windows.h>
-#endif
 #if MACOSX
 #include <mach/mach_time.h>
 #endif
 #if LINUX
 #include <time.h>
 #endif
-
 
 ////////////////////////////////
 // High resolution stopwatch timer wrapper class
@@ -39,17 +42,15 @@ public:
         m_count1 = ((spec.tv_sec % 1000) *1e9) + spec.tv_nsec;
 #endif
     };
-    
-    /**
-     * Get the elapsed time since construction in seconds
-     * @retval double The elapsed time
-     */
+
+	////////////////////////////////
+	// Get elapsed time since instantiation / last reset in seconds
     double GetElapsedTime () const
     {
 #if WIN32
-        uint64 count2;
+        uint64_t count2;
         QueryPerformanceCounter ((LARGE_INTEGER*)&count2);
-        uint64 count_diff = 0;
+        uint64_t count_diff = 0;
         if (m_count1 > count2)
         {
             count_diff = ~(m_count1 - count2);
@@ -78,6 +79,8 @@ public:
         
     };
     
+	////////////////////////////////
+	// Static initialization
     static void StaticInit()
     {
 #if WIN32
@@ -114,6 +117,13 @@ private:
     static bool s_bDidInit;
 };
 
+#if WIN32
+double StopWatch::s_freq_inv = 1.0;		/**< Sampling frequency */
+#endif
+
+#if MACOSX
+mach_timebase_info_data_t    StopWatch::sTimebaseInfo;
+#endif
 bool StopWatch::s_bDidInit = false;
 
 

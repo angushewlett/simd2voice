@@ -29,8 +29,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "242"
             endingLineNumber = "242"
-            landmarkName = "AllocateVoices()"
-            landmarkType = "7">
+            landmarkName = "class NodeTmpl"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -45,8 +45,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "99"
             endingLineNumber = "99"
-            landmarkName = "PrepareStream(const ProcessGlobals&amp; process_globals)"
-            landmarkType = "7">
+            landmarkName = "class Node"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1548,8 +1548,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "149"
             endingLineNumber = "149"
-            landmarkName = "scatter(const vec_float&amp; rv, float* base_address)"
-            landmarkType = "7">
+            landmarkName = "loadps(const float* q1)"
+            landmarkType = "9">
             <Locations>
                <Location
                   shouldBeEnabled = "No"

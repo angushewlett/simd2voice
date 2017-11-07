@@ -1,6 +1,23 @@
-
 #ifndef __XDSP_H__
 #define __XDSP_H__
+
+////////////////////////////////
+// File: XDSP.h
+// Defines basic DSP graph processing types
+// Author: Angus F. Hewlett
+// Copyright FXpansion Audio UK Ltd. 2001-2017
+////////////////////////////////
+
+////////////////////////////////
+// This file provides:-
+//
+// * ProcessGlobals - an object representing shared processing variables: block size, tempo, sample rate etc.
+// * SIMDLevel - report supported SIMD feature set
+// * XDSPNode, XDSPVoice - base interface for a signal processing node & its voices
+// * XDSPNodeTmpl, XDSPVoiceTmpl - CRTP default implementation for type-specific node/voice functionality
+// * JobQueue, Job - queue of processing jobs (to support async operation)
+////////////////////////////////
+
 
 #include <stdint.h>
 #include <vector>
@@ -15,7 +32,7 @@ namespace XDSP
     static constexpr int32 kMaxControlPorts = 64;
     static constexpr int32 kMaxAudioPorts = 8;
 
-/////////////////////////////////////////////////////////
+////////////////////////////////
 // Data shared by all nodes in a processing graph: sample rate, buffer size, voice count etc.
 class ProcessGlobals
 {
@@ -30,14 +47,12 @@ public:
     float tune = 44100.f;
     float sample_rate = 96000.f;
     float sample_rate_inv = 1.f / sample_rate;
-    float* hum;
-    
+    float* hum;    
 };
     
-/////////////////////////////////////////////////////////
+////////////////////////////////
 // SIMD feature level helper class
-
-class SIMD
+class SIMDLevel
 {
 public:
     enum SIMDFeatureLevel
@@ -50,22 +65,25 @@ public:
         eFeatAVX512,
     };
     
+	////////////////////////////////
+	// Report CPU feature level
     static SIMDFeatureLevel GetFeatureLevel()
     {
+		// Beyond the scope of this demo to support platform-independent CPU feature detection.
+		// Pretend we're running on Haswell+
         return eFeatFMA;
     };
-    
 };
 
     
-/////////////////////////////////////////////////////////
+////////////////////////////////
 // A polyphonic filter class
 class Node
 {
 public:
     
-    /////////////////////////////////////////////////////////
-    // A voice on a specific instance of a filter
+	////////////////////////////////
+	// A voice on a specific instance of a filter
     class Voice
     {
     public:
@@ -126,10 +144,10 @@ protected:
 };
     
     
-///////////////////////////////////////////////////
-// WorkQueue - a typed queue of pending jobs for a particular processing object
+////////////////////////////////
+// JobQueue - a typed queue of pending jobs for a particular processing object.
 // Used for asynchronous processing only.
-template <class TNode, class TWorker> class WorkQueue
+template <class TNode, class TWorker> class JobQueue
 {
     
 public:
@@ -138,7 +156,7 @@ public:
     static constexpr int32 kQSize = XDSP::kMaxVoices / TWorker::vec_elem;
     static constexpr int32 kNumThreads = 1;
     
-    ///////////////////////////////////////////////////
+	////////////////////////////////
     // Job - a job in the work queue
     class Job
     {
@@ -171,7 +189,7 @@ protected:
     int32 m_q_pos;
 
 public:
-    WorkQueue() : m_q_pos(0) {};
+    JobQueue() : m_q_pos(0) {};
     
     /*
      * Enqueue - enqueue a job
@@ -206,14 +224,24 @@ template <class T> class NodeTmpl : public Node
 public:
     typedef typename T::Node TNode;
     typedef typename T::Voice TVoice;
-    
+
+	// x86 / x64 dispatch
+	// These are compiled on all architectures but not called (they live in their own compilation units)
+#if ARCH_X86 || ARCH_X64
     static int32 ProcessBuffer_FMA(const ProcessGlobals& process_globals, TNode* caller);
     static int32 ProcessBuffer_AVX(const ProcessGlobals& process_globals, TNode* caller);
     static int32 ProcessBuffer_SSE4(const ProcessGlobals& process_globals, TNode* caller);
     static int32 ProcessBuffer_SSE2(const ProcessGlobals& process_globals, TNode* caller);
+#endif
+
+#if ARCH_ARM
+	// ARM dispatch
+	static int32 ProcessBuffer_NEON(const ProcessGlobals& process_globals, TNode* caller);
+#endif
+
+	// Scalar dispatch
     static int32 ProcessBuffer_Scalar(const ProcessGlobals& process_globals, TNode* caller);
-    
-    
+     
     static constexpr bool s_enableAsyncProcess = false;
     static constexpr size_t s_memAlignPow = 6; // 2^6 = 64 bytes = 1 cache line
     static constexpr size_t s_memAlign = 1 << s_memAlignPow;
@@ -245,7 +273,6 @@ public:
             char* voiceMem = ((char*) m_voiceMemory) + (i * s_voiceSize);
             m_voices[i] = new(voiceMem) TVoice();
         }
-//	printf("VS %d a %d\n", s_voiceSize, s_memAlign);
     };
     
     ////////////////////////////////
@@ -259,20 +286,19 @@ public:
         valigned_free(m_voiceMemory);
     };
 
+	////////////////////////////////
     virtual TVoice* GetVoiceTyped(int32 voice)
     {
-	return static_cast<TVoice*>(m_voices[voice]);
+		return static_cast<TVoice*>(m_voices[voice]);
     };    
     
     ////////////////////////////////
-    //
     virtual int32 AudioInCount()
     {
         return T::kNumAudioInputs;
     };
     
     ////////////////////////////////
-    //
     virtual int32 AudioOutCount()
     {
         return T::kNumAudioOutputs;
@@ -290,13 +316,13 @@ public:
     // Main dispatch entry point for buffer processing, selects which CPU specific dispatch to use
     virtual int32 ProcessBuffer_Dispatch(const ProcessGlobals& process_globals)
     {
-        int32 cpu_feature_level = SIMD::GetFeatureLevel();
+        int32 cpu_feature_level = SIMDLevel::GetFeatureLevel();
 
         ///////
         // These static functions ( NodeTmpl<T>::ProcessBuffer_$ARCH ) are implemented as specializations
         // by way of a CPU-specific (rather than type specific) compilation unit.
         // They in turn instantiate templates for a specific node-type and mathops-implementation
-        ///////
+
 #if !CEXCOMPILE && !DISPATCHTESTCOMPILE
 #if ARCH_X86 || ARCH_X64
 #if ENABLE_AVX512
@@ -320,17 +346,17 @@ public:
         return 0;
     }
 
-    ////////////////////////////////
-    // Template for packing voices in to blocks and dispatching to a CPU-specific worker
+	////////////////////////////////
+	// Template for packing voices in to blocks and dispatching to a CPU-specific worker
     template <class TWorker> static void ProcessAllVoices(const XDSP::ProcessGlobals& process_globals, TNode* node)
     {
         // PerformanceCounterScope p(__FUNCTION__);
         
         // Can check for no / few active voices here, node global power on/off etc.
         typedef typename TWorker::VoiceBlock VoiceBlock;
-        typedef typename XDSP::WorkQueue<TNode, TWorker> WorkQueueImpl;
+        typedef typename XDSP::JobQueue<TNode, TWorker> JobQueueImpl;
         
-        WorkQueueImpl voice_block_queue;
+        JobQueueImpl voice_block_queue;
         
         // Pack the voices and enqueue them for processing
         for (int32 i = 0; i < XDSP::kMaxVoices; i += TWorker::vec_elem)
@@ -350,7 +376,7 @@ public:
             if (s_enableAsyncProcess)
             {
                 // Create a job to call ProcessBuffer() with this voice I/O adapter
-                voice_block_queue.Enqueue(typename WorkQueueImpl::Job(local_voices, process_globals, node->GetProcessAttributes()));
+                voice_block_queue.Enqueue(typename JobQueueImpl::Job(local_voices, process_globals, node->GetProcessAttributes()));
             }
             else
             {
@@ -369,13 +395,11 @@ protected:
     void* m_voiceMemory = 0;
 };
 
-/////////////////////////////////////////////////////////
+////////////////////////////////
 // Template implementation class for node-instance-specific voice data
-/////////////////////////////////////////////////////////
 template <class T> class VoiceTmpl : public Node::Voice
 {
 };
-
     
 };
 
