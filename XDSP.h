@@ -153,7 +153,7 @@ template <class TNode, class TWorker> class JobQueue
 public:
     typedef typename  TNode::ProcessAttributes ProcessAttributes;
     
-    static constexpr int32 kQSize = XDSP::kMaxVoices / TWorker::vec_elem;
+    static constexpr int32 kQSize = XDSP::kMaxVoices / TWorker::num_elem;
     static constexpr int32 kNumThreads = 1;
     
 	////////////////////////////////
@@ -359,11 +359,11 @@ public:
         JobQueueImpl voice_block_queue;
         
         // Pack the voices and enqueue them for processing
-        for (int32 i = 0; i < XDSP::kMaxVoices; i += TWorker::vec_elem)
+        for (int32 i = 0; i < XDSP::kMaxVoices; i += TWorker::num_elem)
         {
             // local_voices contains a subset of the global voice array adapted to the SIMD operation width
             VoiceBlock local_voices;
-            for (int j = 0; j < TWorker::vec_elem; j++)
+            for (int j = 0; j < TWorker::num_elem; j++)
             {
                 typename T::Voice* voice = static_cast<typename T::Voice*>(node->GetVoice(i+j));
               //  voice->PreProcessBuffer(process_globals);

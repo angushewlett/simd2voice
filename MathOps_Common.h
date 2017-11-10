@@ -20,8 +20,10 @@
 #define SIMDFUNC static vforceinline vf
 
 #if WIN32
+#define ALIGN_PRE(x) __declspec(align(x))
 #define ALIGN_POST(x)
 #else
+#define ALIGN_PRE(x) 
 #define ALIGN_POST(x) __attribute__ ((aligned (x)))
 #endif
 
@@ -36,9 +38,9 @@ public:
 
 	////////////////////////////////
 	// Interleaving function generator for 1-op
-	template <typename container_t, class op_t> static vforceinline container_t funcgen_1op(const container_t& a)
+	template <class op_t> static vforceinline vf funcgen_1op(const vf& a)
 	{
-		container_t result;
+		vf result;
 		if (interleave > 0x0) result.m[0x0] = op_t::op(a.m[0x0]);
 		if (interleave > 0x1) result.m[0x1] = op_t::op(a.m[0x1]);
 		if (interleave > 0x2) result.m[0x2] = op_t::op(a.m[0x2]);
@@ -58,61 +60,62 @@ public:
 		return result;
 	};
 
-	////////////////////////////////
-	// Interleaving function generator for 2-op
-	template <typename container_t, class op_t> static vforceinline container_t funcgen_2op(const container_t& a, const container_t& b)
-	{
-		container_t result;
-		if (interleave > 0x0) result.m[0x0] = op_t::op(a.m[0x0], b.m[0x0]);
-		if (interleave > 0x1) result.m[0x1] = op_t::op(a.m[0x1], b.m[0x1]);
-		if (interleave > 0x2) result.m[0x2] = op_t::op(a.m[0x2], b.m[0x2]);
-		if (interleave > 0x3) result.m[0x3] = op_t::op(a.m[0x3], b.m[0x3]);
-		if (interleave > 0x4) result.m[0x4] = op_t::op(a.m[0x4], b.m[0x4]);
-		if (interleave > 0x5) result.m[0x5] = op_t::op(a.m[0x5], b.m[0x5]);
-		if (interleave > 0x6) result.m[0x6] = op_t::op(a.m[0x6], b.m[0x6]);
-		if (interleave > 0x7) result.m[0x7] = op_t::op(a.m[0x7], b.m[0x7]);
-		if (interleave > 0x8) result.m[0x8] = op_t::op(a.m[0x8], b.m[0x8]);
-		if (interleave > 0x9) result.m[0x9] = op_t::op(a.m[0x9], b.m[0x9]);
-		if (interleave > 0xA) result.m[0xA] = op_t::op(a.m[0xA], b.m[0xA]);
-		if (interleave > 0xB) result.m[0xB] = op_t::op(a.m[0xB], b.m[0xB]);
-		if (interleave > 0xC) result.m[0xC] = op_t::op(a.m[0xC], b.m[0xC]);
-		if (interleave > 0xD) result.m[0xD] = op_t::op(a.m[0xD], b.m[0xD]);
-		if (interleave > 0xE) result.m[0xE] = op_t::op(a.m[0xE], b.m[0xE]);
-		if (interleave > 0xF) result.m[0xF] = op_t::op(a.m[0xF], b.m[0xF]);
-		return result;
-	};
+    
+    ////////////////////////////////
+    // Interleaving function generator for 2-op
+    template <class op_t> static vforceinline vf funcgen_2op(const vf& a, const vf& b)
+    {
+        vf result;
+        if (interleave > 0x0) result.m[0x0] = op_t::op(a.m[0x0], b.m[0x0]);
+        if (interleave > 0x1) result.m[0x1] = op_t::op(a.m[0x1], b.m[0x1]);
+        if (interleave > 0x2) result.m[0x2] = op_t::op(a.m[0x2], b.m[0x2]);
+        if (interleave > 0x3) result.m[0x3] = op_t::op(a.m[0x3], b.m[0x3]);
+        if (interleave > 0x4) result.m[0x4] = op_t::op(a.m[0x4], b.m[0x4]);
+        if (interleave > 0x5) result.m[0x5] = op_t::op(a.m[0x5], b.m[0x5]);
+        if (interleave > 0x6) result.m[0x6] = op_t::op(a.m[0x6], b.m[0x6]);
+        if (interleave > 0x7) result.m[0x7] = op_t::op(a.m[0x7], b.m[0x7]);
+        if (interleave > 0x8) result.m[0x8] = op_t::op(a.m[0x8], b.m[0x8]);
+        if (interleave > 0x9) result.m[0x9] = op_t::op(a.m[0x9], b.m[0x9]);
+        if (interleave > 0xA) result.m[0xA] = op_t::op(a.m[0xA], b.m[0xA]);
+        if (interleave > 0xB) result.m[0xB] = op_t::op(a.m[0xB], b.m[0xB]);
+        if (interleave > 0xC) result.m[0xC] = op_t::op(a.m[0xC], b.m[0xC]);
+        if (interleave > 0xD) result.m[0xD] = op_t::op(a.m[0xD], b.m[0xD]);
+        if (interleave > 0xE) result.m[0xE] = op_t::op(a.m[0xE], b.m[0xE]);
+        if (interleave > 0xF) result.m[0xF] = op_t::op(a.m[0xF], b.m[0xF]);
+        return result;
+    };
 
 	////////////////////////////////
 	//  One-op and two-op functions
 
 	// Basics
-	SIMDFUNC addps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_add_f>(q1, q2); };
-	SIMDFUNC subps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_sub_f>(q1, q2); };
-	SIMDFUNC mulps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_mul_f>(q1, q2); };
-	SIMDFUNC divps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_div_f>(q1, q2); };
+	SIMDFUNC addps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_add_f>(q1, q2); };
+	SIMDFUNC subps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_sub_f>(q1, q2); };
+	SIMDFUNC mulps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_mul_f>(q1, q2); };
+	SIMDFUNC divps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_div_f>(q1, q2); };
 
 	// Minmax
-	SIMDFUNC minps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_min_f>(q1, q2); };
-	SIMDFUNC maxps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_max_f>(q1, q2); };
+	SIMDFUNC minps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_min_f>(q1, q2); };
+	SIMDFUNC maxps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_max_f>(q1, q2); };
 
 	// Booleans
-	SIMDFUNC andps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_and_f>(q1, q2); };
-	SIMDFUNC andnps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_andn_f>(q1, q2); };
-	SIMDFUNC orps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_or_f>(q1, q2); };
-	SIMDFUNC xorps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_xor_f>(q1, q2); };
-	SIMDFUNC notps(const vf& q1) { return funcgen_1op<vf, typename simd_t::op_not_f>(q1); };
+	SIMDFUNC andps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_and_f>(q1, q2); };
+	SIMDFUNC andnps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_andn_f>(q1, q2); };
+	SIMDFUNC orps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_or_f>(q1, q2); };
+	SIMDFUNC xorps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_xor_f>(q1, q2); };
+	SIMDFUNC notps(const vf& q1) { return funcgen_1op<typename simd_t::op_not_f>(q1); };
 
 	// Compares
-	SIMDFUNC cmpgeps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmpge_f>(q1, q2); };
-	SIMDFUNC cmpgtps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmpgt_f>(q1, q2); };
-	SIMDFUNC cmpleps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmple_f>(q1, q2); };
-	SIMDFUNC cmpltps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmplt_f>(q1, q2); };
-	SIMDFUNC cmpeqps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmpeq_f>(q1, q2); };
-	SIMDFUNC cmpneps(const vf& q1, const vf& q2) { return funcgen_2op<vf, typename simd_t::op_cmpne_f>(q1, q2); };
+	SIMDFUNC cmpgeps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmpge_f>(q1, q2); };
+	SIMDFUNC cmpgtps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmpgt_f>(q1, q2); };
+	SIMDFUNC cmpleps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmple_f>(q1, q2); };
+	SIMDFUNC cmpltps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmplt_f>(q1, q2); };
+	SIMDFUNC cmpeqps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmpeq_f>(q1, q2); };
+	SIMDFUNC cmpneps(const vf& q1, const vf& q2) { return funcgen_2op<typename simd_t::op_cmpne_f>(q1, q2); };
 
 	// Misc
-	SIMDFUNC rcpps(const vf& q1) { return funcgen_1op<vf, typename simd_t::op_rcp_f>(q1); };
-	SIMDFUNC absps(const vf& q1) { return funcgen_1op<vf, typename simd_t::op_abs_f>(q1); };
+	SIMDFUNC rcpps(const vf& q1) { return funcgen_1op<typename simd_t::op_rcp_f>(q1); };
+	SIMDFUNC absps(const vf& q1) { return funcgen_1op<typename simd_t::op_abs_f>(q1); };
 	SIMDFUNC zerops()			{	return assign_single(0.f);	};
 	SIMDFUNC set1ps(float q1)	{	return assign_single(q1);	};
 
@@ -221,11 +224,11 @@ public:
 template <class simd_t, int32 interleave> class alignas(simd_t::alignment) vf_t : public simd_t
 {
 public:
-	typedef typename simd_t::vec_elem_t vec_elem_t;
+	typedef typename simd_t::vec_elem_f vec_elem_f;
 //	typedef typename simd_t::vec_union_f vec_union_f;
 
 	// Data storage - (interleave) elements of SIMD vectors
-	vec_elem_t m[interleave];
+	vec_elem_f m[interleave];
 
 	// Default ctor doesn't initialize. standard c++.
 	vforceinline vf_t() {};
@@ -235,9 +238,9 @@ public:
 
 	////////////////////////////////
 	// Copy constructors and assignment operators
-	// Can take:- another vf_t, a single vec_elem_t element which is copied to all, a single float copied to all.
+	// Can take:- another vf_t, a single vec_elem_f element which is copied to all, a single float copied to all.
 	vforceinline vf_t(const vf_t& f) { *this = f; };
-	vforceinline vf_t(const vec_elem_t(&f)[interleave]) { *this = f; };
+	vforceinline vf_t(const vec_elem_f(&f)[interleave]) { *this = f; };
 	vforceinline vf_t(const float& f) { *this = f; };
 
 	vforceinline vf_t& operator=(const vf_t& f)
@@ -246,7 +249,7 @@ public:
 		return *this;
 	};
 
-	vforceinline vf_t& operator=(const vec_elem_t(&f)[interleave])
+	vforceinline vf_t& operator=(const vec_elem_f(&f)[interleave])
 	{
 		*this = simd_t::assign_array(f);
 		return *this;
@@ -361,7 +364,7 @@ public:
 	using TIOAdapter::zerops;\
     using TIOAdapter::maskps;\
     using TIOAdapter::notps;\
-	using TIOAdapter::vec_elem;\
+	using TIOAdapter::num_elem;\
     using TIOAdapter::cubeps;\
     using TIOAdapter::clip01ps;\
     using TIOAdapter::clipps;\

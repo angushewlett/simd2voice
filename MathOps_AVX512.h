@@ -16,121 +16,121 @@
 template <const int interleave_i> class MathOps_AVX512 : public MathBase<MathOps_AVX512<interleave_i>, __m512, interleave_i>
 {
 public:
-    static constexpr int raw_vec_elem = 16;
+    static constexpr int raw_num_elem = 16;
     static constexpr int raw_vec_2pow = 4;
-    static constexpr int vec_elem = interleave_i * raw_vec_elem;
+    static constexpr int num_elem = interleave_i * raw_num_elem;
     static constexpr int alignment = 64;
 	static constexpr int interleave = interleave_i;
     
-    typedef __m512 vec_elem_t ALIGN_POST(64);
-    typedef __m512i vec_int_t ALIGN_POST(64);    
+    typedef __m512 vec_elem_f ALIGN_POST(64);
+    typedef __m512i vec_elem_i ALIGN_POST(64);
 	typedef vf_t<MathOps_AVX512, interleave> vec_float;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
 	class op_set_f
 	{
-	public: static vforceinline vec_elem_t op(float a) { return _mm512_set1_ps(a); };
+	public: static vforceinline vec_elem_f op(float a) { return _mm512_set1_ps(a); };
 	};
 
 	class op_add_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_add_ps(a , b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_add_ps(a , b); };
 	};
 
 	class op_sub_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_sub_ps(a , b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_sub_ps(a , b); };
 	};
 
 	class op_mul_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_mul_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_mul_ps(a, b); };
 	};
 
 	class op_div_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_div_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_div_ps(a, b); };
 	};
 
 	class op_min_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_min_ps(a , b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_min_ps(a , b); };
 	};
 
 	class op_max_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_max_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_max_ps(a, b); };
 	};
 
 	class op_rcp_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return _mm512_rcp14_ps(a); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { return _mm512_rcp14_ps(a); };
 	};
 
 	class op_abs_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { const int32 mask = 0x7FFFFFFF; return  _mm512_and_ps(a, _mm512_set1_ps(mask)); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { const int32 mask = 0x7FFFFFFF; return  _mm512_and_ps(a, _mm512_set1_ps(mask)); };
 	};
 
 	class op_and_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_and_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_and_ps(a, b); };
 	};
 
 	class op_or_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_or_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_or_ps(a, b); };
 	};
 
 	class op_andn_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_andnot_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_andnot_ps(a, b); };
 	};
 
 	class op_xor_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_xor_ps(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_xor_ps(a, b); };
 	};
 
 	class op_not_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return _mm512_xor_ps(a, _mm512_set1_epi32(0xFFFFFFFF)); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { return _mm512_xor_ps(a, _mm512_set1_epi32(0xFFFFFFFF)); };
 	};
 
-	template <int32 cmp_op> static vforceinline vec_elem_t _mm512_cmp_ps(const vec_elem_t& a, const vec_elem_t &b)
+	template <int32 cmp_op> static vforceinline vec_elem_f _mm512_cmp_ps(const vec_elem_f& a, const vec_elem_f &b)
         {
             return _mm512_castsi512_ps(_mm512_maskz_set1_epi32(_mm512_cmp_ps_mask(a, b, cmp_op), 0xFFFFFFFF));
         };
 
 	class op_cmpge_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_GE_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_GE_OS>(a,b); };
 	};
 
 	class op_cmpgt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_GT_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_GT_OS>(a,b); };
 	};
 
 	class op_cmple_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_LE_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_LE_OS>(a,b); };
 	};
 
 	class op_cmplt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_LT_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_LT_OS>(a,b); };
 	};
 
 	class op_cmpeq_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_EQ_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_EQ_OS>(a,b); };
 	};
 
 	class op_cmpne_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return _mm512_cmp_ps<_CMP_NEQ_OS>(a,b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm512_cmp_ps<_CMP_NEQ_OS>(a,b); };
 	};
              
     ////////////////////////////////

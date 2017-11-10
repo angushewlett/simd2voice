@@ -8,6 +8,7 @@
 #define WIN32 1
 #define NOMINMAX 1
 class IUnknown;
+
 #include <windows.h>
 #include <stdint.h>
 
@@ -94,7 +95,7 @@ void sleep(int s)
 template <class TTestClass, class TMathClass> void run_test(const char* messagePrefix)
 {
 	// Reject interleave sizes larger than the number of voices.
-	if (TMathClass::vec_elem > XDSP::kMaxVoices)
+	if (TMathClass::num_elem > XDSP::kMaxVoices)
 	{
 		printf("%s %s%s\n", TTestClass::GetDescription(), messagePrefix, ": Failed to interleave (larger than voice count)");
 		return;
@@ -191,11 +192,11 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 #ifdef TARGET_TYPE_APP
     fprintf (stderr, "Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
             TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6,
-            mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_vec_elem, mIterationsPerSecond / TMathClass::vec_elem, xRealtime);
+            mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_num_elem, mIterationsPerSecond / TMathClass::num_elem, xRealtime);
 #else
     printf ("Average time for [ %s %s ] [%dv, %ds] bl: %0.2f us \t\t%0.2f MIt/sec\t%0.2f MOp/sec\t%0.2f MCall/sec\t%0.2f x Realtime\n",
             TTestClass::GetDescription(), messagePrefix, XDSP::kMaxVoices, process_globals.block_length, audioBlockAverage * k10e6,
-            mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_vec_elem, mIterationsPerSecond / TMathClass::vec_elem, xRealtime);
+            mIterationsPerSecond, mIterationsPerSecond / TMathClass::raw_num_elem, mIterationsPerSecond / TMathClass::num_elem, xRealtime);
 #endif
     ////////////////
     // Sanity checks
@@ -222,7 +223,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 #include "YEQFilter.h"
 #include "YFilterLadder.h"
 
-//#define TEST_CLASS YBasicAmp
+// #define TEST_CLASS YBasicAmp
 // #define TEST_CLASS YPannerAmp
 #define TEST_CLASS YFilterLadder
 // #define TEST_CLASS YEQFilter<1>
@@ -243,13 +244,12 @@ int main(int argc, char *argv[])
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
 	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
-//	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
-    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
+//	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1"); // Extra run to check consistency
     run_test<TEST_CLASS,MathOps_FPU<2>>("fpu,  2");
     run_test<TEST_CLASS,MathOps_FPU<4>>("fpu,  4");
     run_test<TEST_CLASS,MathOps_FPU<8>>("fpu,  8");
     run_test<TEST_CLASS,MathOps_FPU<16>>("fpu, 16");
-//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
+//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1"); // Extra run to check consistency (CPU spin up/down)
     
 #if ENABLE_SSE
     run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
@@ -267,7 +267,6 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_NEON<16>>("NEON, 16");
 #endif
     
-    
 #if ENABLE_AVX
     run_test<TEST_CLASS,MathOps_AVX2<1>>("AVX,  1");
     run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");
@@ -283,7 +282,7 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
     run_test<TEST_CLASS,MathOps_AVX512<8>>("AVX512,  8");
 #endif
-//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");
+//    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");     // (Extra runs)
 //    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");    
 //	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
 

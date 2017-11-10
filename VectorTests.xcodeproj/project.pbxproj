@@ -23,6 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9277F1091FB52A3400E05A39 /* MathOps_Neon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Neon.h; sourceTree = SOURCE_ROOT; };
 		92CB39681FAE0FB70039418F /* YBasicAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YBasicAmp.h; sourceTree = SOURCE_ROOT; };
 		92CB39691FAE0FB70039418F /* YEQFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YEQFilter.h; sourceTree = SOURCE_ROOT; };
 		92CB396A1FAE0FB70039418F /* YFilterLadder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YFilterLadder.h; sourceTree = SOURCE_ROOT; };
@@ -72,6 +73,7 @@
 				92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */,
 				92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */,
 				92CB8D7C1F967B2C009D7BA7 /* MathOps_SSE.h */,
+				9277F1091FB52A3400E05A39 /* MathOps_Neon.h */,
 				92CB8D7F1F96CEA5009D7BA7 /* MathOps_Scalar.h */,
 				92CB8D6C1F965816009D7BA7 /* Prefix_FMA.h */,
 			);

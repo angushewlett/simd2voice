@@ -15,116 +15,116 @@
 template <const int interleave_i> class MathOps_FPU : public MathBase<MathOps_FPU<interleave_i>, float, interleave_i>
 {
 public:
-    static constexpr int raw_vec_elem = 1;
+    static constexpr int raw_num_elem = 1;
     static constexpr int raw_vec_2pow = 0;
-    static constexpr int vec_elem = interleave_i * raw_vec_elem;
+    static constexpr int num_elem = interleave_i * raw_num_elem;
     static constexpr int alignment = 4;   
 	static constexpr int interleave = interleave_i;
     
-    typedef float vec_elem_t;
-    typedef int vec_int_t;
+    typedef float vec_elem_f;
+    typedef int vec_elem_i;
 	typedef vf_t<MathOps_FPU, interleave> vec_float;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
 	class op_set_f
 	{
-	public: static vforceinline vec_elem_t op(float a) { return a; };
+	public: static vforceinline vec_elem_f op(float a) { return a; };
 	};
 
 	class op_add_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b)	{ return a + b;	};
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b)	{ return a + b;	};
 	};
 
 	class op_sub_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b)	{ return a - b; };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b)	{ return a - b; };
 	};
 
 	class op_mul_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b)	{ return a * b; };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b)	{ return a * b; };
 	};
 
 	class op_div_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return a / b; };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return a / b; };
 	};
 
 	class op_min_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return std::min<float>(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return std::min<float>(a, b); };
 	};
 
 	class op_max_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { return std::max<float>(a, b); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return std::max<float>(a, b); };
 	};
 
 	class op_rcp_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { return 1.f / a; };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { return 1.f / a; };
 	};
 
 	class op_abs_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { int32 tmp = (*reinterpret_cast<const int32*>(&a) & 0x7FFFFFFF); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { int32 tmp = (*reinterpret_cast<const int32*>(&a) & 0x7FFFFFFF); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_and_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) & *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) & *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_or_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) | *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) | *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_andn_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) &~*reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) &~*reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_xor_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) ^ *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (*reinterpret_cast<const int32*>(&a) ^ *reinterpret_cast<const int32*>(&b)); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_not_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a) { int32 tmp = (*reinterpret_cast<const int32*>(&a) ^ 0xFFFFFFFF); return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a) { int32 tmp = (*reinterpret_cast<const int32*>(&a) ^ 0xFFFFFFFF); return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmpge_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a >= b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a >= b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmpgt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a > b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a > b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmple_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a <= b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a <= b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmplt_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a < b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a < b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmpeq_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a == b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a == b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
 
 	class op_cmpne_f
 	{
-	public: static vforceinline vec_elem_t op(const vec_elem_t& a, const vec_elem_t& b) { int32 tmp = (a != b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a != b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
              
     ////////////////////////////////

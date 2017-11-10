@@ -11,8 +11,8 @@
 ////////////////////////////////
 // Scatter/gather class for XDSP process nodes with interleaved audio buffers
 // Inherits from a math-ops class which provides the following:-
-// * simd_t an opaque vector of (one or more) floats, with a fixed size of (vec_elem) elements
-// * static const int32 vec_elem	-- an int declaring the total number of elements in the vector
+// * simd_t an opaque vector of (one or more) floats, with a fixed size of (num_elem) elements
+// * static const int32 num_elem	-- an int declaring the total number of elements in the vector
 // * static const int32 interleave -- an int declaring the vector's interleave factor
 ////////////////////////////////
 
@@ -34,18 +34,14 @@ template <class simd_t, class dspnode_t> class IOAdapter : public simd_t
 {
 public:
     // Import types from the base mathops implementation
-	typedef typename simd_t::vec_float vec_float;
-//	typedef typename simd_t::vec_union_f vec_union_f;
-	//	typedef typename simd_t::vec_int vec_int;
-	//	typedef typename simd_t::vec_union_i32 vec_union_i32;
-    
-	static constexpr int32 vec_elem = simd_t::vec_elem;
+	typedef typename simd_t::vec_float vec_float;    
+	static constexpr int32 num_elem = simd_t::num_elem;
 	static constexpr int32 interleave = simd_t::interleave;
     
     // Import voice type from the DSP node
     typedef typename dspnode_t::Voice Voice;
     typedef typename dspnode_t::template Worker<IOAdapter> Worker;
-    typedef Voice* VoiceBlock[simd_t::vec_elem];
+    typedef Voice* VoiceBlock[simd_t::num_elem];
     
     /////////////////////////////////
     // Input stream (for reading from interleaved AudioDSPGraph I/O buffers)
@@ -69,7 +65,7 @@ public:
         vforceinline SampleInputStream & operator >> (vec_float& f)
         {
             f= *m_buff_read;
-            m_buff_read += XDSP::kMaxVoices / vec_elem;
+            m_buff_read += XDSP::kMaxVoices / num_elem;
             return *this;
         };
         
@@ -77,7 +73,7 @@ public:
         vforceinline SampleInputStream operator++(int n)
         {
             SampleInputStream tmp(*this);
-            m_buff_read += XDSP::kMaxVoices / vec_elem;
+            m_buff_read += XDSP::kMaxVoices / num_elem;
             return tmp;
         };
         
@@ -114,7 +110,7 @@ public:
         vforceinline SampleOutputStream & operator << (vec_float f)
         {
             *m_buff_write = f;
-            m_buff_write += XDSP::kMaxVoices / vec_elem;
+            m_buff_write += XDSP::kMaxVoices / num_elem;
             return *this;
         };
         
@@ -122,7 +118,7 @@ public:
         vforceinline SampleOutputStream operator++(int n)
         {
             SampleOutputStream tmp(*this);
-            m_buff_write += XDSP::kMaxVoices / vec_elem;
+            m_buff_write += XDSP::kMaxVoices / num_elem;
             return tmp;
         };
         
