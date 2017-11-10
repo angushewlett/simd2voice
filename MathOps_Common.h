@@ -263,9 +263,9 @@ public:
 
 	////////////////////////////////
 	// Math operations taking float on lhs
-	friend vforceinline vf_t operator* (float lhs, vf_t rhs) { vf_t tmp = vf_t::set1ps(lhs) * rhs; return tmp; };
-	friend vforceinline vf_t operator+ (float lhs, vf_t rhs) { vf_t tmp = vf_t::set1ps(lhs) + rhs; return tmp; };
-	friend vforceinline vf_t operator- (float lhs, vf_t rhs) { vf_t tmp = vf_t::set1ps(lhs) - rhs; return tmp; };
+	friend vforceinline vf_t operator* (float lhs, const vf_t& rhs) { vf_t tmp = vf_t::set1ps(lhs) * rhs; return tmp; };
+	friend vforceinline vf_t operator+ (float lhs, const vf_t& rhs) { vf_t tmp = vf_t::set1ps(lhs) + rhs; return tmp; };
+	friend vforceinline vf_t operator- (float lhs, const vf_t& rhs) { vf_t tmp = vf_t::set1ps(lhs) - rhs; return tmp; };
 
 	////////////////////////////////
 	// Basic maths: +,-,* (no divide, it's slow. if you want divide, figure out a faster way).

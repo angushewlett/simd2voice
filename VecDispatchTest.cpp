@@ -1,24 +1,20 @@
-
 //////////////////////////////////////////////////////////
-// XDispatch_FMA.cpp
-// Dispatcher for FMA optimized processbuffer loops (Haswell / Broadwell)
+// VecDispatchTest.cpp
+// Vector dispatch test code
 //////////////////////////////////////////////////////////
 
 #ifdef _MSC_VER
 #define WIN32 1
 #define NOMINMAX 1
-class IUnknown;
 
 #include <windows.h>
 #include <stdint.h>
-
 // System headers
 WINBASEAPI VOID WINAPI Sleep(_In_ DWORD dwMilliseconds);
 void sleep(int s)
 {
 	Sleep(s * 1000);
 }
-
 #else
 #include <unistd.h>
 #endif
@@ -34,6 +30,9 @@ void sleep(int s)
 
 #ifdef IACA_TEST
 #include "iacaMarks.h"
+#else
+#define IACA_START
+#define IACA_END
 #endif
 
 #if ARCH_ARM
@@ -41,11 +40,11 @@ void sleep(int s)
 
 
 // Enable additional instruction sets here
-#if 1 // __SSE__
+#if   __SSE__
 #define ENABLE_SSE 1
 #endif
 
-#if 1 //__AVX__
+#if  __AVX__
 #define ENABLE_AVX 1
 #endif
 
@@ -226,7 +225,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
 // #define TEST_CLASS YBasicAmp
 // #define TEST_CLASS YPannerAmp
 #define TEST_CLASS YFilterLadder
-// #define TEST_CLASS YEQFilter<1>
+// #define TEST_CLASS YEQFilter<4>
 
 #if TARGET_TYPE_APP
 int test_auto_simd()
@@ -245,6 +244,7 @@ int main(int argc, char *argv[])
 #endif
 	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
 //	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1"); // Extra run to check consistency
+/*
     run_test<TEST_CLASS,MathOps_FPU<2>>("fpu,  2");
     run_test<TEST_CLASS,MathOps_FPU<4>>("fpu,  4");
     run_test<TEST_CLASS,MathOps_FPU<8>>("fpu,  8");
@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_AVX512<2>>("AVX512,  2");
     run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
     run_test<TEST_CLASS,MathOps_AVX512<8>>("AVX512,  8");
-#endif
+#endif*/
 //    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");     // (Extra runs)
 //    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");    
 //	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");

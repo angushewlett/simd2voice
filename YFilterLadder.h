@@ -147,7 +147,7 @@ public:
             
             for (int32 t=0; t<block_length; t++)
             {
-//                 _mm_mfence();
+IACA_START;
                 // ------------------------------------------------------------
                 // interpolations, basic coeffs, input
                 f1 += f1_inc;
@@ -261,7 +261,7 @@ public:
                 dcv += (dc_f * out_hp);
                 
                 outstream << out_hp + (input * bleed);
-//                _mm_mfence();
+                IACA_END;
             }
             
             // Store members

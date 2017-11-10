@@ -29,7 +29,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "242"
             endingLineNumber = "242"
-            landmarkName = "NodeTmpl"
+            landmarkName = "class NodeTmpl"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -45,7 +45,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "99"
             endingLineNumber = "99"
-            landmarkName = "Node"
+            landmarkName = "class Node"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -961,9 +961,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "359"
-            endingLineNumber = "359"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            endingLineNumber = "359">
             <Locations>
                <Location
                   shouldBeEnabled = "No"

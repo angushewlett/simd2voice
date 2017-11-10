@@ -69,7 +69,6 @@
 		92CB8D6F1F965837009D7BA7 /* Architectures */ = {
 			isa = PBXGroup;
 			children = (
-				92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */,
 				92CB8D8A1F9A112D009D7BA7 /* MathOps_AVX512.h */,
 				92CB8D6A1F965816009D7BA7 /* MathOps_AVX.h */,
 				92CB8D7C1F967B2C009D7BA7 /* MathOps_SSE.h */,
@@ -116,6 +115,7 @@
 				92CB8D6F1F965837009D7BA7 /* Architectures */,
 				92CB8D6E1F965822009D7BA7 /* Filters */,
 				92CB8D7E1F96CBBD009D7BA7 /* CompilerExplorer.cpp */,
+				92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */,
 			);
 			path = VectorTests;
 			sourceTree = "<group>";
