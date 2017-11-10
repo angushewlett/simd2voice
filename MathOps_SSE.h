@@ -23,9 +23,9 @@ public:
     static constexpr int alignment = 16;
 	static constexpr int interleave = interleave_i;
 
-    typedef __m128 vec_elem_f;
-    typedef __m128i vec_elem_i;
-	typedef vf_t<MathOps_SSE_v, interleave> vec_float;
+    typedef ALIGN_PRE(16) __m128 vec_elem_f ALIGN_POST(16);
+    typedef ALIGN_PRE(16) __m128i vec_elem_i ALIGN_POST(16);
+	typedef ALIGN_PRE(16) vf_t<MathOps_SSE_v, interleave> vec_float ALIGN_POST(16);
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).

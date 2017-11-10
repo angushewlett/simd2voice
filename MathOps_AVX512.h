@@ -22,9 +22,9 @@ public:
     static constexpr int alignment = 64;
 	static constexpr int interleave = interleave_i;
     
-    typedef __m512 vec_elem_f ALIGN_POST(64);
-    typedef __m512i vec_elem_i ALIGN_POST(64);
-	typedef vf_t<MathOps_AVX512, interleave> vec_float;
+    typedef ALIGN_PRE(64) __m512 vec_elem_f ALIGN_POST(64);
+    typedef ALIGN_PRE(64) __m512i vec_elem_i ALIGN_POST(64);
+	typedef ALIGN_PRE(64) vf_t<MathOps_AVX512, interleave> vec_float ALIGN_POST(64);
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
