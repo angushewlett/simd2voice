@@ -307,8 +307,6 @@
 					"-march=haswell",
 					"-O3",
 					"-ffp-contract=fast",
-					"-fno-vectorize",
-					"-fno-slp-vectorize",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

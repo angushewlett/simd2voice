@@ -141,7 +141,7 @@ template <class TTestClass, class TMathClass> void run_test(const char* messageP
     
     ////////
     // Set up some control parameters for the node (these are set independently on each voice)
-    float control_params[] = {1.f, 0.8f, 0.6f, 0.3f, 0.8f, 0.9f, 0.2f, 0.5f };
+    float control_params[] = {0.2f, 0.8f, 0.6f, 0.3f, 0.8f, 0.9f, 0.2f, 0.5f };
     float* control_buffer = (float*)valigned_malloc(XDSP::kMaxVoices * XDSP::kMaxControlPorts * sizeof(float), 64);
     for (int32 i = 0; i < 8; i++)
     {
@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
 #elif WIN32
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
+    
 	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
 //	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1"); // Extra run to check consistency
 
@@ -286,9 +287,8 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_AVX512<8>>("AVX512,  8");
 #endif
 //    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");     // (Extra runs)
-//    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");    
+//     run_test<TEST_CLASS,MathOps_AVX2<4>>("AVX,  4");
 //	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
-
     sleep(2); // Give Instruments time to detach cleanly
     return 0;
 }
