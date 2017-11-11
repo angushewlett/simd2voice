@@ -168,8 +168,7 @@ public:
 	vforceinline vec_float member_gather(size_t offset)
 	{
         const float* base = reinterpret_cast<const float*>(m_voices[0]);
-        constexpr size_t voice_shift = (((sizeof(typename dspnode_t::Voice) >> 6) + 1) << 6);
-        return simd_t::template gather<voice_shift> (base + (offset / sizeof(float)));
+        return simd_t::template gather<dspnode_t::Node::s_voice_size_padded> (base + (offset / sizeof(float)));
 	};
 
     //////////////////////////////
@@ -177,8 +176,7 @@ public:
 	vforceinline void member_scatter(const vec_float& data, size_t offset)
 	{
         float* base = reinterpret_cast<float*>(m_voices[0]);
-        constexpr size_t voice_shift = (((sizeof(typename dspnode_t::Voice) >> 6) + 1) << 6);
-        simd_t::template scatter<voice_shift> (data, base + (offset / sizeof(float)));
+        simd_t::template scatter<dspnode_t::Node::s_voice_size_padded> (data, base + (offset / sizeof(float)));
     };
 
     ///////////////////////////////

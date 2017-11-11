@@ -23,6 +23,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		922476D91FB61F26009CF6E4 /* XDispatch_AVX2_XBasicAmp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = XDispatch_AVX2_XBasicAmp.cpp; sourceTree = SOURCE_ROOT; };
+		922476DA1FB7318E009CF6E4 /* YSawOsc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YSawOsc.h; sourceTree = SOURCE_ROOT; };
 		9277F1091FB52A3400E05A39 /* MathOps_Neon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathOps_Neon.h; sourceTree = SOURCE_ROOT; };
 		92CB39681FAE0FB70039418F /* YBasicAmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YBasicAmp.h; sourceTree = SOURCE_ROOT; };
 		92CB39691FAE0FB70039418F /* YEQFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YEQFilter.h; sourceTree = SOURCE_ROOT; };
@@ -55,15 +57,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		92CB8D6E1F965822009D7BA7 /* Filters */ = {
+		92CB8D6E1F965822009D7BA7 /* DSP */ = {
 			isa = PBXGroup;
 			children = (
 				92CB39681FAE0FB70039418F /* YBasicAmp.h */,
+				922476DA1FB7318E009CF6E4 /* YSawOsc.h */,
 				92CB39691FAE0FB70039418F /* YEQFilter.h */,
 				92CB396A1FAE0FB70039418F /* YFilterLadder.h */,
 				92CB396B1FAE0FB70039418F /* YPannerAmp.h */,
 			);
-			name = Filters;
+			name = DSP;
 			sourceTree = "<group>";
 		};
 		92CB8D6F1F965837009D7BA7 /* Architectures */ = {
@@ -113,8 +116,9 @@
 			children = (
 				92CB8D711F96587F009D7BA7 /* Common */,
 				92CB8D6F1F965837009D7BA7 /* Architectures */,
-				92CB8D6E1F965822009D7BA7 /* Filters */,
+				92CB8D6E1F965822009D7BA7 /* DSP */,
 				92CB8D7E1F96CBBD009D7BA7 /* CompilerExplorer.cpp */,
+				922476D91FB61F26009CF6E4 /* XDispatch_AVX2_XBasicAmp.cpp */,
 				92CB8D631F96580F009D7BA7 /* VecDispatchTest.cpp */,
 			);
 			path = VectorTests;

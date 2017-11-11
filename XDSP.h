@@ -228,10 +228,10 @@ public:
 	// x86 / x64 dispatch
 	// These are compiled on all architectures but not called (they live in their own compilation units)
 #if ARCH_X86 || ARCH_X64
-    static int32 ProcessBuffer_FMA(const ProcessGlobals& process_globals, TNode* caller);
-    static int32 ProcessBuffer_AVX(const ProcessGlobals& process_globals, TNode* caller);
-    static int32 ProcessBuffer_SSE4(const ProcessGlobals& process_globals, TNode* caller);
-    static int32 ProcessBuffer_SSE2(const ProcessGlobals& process_globals, TNode* caller);
+    static void ProcessBuffer_AVX2(const ProcessGlobals& process_globals, TNode* caller);
+    static void ProcessBuffer_AVX(const ProcessGlobals& process_globals, TNode* caller);
+    static void ProcessBuffer_SSE4(const ProcessGlobals& process_globals, TNode* caller);
+    static void ProcessBuffer_SSE2(const ProcessGlobals& process_globals, TNode* caller);
 #endif
 
 #if ARCH_ARM
@@ -241,11 +241,11 @@ public:
 
 	// Scalar dispatch
     static int32 ProcessBuffer_Scalar(const ProcessGlobals& process_globals, TNode* caller);
-     
+    
     static constexpr bool s_enableAsyncProcess = false;
-    static constexpr size_t s_memAlignPow = 6; // 2^6 = 64 bytes = 1 cache line
-    static constexpr size_t s_memAlign = 1 << s_memAlignPow;
-    static constexpr size_t s_voiceSize = (((sizeof(TVoice) >> s_memAlignPow) + 1) << s_memAlignPow);
+    static constexpr size_t s_mem_align_pow = 6; // 2^6 = 64 bytes = 1 cache line
+    static constexpr size_t s_mem_align = 1 << s_mem_align_pow;
+    static constexpr size_t s_voice_size_padded = (((sizeof(TVoice) >> s_mem_align_pow) + 1) << s_mem_align_pow);
 
     ////////////////////////////////
     //
@@ -265,12 +265,12 @@ public:
     // Allocate voices using placement new
     virtual void AllocateVoices()
     {
-        m_voiceMemory = valigned_malloc(s_voiceSize * XDSP::kMaxVoices, s_memAlign);
+        m_voiceMemory = valigned_malloc(s_voice_size_padded * XDSP::kMaxVoices, s_mem_align);
         m_voices.resize(XDSP::kMaxVoices);
-       // printf("Allocated %lu bytes (voice = %lu, aligned = %lu)\n", s_voiceSize * XDSP::kMaxVoices, sizeof(TVoice), s_voiceSize);
+       // printf("Allocated %lu bytes (voice = %lu, aligned = %lu)\n", s_voice_size_padded * XDSP::kMaxVoices, sizeof(TVoice), s_voice_size_padded);
         for (int32 i = 0; i < XDSP::kMaxVoices; i++)
         {
-            char* voiceMem = ((char*) m_voiceMemory) + (i * s_voiceSize);
+            char* voiceMem = ((char*) m_voiceMemory) + (i * s_voice_size_padded);
             m_voices[i] = new(voiceMem) TVoice();
         }
     };
@@ -329,7 +329,7 @@ public:
         if (cpu_feature_level >= eFeatAVX512) return ProcessBuffer_AVX512(process_globals, this);
 #endif
 #if ENABLE_AVX
-        if (cpu_feature_level >= SIMD::eFeatFMA) return ProcessBuffer_FMA(process_globals, static_cast<TNode*>(this));
+        if (cpu_feature_level >= SIMD::eFeatFMA) return ProcessBuffer_AVX2(process_globals, static_cast<TNode*>(this));
         if (cpu_feature_level >= SIMD::eFeatAVX) return ProcessBuffer_AVX(process_globals, static_cast<TNode*>(this));
 #endif
 #if ENABLE_SSE
@@ -345,6 +345,7 @@ public:
 #endif
         return 0;
     }
+    
 
 	////////////////////////////////
 	// Template for packing voices in to blocks and dispatching to a CPU-specific worker
@@ -395,11 +396,14 @@ protected:
     void* m_voiceMemory = 0;
 };
 
-////////////////////////////////
-// Template implementation class for node-instance-specific voice data
-template <class T> class VoiceTmpl : public Node::Voice
-{
-};
+    ////////////////////////////////
+    // Template implementation class for node-instance-specific voice data
+    template <class T> class VoiceTmpl : public Node::Voice
+    {
+    public:
+//        static const size_t size_padded = (((sizeof(T::Voice) >> 6) + 1) << 6);
+    };
+
     
 };
 

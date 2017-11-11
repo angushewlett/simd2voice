@@ -157,6 +157,29 @@ public:
     // Gather
     template <size_t increment> vforceinline vec_float gather(const float* base_address)
     {
+#if AVX_VERSION == 1
+        vec_float rv;
+        int32 fc = increment / sizeof(float);
+        const float* ba = base_address;
+        
+        if (interleave > 0x0) rv.m[0x0] = _mm256_set_ps(*(ba + (fc * 0x00)), *(ba + (fc * 0x01)), *(ba + (fc * 0x02)), *(ba + (fc * 0x03)), *(ba + (fc * 0x04)), *(ba + (fc * 0x05)), *(ba + (fc * 0x06)), *(ba + (fc * 0x07)));
+        if (interleave > 0x1) rv.m[0x1] = _mm256_set_ps(*(ba + (fc * 0x08)), *(ba + (fc * 0x09)), *(ba + (fc * 0x0A)), *(ba + (fc * 0x0B)), *(ba + (fc * 0x0C)), *(ba + (fc * 0x0D)), *(ba + (fc * 0x0E)), *(ba + (fc * 0x0F)));
+        if (interleave > 0x2) rv.m[0x2] = _mm256_set_ps(*(ba + (fc * 0x10)), *(ba + (fc * 0x11)), *(ba + (fc * 0x12)), *(ba + (fc * 0x13)), *(ba + (fc * 0x14)), *(ba + (fc * 0x15)), *(ba + (fc * 0x16)), *(ba + (fc * 0x17)));
+        if (interleave > 0x3) rv.m[0x3] = _mm256_set_ps(*(ba + (fc * 0x18)), *(ba + (fc * 0x19)), *(ba + (fc * 0x1A)), *(ba + (fc * 0x1B)), *(ba + (fc * 0x1C)), *(ba + (fc * 0x1D)), *(ba + (fc * 0x1E)), *(ba + (fc * 0x1F)));
+        if (interleave > 0x4) rv.m[0x4] = _mm256_set_ps(*(ba + (fc * 0x20)), *(ba + (fc * 0x21)), *(ba + (fc * 0x22)), *(ba + (fc * 0x23)), *(ba + (fc * 0x24)), *(ba + (fc * 0x25)), *(ba + (fc * 0x26)), *(ba + (fc * 0x27)));
+        if (interleave > 0x5) rv.m[0x5] = _mm256_set_ps(*(ba + (fc * 0x28)), *(ba + (fc * 0x29)), *(ba + (fc * 0x2A)), *(ba + (fc * 0x2B)), *(ba + (fc * 0x2C)), *(ba + (fc * 0x2D)), *(ba + (fc * 0x2E)), *(ba + (fc * 0x2F)));
+        if (interleave > 0x6) rv.m[0x6] = _mm256_set_ps(*(ba + (fc * 0x30)), *(ba + (fc * 0x31)), *(ba + (fc * 0x32)), *(ba + (fc * 0x33)), *(ba + (fc * 0x34)), *(ba + (fc * 0x35)), *(ba + (fc * 0x36)), *(ba + (fc * 0x37)));
+        if (interleave > 0x7) rv.m[0x7] = _mm256_set_ps(*(ba + (fc * 0x38)), *(ba + (fc * 0x39)), *(ba + (fc * 0x3A)), *(ba + (fc * 0x3B)), *(ba + (fc * 0x3C)), *(ba + (fc * 0x3D)), *(ba + (fc * 0x3E)), *(ba + (fc * 0x3F)));
+        if (interleave > 0x8) rv.m[0x8] = _mm256_set_ps(*(ba + (fc * 0x40)), *(ba + (fc * 0x41)), *(ba + (fc * 0x42)), *(ba + (fc * 0x43)), *(ba + (fc * 0x44)), *(ba + (fc * 0x45)), *(ba + (fc * 0x46)), *(ba + (fc * 0x47)));
+        if (interleave > 0x9) rv.m[0x9] = _mm256_set_ps(*(ba + (fc * 0x48)), *(ba + (fc * 0x49)), *(ba + (fc * 0x4A)), *(ba + (fc * 0x4B)), *(ba + (fc * 0x4C)), *(ba + (fc * 0x4D)), *(ba + (fc * 0x4E)), *(ba + (fc * 0x4F)));
+        if (interleave > 0xA) rv.m[0xA] = _mm256_set_ps(*(ba + (fc * 0x50)), *(ba + (fc * 0x51)), *(ba + (fc * 0x52)), *(ba + (fc * 0x53)), *(ba + (fc * 0x54)), *(ba + (fc * 0x55)), *(ba + (fc * 0x56)), *(ba + (fc * 0x57)));
+        if (interleave > 0xB) rv.m[0xB] = _mm256_set_ps(*(ba + (fc * 0x58)), *(ba + (fc * 0x59)), *(ba + (fc * 0x5A)), *(ba + (fc * 0x5B)), *(ba + (fc * 0x5C)), *(ba + (fc * 0x5D)), *(ba + (fc * 0x5E)), *(ba + (fc * 0x5F)));
+        if (interleave > 0xC) rv.m[0xC] = _mm256_set_ps(*(ba + (fc * 0x60)), *(ba + (fc * 0x61)), *(ba + (fc * 0x62)), *(ba + (fc * 0x63)), *(ba + (fc * 0x64)), *(ba + (fc * 0x65)), *(ba + (fc * 0x66)), *(ba + (fc * 0x67)));
+        if (interleave > 0xD) rv.m[0xD] = _mm256_set_ps(*(ba + (fc * 0x68)), *(ba + (fc * 0x69)), *(ba + (fc * 0x6A)), *(ba + (fc * 0x6B)), *(ba + (fc * 0x6C)), *(ba + (fc * 0x6D)), *(ba + (fc * 0x6E)), *(ba + (fc * 0x6F)));
+        if (interleave > 0xE) rv.m[0xE] = _mm256_set_ps(*(ba + (fc * 0x70)), *(ba + (fc * 0x71)), *(ba + (fc * 0x72)), *(ba + (fc * 0x73)), *(ba + (fc * 0x74)), *(ba + (fc * 0x75)), *(ba + (fc * 0x76)), *(ba + (fc * 0x77)));
+        if (interleave > 0xF) rv.m[0xF] = _mm256_set_ps(*(ba + (fc * 0x78)), *(ba + (fc * 0x79)), *(ba + (fc * 0x7A)), *(ba + (fc * 0x7B)), *(ba + (fc * 0x7C)), *(ba + (fc * 0x7D)), *(ba + (fc * 0x7E)), *(ba + (fc * 0x7F)));
+        return rv;
+#else
         const __m256i scale_base = _mm256_set_epi32(0x00 * increment,0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment);
         vec_float rv;
         constexpr int32 inc_f = increment / sizeof(float);
@@ -177,6 +200,7 @@ public:
         if (interleave > 0xE) rv.m[0xE] = _mm256_i32gather_ps(base_address + (inc_f * 0x70), scale_base, 1);
         if (interleave > 0xF) rv.m[0xF] = _mm256_i32gather_ps(base_address + (inc_f * 0x78), scale_base, 1);
         return rv;
+#endif
     }
     
     

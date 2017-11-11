@@ -1,17 +1,17 @@
-#ifndef __YBasicAmp_H__
-#define __YBasicAmp_H__
+#ifndef __YSawOsc_H__
+#define __YSawOsc_H__
 
 ////////////////
-// A basic linear gain amp
-class YBasicAmp
+// A basic PolyBLEP sawtooth oscillator
+class YSawOsc
 {
 public:
-    static const char* GetDescription() { return "YBasicAmp"; };
+    static const char* GetDescription() { return "YSawOsc"; };
     
     // Some control I/O ports
     enum eControlIn
     {
-        C_GAIN_LINEAR     = 0,
+        C_FREQUENCY     = 0,
     };
     
     enum
@@ -25,19 +25,19 @@ public:
     
     ////////
     // Voice member data
-    class Voice : public XDSP::VoiceTmpl <YBasicAmp>
+    class Voice : public XDSP::VoiceTmpl <YSawOsc>
     {
     public:
         Voice() {};
         virtual ~Voice() {};
         virtual void Reset ()
         {
-            // m_linear_gain = 1.f;
+            m_phase = 0.f;
         };
         
     protected:
         template <class T> friend class Worker;
-        // float m_linear_gain = 1.f;
+        float m_phase = 0.f;  // -1..+1 phase clock
     };
     
     ////////
@@ -59,21 +59,24 @@ public:
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
             const int32 block_length = process_globals.block_length;
-            vec_float next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
-            SampleInputStream instream = voices.getInputStream(0);
-            SampleOutputStream outstream = voices.getOutputStream(0);            
+            
+            // Assume precomputed (0.. 0.5*SR) frequency
+            vec_float freq01  = voices.controlport_gather(C_FREQUENCY);
+            vec_float phase = voices.member_gather(my_offsetof(m_phase));
+            SampleOutputStream outstream = voices.getOutputStream(0);
             
             for (int32 t=0; t<block_length; t++)
             {
-                vec_float sample;
-                instream >> sample;
-                outstream << (sample * next_linear_gain);
-                // Or: *outstream++ = *instream++ * next_linear_gain;
+                phase += freq01;
+                phase -= ((phase > 1.f) & 2.f);
+                
+                vec_float out_sample = phase;
+                outstream << out_sample;
             }
         }; // ProcessBuffer()
     };	// class Worker
 };
-#endif // __YBasicAmp_H__
+#endif // __SawOsc_H__
 
 
 

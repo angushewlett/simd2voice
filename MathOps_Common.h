@@ -284,7 +284,7 @@ public:
 
 	////////////////////////////////
 	// Logical operators
-	vforceinline vf_t   operator&(const vf_t& m2) const {	return 	andps(*this, m2);	};
+    vforceinline vf_t   operator&(const vf_t& m2) const {	return 	vf_t::andps(*this, m2);	};
 	vforceinline vf_t&  operator!() const	{	return notps(*this);	};
 
 	////////////////////////////////
