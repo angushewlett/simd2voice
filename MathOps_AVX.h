@@ -127,6 +127,15 @@ public:
 	{
 	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { return _mm256_cmp_ps(a,b, _CMP_NEQ_OS); };
 	};
+
+        class op_sub_if_greater_f
+        {
+        public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b, const vec_elem_f& c) 
+                {
+                        vec_elem_f k = _mm256_cmp_ps(a, b, _CMP_GE_OS); 
+                        return _mm256_sub_ps(a,_mm256_and_ps(k, c)); 
+                };
+        };
              
     ////////////////////////////////
     // Load, gather, scatter

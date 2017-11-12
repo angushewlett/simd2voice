@@ -85,6 +85,31 @@ public:
         return result;
     };
 
+    ////////////////////////////////
+    // Interleaving function generator for 2-op
+    template <class op_t> static vforceinline vf funcgen_3op(const vf& a, const vf& b, const vf& c)
+    {
+        vf result;
+        if (interleave > 0x0) result.m[0x0] = op_t::op(a.m[0x0], b.m[0x0], c.m[0x0]);
+        if (interleave > 0x1) result.m[0x1] = op_t::op(a.m[0x1], b.m[0x1], c.m[0x1]);
+        if (interleave > 0x2) result.m[0x2] = op_t::op(a.m[0x2], b.m[0x2], c.m[0x2]);
+        if (interleave > 0x3) result.m[0x3] = op_t::op(a.m[0x3], b.m[0x3], c.m[0x3]);
+        if (interleave > 0x4) result.m[0x4] = op_t::op(a.m[0x4], b.m[0x4], c.m[0x4]);
+        if (interleave > 0x5) result.m[0x5] = op_t::op(a.m[0x5], b.m[0x5], c.m[0x5]);
+        if (interleave > 0x6) result.m[0x6] = op_t::op(a.m[0x6], b.m[0x6], c.m[0x6]);
+        if (interleave > 0x7) result.m[0x7] = op_t::op(a.m[0x7], b.m[0x7], c.m[0x7]);
+        if (interleave > 0x8) result.m[0x8] = op_t::op(a.m[0x8], b.m[0x8], c.m[0x8]);
+        if (interleave > 0x9) result.m[0x9] = op_t::op(a.m[0x9], b.m[0x9], c.m[0x9]);
+        if (interleave > 0xA) result.m[0xA] = op_t::op(a.m[0xA], b.m[0xA], c.m[0xA]);
+        if (interleave > 0xB) result.m[0xB] = op_t::op(a.m[0xB], b.m[0xB], c.m[0xB]);
+        if (interleave > 0xC) result.m[0xC] = op_t::op(a.m[0xC], b.m[0xC], c.m[0xC]);
+        if (interleave > 0xD) result.m[0xD] = op_t::op(a.m[0xD], b.m[0xD], c.m[0xD]);
+        if (interleave > 0xE) result.m[0xE] = op_t::op(a.m[0xE], b.m[0xE], c.m[0xE]);
+        if (interleave > 0xF) result.m[0xF] = op_t::op(a.m[0xF], b.m[0xF], c.m[0xF]);
+        return result;
+    };
+
+
 	////////////////////////////////
 	//  One-op and two-op functions
 
@@ -118,6 +143,8 @@ public:
 	SIMDFUNC absps(const vf& q1) { return funcgen_1op<typename simd_t::op_abs_f>(q1); };
 	SIMDFUNC zerops()			{	return assign_single(0.f);	};
 	SIMDFUNC set1ps(float q1)	{	return assign_single(q1);	};
+
+	SIMDFUNC sub_if_greater_ps(const vf& q1, const vf& q2, const vf& q3) { return funcgen_3op<typename simd_t::op_sub_if_greater_f>(q1, q2, q3); };
 
 	////////////////////////////////
 	// Composites
@@ -228,7 +255,7 @@ public:
 //	typedef typename simd_t::vec_union_f vec_union_f;
 
 	// Data storage - (interleave) elements of SIMD vectors
-	vec_elem_f m[interleave];
+	alignas(simd_t::alignment) vec_elem_f m[interleave];
 
 	// Default ctor doesn't initialize. standard c++.
 	vforceinline vf_t() {};
@@ -373,6 +400,7 @@ public:
     using TIOAdapter::cmpleps;\
     using TIOAdapter::cmpltps;\
     using TIOAdapter::cmpeqps;\
-    using TIOAdapter::cmpneps;
+    using TIOAdapter::cmpneps;\
+    using TIOAdapter::sub_if_greater_ps;
 
 #endif

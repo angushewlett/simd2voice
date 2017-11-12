@@ -126,6 +126,14 @@ public:
 	{
 	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b) { int32 tmp = (a != b) ? 0xFFFFFFFF : 0; return *reinterpret_cast<float*>(&tmp); };
 	};
+
+	class op_sub_if_greater_f
+	{
+	public: static vforceinline vec_elem_f op(const vec_elem_f& a, const vec_elem_f& b, const vec_elem_f& c) 
+	{ 
+		int32 tmp = (a >= b) ? 0xFFFFFFFF : 0; return a - op_and_f::op(*reinterpret_cast<float*>(&tmp), c); 
+	};
+	};
              
     ////////////////////////////////
     // Load, gather, scatter

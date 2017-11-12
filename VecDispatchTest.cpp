@@ -44,11 +44,11 @@ void sleep(int s)
 #define ENABLE_SSE 1
 #endif
 
-#if  __AVX__
+/*#if  __AVX__
 #define ENABLE_AVX 1
-#endif
+#endif*/
 
-#if 0 //__AVX512__
+#if __AVX512__
 #define ENABLE_AVX512 1
 #endif
 
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
 #elif WIN32
     _controlfp_s( NULL, _DN_FLUSH, _MCW_DN );
 #endif
-    
+
 	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1");
 //	run_test<TEST_CLASS, MathOps_FPU<1>>("fpu,  1"); // Extra run to check consistency
 
@@ -286,9 +286,21 @@ int main(int argc, char *argv[])
     run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
     run_test<TEST_CLASS,MathOps_AVX512<8>>("AVX512,  8");
 #endif
+/*    run_test<TEST_CLASS,MathOps_AVX2<1>>("AVX,  1");
+    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");
+    run_test<TEST_CLASS,MathOps_AVX2<4>>("AVX,  4");
+    run_test<TEST_CLASS,MathOps_AVX2<8>>("AVX,  8");*/
+/*    run_test<TEST_CLASS,MathOps_AVX512<1>>("AVX512,  1");
+    run_test<TEST_CLASS,MathOps_AVX512<2>>("AVX512,  2");
+    run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
+    run_test<TEST_CLASS,MathOps_AVX2<1>>("AVX,  1");
+    run_test<TEST_CLASS,MathOps_AVX2<2>>("AVX,  2");
+    run_test<TEST_CLASS,MathOps_AVX2<4>>("AVX,  4");*/
 //    run_test<TEST_CLASS,MathOps_FPU<1>>("fpu,  1");     // (Extra runs)
-//     run_test<TEST_CLASS,MathOps_AVX2<4>>("AVX,  4");
+//     run_test<TEST_CLASS,MathOps_AVX2<8>>("AVX,  4");
 //	  run_test<TEST_CLASS,MathOps_SSE4<1>>("SSE,  1");
+ //   run_test<TEST_CLASS,MathOps_AVX512<4>>("AVX512,  4");
+
     sleep(2); // Give Instruments time to detach cleanly
     return 0;
 }

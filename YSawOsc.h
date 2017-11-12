@@ -78,7 +78,8 @@ public:
                 IACA_START;
                 // Generate naive waveform
                 phase += increment;
-                phase -= ((phase > 1.f) & 2.f);
+		phase = sub_if_greater_ps(phase, 1.f, 2.f);
+//                phase -= ((phase > 1.f) & 2.f);
                 vec_float out_sample = phase;
                 
                 // Calculate +ve & -ve polybleps
@@ -90,8 +91,8 @@ public:
                 out_sample += (polyblep_neg * polyblep_neg); // FMA
  
                 outstream << out_sample;
-                IACA_END;
             }
+                IACA_END;
 
         }; // ProcessBuffer()
     };	// class Worker
