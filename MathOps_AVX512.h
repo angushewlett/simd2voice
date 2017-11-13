@@ -24,7 +24,7 @@ public:
     
     typedef ALIGN_PRE(64) __m512 vec_elem_f ALIGN_POST(64);
     typedef ALIGN_PRE(64) __m512i vec_elem_i ALIGN_POST(64);
-	typedef ALIGN_PRE(64) vf_t<MathOps_AVX512, interleave> vec_float ALIGN_POST(64);
+	typedef ALIGN_PRE(64) vf_t<MathOps_AVX512, interleave> vf ALIGN_POST(64);
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
@@ -147,9 +147,9 @@ public:
     // Load, gather, scatter
 
     // Load
-    static vforceinline vec_float  loadps(const float* q1)
+    static vforceinline vf  loadps(const float* q1)
     {
-        vec_float rv;
+        vf rv;
         if (interleave > 0x0) rv.m[0x0] = _mm512_loadu_ps(&(q1[0]));
         if (interleave > 0x1) rv.m[0x1] = _mm512_loadu_ps(&(q1[16]));
         if (interleave > 0x2) rv.m[0x2] = _mm512_loadu_ps(&(q1[32]));
@@ -170,10 +170,10 @@ public:
     };
     
     // Gather
-    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    template <size_t increment> vforceinline vf gather(const float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
-        vec_float rv;
+        vf rv;
 		constexpr int32 inc_f = increment / sizeof(float);
         const __m512i scale_base = _mm512_set_epi32(0x00 * increment, 0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment,
 						    0x08 * increment, 0x09 * increment, 0x0A * increment, 0x0B * increment, 0x0C * increment, 0x0D * increment, 0x0E * increment, 0x0F * increment);
@@ -198,7 +198,7 @@ public:
     }
     
 	// Scatter
-    template <size_t increment> vforceinline void scatter(const vec_float& data, float* base_address)
+    template <size_t increment> vforceinline void scatter(const vf& data, float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
         constexpr int32 inc_f = increment / sizeof(float);

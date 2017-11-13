@@ -62,29 +62,29 @@ public:
             
             // Assume precomputed (0.. 0.5*SR) frequency.
             // Oscillator [-1..+1]
-            vec_float increment  = voices.controlport_gather(C_FREQUENCY);
-            vec_float phase = voices.member_gather(my_offsetof(m_phase));
+            vf increment  = voices.controlport_gather(C_FREQUENCY);
+            vf phase = voices.member_gather(my_offsetof(m_phase));
             SampleOutputStream outstream = voices.getOutputStream(0);
             
             float filter_scale = 4.f;
             
             // Precompute +ve, -ve & offset coefficients for polyBLEP
-            vec_float scale_pos = divps(1.f, increment * filter_scale);
-            vec_float scale_neg = scale_pos * -1.f;
-            vec_float shift_offset = scale_pos - 1.f;
+            vf scale_pos = divps(1.f, increment * filter_scale);
+            vf scale_neg = scale_pos * -1.f;
+            vf shift_offset = scale_pos - 1.f;
             
             for (int32 t=0; t<block_length; t++)
             {
                 IACA_START;
                 // Generate naive waveform
                 phase += increment;
-		phase = sub_if_greater_ps(phase, 1.f, 2.f);
+                phase = sub_if_greater_ps(phase, 1.f, 2.f);
 //                phase -= ((phase > 1.f) & 2.f);
-                vec_float out_sample = phase;
+                vf out_sample = phase;
                 
                 // Calculate +ve & -ve polybleps
-                vec_float polyblep_pos = maxps(0.f, (phase * scale_pos) - shift_offset);
-                vec_float polyblep_neg = maxps(0.f, (phase * scale_neg) - shift_offset);
+                vf polyblep_pos = maxps(0.f, (phase * scale_pos) - shift_offset);
+                vf polyblep_neg = maxps(0.f, (phase * scale_neg) - shift_offset);
                 
                 // Quadratic & apply
                 out_sample -= (polyblep_pos * polyblep_pos); // FMA

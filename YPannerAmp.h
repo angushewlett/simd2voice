@@ -62,29 +62,29 @@ public:
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
             const int32 block_length = process_globals.block_length;
-            vec_float next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
-            vec_float next_cubic_gain  = voices.controlport_gather(C_GAIN_CUBIC);
-            vec_float next_pan  = voices.controlport_gather(C_PAN);
+            vf next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
+            vf next_cubic_gain  = voices.controlport_gather(C_GAIN_CUBIC);
+            vf next_pan  = voices.controlport_gather(C_PAN);
             
             next_cubic_gain *= next_cubic_gain * next_cubic_gain;
             
-            vec_float last_linear_gain = voices.member_gather(my_offsetof(m_linear_gain));
-            vec_float last_cubic_gain = voices.member_gather(my_offsetof(m_cubic_gain));
-            vec_float last_pan = voices.member_gather(my_offsetof(m_pan));
+            vf last_linear_gain = voices.member_gather(my_offsetof(m_linear_gain));
+            vf last_cubic_gain = voices.member_gather(my_offsetof(m_cubic_gain));
+            vf last_pan = voices.member_gather(my_offsetof(m_pan));
             
-            vec_float linear_gain_diff = (next_linear_gain - last_linear_gain) * process_globals.block_length_norm_inv;
-            vec_float cubic_gain_diff = (next_cubic_gain - last_cubic_gain) * process_globals.block_length_norm_inv;
-            vec_float pan_diff = (next_pan - last_pan) * process_globals.block_length_norm_inv;
+            vf linear_gain_diff = (next_linear_gain - last_linear_gain) * process_globals.block_length_norm_inv;
+            vf cubic_gain_diff = (next_cubic_gain - last_cubic_gain) * process_globals.block_length_norm_inv;
+            vf pan_diff = (next_pan - last_pan) * process_globals.block_length_norm_inv;
             
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream0 = voices.getOutputStream(0);
             SampleOutputStream outstream1 = voices.getOutputStream(1);
             
-            vec_float out_sample1 = 0.f;
+            vf out_sample1 = 0.f;
             
             for (int32 t=0; t<block_length; t++)
             {
-                 vec_float in_sample;
+                 vf in_sample;
                  instream >> in_sample;
                  in_sample = (in_sample * 0.9f) + (out_sample1 * 0.1f);
                  next_linear_gain += linear_gain_diff;

@@ -79,13 +79,13 @@ public:
         {
 
             const int32 block_length = process_globals.block_length;
-            vec_float drv = 0.5f * clipps( voices.controlport_gather(C_DRIVE), 0.f, 10.f);
-            vec_float inv_drv = divps(1.f, drv);
+            vf drv = 0.5f * clipps( voices.controlport_gather(C_DRIVE), 0.f, 10.f);
+            vf inv_drv = divps(1.f, drv);
             inv_drv = minps(inv_drv, 8.f); // limit compensator to +18dB
 
-            vec_float freq = voices.controlport_gather(C_FREQ);
-            vec_float res  = voices.controlport_gather(C_RES);
-            vec_float bleed = voices.controlport_gather(C_BLEED);
+            vf freq = voices.controlport_gather(C_FREQ);
+            vf res  = voices.controlport_gather(C_RES);
+            vf bleed = voices.controlport_gather(C_BLEED);
             bleed = bleed * bleed * bleed;
             
 //            const int32 mixtaps = 5;
@@ -105,10 +105,10 @@ public:
             const float g0 = 0.74f;
             const float g1 = 0.26f;
             
-            vec_float xmix_t[5]; // Target values (from vector values)
-            vec_float xmix_m[5]; // Member values (from current state)
-            vec_float xmix_d[5]; // difference value
-            vec_float y[5];     // local storage for filter memory
+            vf xmix_t[5]; // Target values (from vector values)
+            vf xmix_m[5]; // Member values (from current state)
+            vf xmix_d[5]; // difference value
+            vf y[5];     // local storage for filter memory
             
             //	const float tap_gain = 0.5f; //2.f;
             for (int32 m = 0; m < 5; m++)
@@ -120,27 +120,27 @@ public:
             }
             
             // Calculate updated (end-of-block) values for f1 and q
-            vec_float nf1 = clipps (process_globals.tune * process_globals.sample_rate_inv * freq, 0.f, 1.f);
-            vec_float nq = clipps(res * 4.03, 0.f, 32.f);
+            vf nf1 = clipps (process_globals.tune * process_globals.sample_rate_inv * freq, 0.f, 1.f);
+            vf nq = clipps(res * 4.03, 0.f, 32.f);
 
             // Get old values for f1, q, g1, g & then calculate per-sample delta
-            vec_float f1 = voices.member_gather(my_offsetof(m_f1));
-            vec_float q =  voices.member_gather(my_offsetof(m_q));
-            vec_float d = voices.member_gather(my_offsetof(m_d));
-            vec_float d_inv = voices.member_gather(my_offsetof(m_d_inv));
+            vf f1 = voices.member_gather(my_offsetof(m_f1));
+            vf q =  voices.member_gather(my_offsetof(m_q));
+            vf d = voices.member_gather(my_offsetof(m_d));
+            vf d_inv = voices.member_gather(my_offsetof(m_d_inv));
             
             float  blinv  = process_globals.block_length_norm_inv;
-            vec_float f1_inc =  (nf1 - f1) * blinv;
-            vec_float  q_inc  = (nq - q) * blinv;
-            vec_float d_inc = (drv - g1) * blinv;
-            vec_float d_inv_inc = (inv_drv - d_inv) * blinv;
+            vf f1_inc =  (nf1 - f1) * blinv;
+            vf  q_inc  = (nq - q) * blinv;
+            vf d_inc = (drv - g1) * blinv;
+            vf d_inv_inc = (inv_drv - d_inv) * blinv;
             
-            vec_float  dc_f = process_globals.filtg_2_5;
-            vec_float dcv = voices.member_gather(my_offsetof(m_dc_f));
+            vf  dc_f = process_globals.filtg_2_5;
+            vf dcv = voices.member_gather(my_offsetof(m_dc_f));
             
-            vec_float  in_lp =  voices.member_gather(my_offsetof(m_in_lp));
-            vec_float  out_lp = voices.member_gather(my_offsetof(m_out_lp));
-            vec_float  limit_f = voices.member_gather(my_offsetof(m_limit));
+            vf  in_lp =  voices.member_gather(my_offsetof(m_in_lp));
+            vf  out_lp = voices.member_gather(my_offsetof(m_out_lp));
+            vf  limit_f = voices.member_gather(my_offsetof(m_limit));
             
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream = voices.getOutputStream(0);
@@ -155,39 +155,39 @@ public:
                 d += d_inc;
                 d_inv += d_inv_inc;
                 
-                const vec_float g =  f1 *(pf[0] + f1*(pf[1] + f1*(pf[2] + f1*pf[3])));
-                const vec_float k =  q*(pk[0] + f1*(pk[1] + f1*(pk[2] + f1*pk[3])));
+                const vf g =  f1 *(pf[0] + f1*(pf[1] + f1*(pf[2] + f1*pf[3])));
+                const vf k =  q*(pk[0] + f1*(pk[1] + f1*(pk[2] + f1*pk[3])));
 
-                vec_float input;
+                vf input;
                 instream >> input; // Read a group of samples
-                vec_float  gain_input = g1 * input;
+                vf  gain_input = g1 * input;
                 
                 // ------------------------------------------------------------
                 // feedback section -- custom clipper algorithm, tanh approximation with bias and a discontinuity around zero
-                vec_float clipsignal = k * y[4];
+                vf clipsignal = k * y[4];
                 // Gain and bias
                 clipsignal =  (scale_gain * clipsignal) + dc_bias;
                 // hardlimit to prevent approximator blow ups
                 clipsignal = clipps(clipsignal, clipper_min,  clipper_max);
                 // y = x - (2x^2)/4, abs compensated
-                vec_float clipsignal_out = clipsignal - (clipsignal * absps(clipsignal) * 0.25f);
+                vf clipsignal_out = clipsignal - (clipsignal * absps(clipsignal) * 0.25f);
                 // scale back
                 clipsignal_out *= scale_gaininv;
                 
                 // ------------------------------------------------------------
-                vec_float  feedback = clipsignal_out;
+                vf  feedback = clipsignal_out;
                 
-                vec_float  tmp0 = y[0];
-                vec_float  tmp1 = gain_input - in_lp;
+                vf  tmp0 = y[0];
+                vf  tmp1 = gain_input - in_lp;
                 
                 y[0] = tmp1 - feedback;
-                vec_float y0m = xmix_m[0] * y[0];
+                vf y0m = xmix_m[0] * y[0];
                 
                 //in_lp += dc_f * tmp1;
                 in_lp += dc_f * tmp1;
                 
-                vec_float t1 = (y[1] * g1) - y[2];
-                vec_float xx;
+                vf t1 = (y[1] * g1) - y[2];
+                vf xx;
                 // ------------------------------------------------------------
                 // y1 += g * tanh1 (g0*y0 + g1*tmp0 - y1 + hm1,  -0.5f);
                 xx = (g0* y[0]) +  (g1* tmp0) - y[1];
@@ -195,11 +195,11 @@ public:
                 xx += xx * xx * xx * (ptx3 + (absps(xx) * ptx4));
                 xx += xx * xx * -0.5f * ptxs;
                 y[1] += g * xx;
-                vec_float y1m = xmix_m[1] * y[1];
+                vf y1m = xmix_m[1] * y[1];
                 
                 
                 // tmp0 = y2;
-                vec_float t2 = (y[2] * g1) - y[3];
+                vf t2 = (y[2] * g1) - y[3];
                 
                     // ------------------------------------------------------------
                     // y2 += g * tanh1 (g0*y1 + g1*tmp1 - y2 + hm2,  -0.47f);
@@ -210,9 +210,9 @@ public:
                     y[2] = addps(y[2], mulps(g, xx));
                     //			cleandiff2 += absps(y2 - y2_linear);
                 
-                vec_float y2m = xmix_m[2] * y[2];
+                vf y2m = xmix_m[2] * y[2];
                 
-                vec_float t3 = (y[3] * g1) - y[4];
+                vf t3 = (y[3] * g1) - y[4];
                 
                     // ------------------------------------------------------------
                     // y3 += g * tanh1 (g0*y2 + g1*tmp0 - y3 + hm1,  -0.5f);
@@ -223,7 +223,7 @@ public:
                     y[3] = addps(y[3], mulps(g, xx)); // FMA
                     //			cleandiff3 += absps(y3 - y3_linear);
                 
-                vec_float y3m = xmix_m[3] * y[3];
+                vf y3m = xmix_m[3] * y[3];
                 
                     // ------------------------------------------------------------
                     // y4 += g * tanh1 (g0*y3 + g1*tmp1 - y4 + hm2,  -0.49f);
@@ -233,10 +233,10 @@ public:
                     xx = addps(xx, mulps((-0.49f * ptxs), mulps(xx, xx)));
                     y[4] = addps(y[4], mulps(g, xx)); // FMA
                     //			cleandiff4 += absps(y4 - y4_linear);
-                vec_float y4m = xmix_m[4] * y[4];
+                vf y4m = xmix_m[4] * y[4];
                 
                 //const float out_hp = mix0[0]*y0 + mix0[1]*y1 + mix0[2]*y2 + mix0[3]*y3 + mix0[4]*y4 - out_lp;
-                vec_float  out_hp = (y0m + y1m) + (y2m + y3m)  + (y4m - out_lp);
+                vf  out_hp = (y0m + y1m) + (y2m + y3m)  + (y4m - out_lp);
                 
                 //out_lp += dc_f * out_hp;
                 out_lp = addps (out_lp, mulps (dc_f, out_hp));

@@ -23,7 +23,7 @@ public:
     
     typedef float vec_elem_f;
     typedef int vec_elem_i;
-	typedef vf_t<MathOps_FPU, interleave> vec_float;
+	typedef vf_t<MathOps_FPU, interleave> vf;
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
@@ -140,9 +140,9 @@ public:
 
 	////////////////////////////////
 	// Load
-    static vforceinline vec_float  loadps(const float* q1)
+    static vforceinline vf  loadps(const float* q1)
     {
-        vec_float rv;
+        vf rv;
         if (interleave > 0x0) rv.m[0x0] = q1[0];
         if (interleave > 0x1) rv.m[0x1] = q1[1];
         if (interleave > 0x2) rv.m[0x2] = q1[2];
@@ -164,9 +164,9 @@ public:
     
 	////////////////////////////////
 	// Gather with known stride
-    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    template <size_t increment> vforceinline vf gather(const float* base_address)
     {
-        vec_float rv;
+        vf rv;
         if (interleave > 0x0) rv.m[0x0] = *(base_address + ((increment * 0x00)/ sizeof(float)));
         if (interleave > 0x1) rv.m[0x1] = *(base_address + ((increment * 0x01)/ sizeof(float)));
         if (interleave > 0x2) rv.m[0x2] = *(base_address + ((increment * 0x02)/ sizeof(float)));
@@ -188,7 +188,7 @@ public:
     
 	////////////////////////////////
 	// Scatter with known stride
-    template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
+    template <size_t increment> vforceinline void scatter(const vf& rv, float* base_address)
     {
         if (interleave > 0x0) *(base_address + ((increment * 0x00)/ sizeof(float))) = rv.m[0x0];
         if (interleave > 0x1) *(base_address + ((increment * 0x01)/ sizeof(float))) = rv.m[0x1];

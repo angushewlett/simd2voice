@@ -22,17 +22,12 @@ public:
         kNumAudioOutputs = 1,
     };
     
-    ////////
-    // Forward declaration of templated Worker class
-    // template <class TIOAdapter> class Worker;
-    
     class BandState
     {
     public:
 	BandState()
         {
-		// printf("A4 %f\n", a[4]);
-	};
+        };
         float m_freq = 0.5f;
         float m_gain = 1.f;
         float m_q = 0.5f;
@@ -41,8 +36,6 @@ public:
         float x[2] = {0.f, 0.f};   // Input memory
         float y[2] = {0.f, 0.f};   // Output memory
     };
-    
-
     
     ////////
     // Node implementation via CRTP
@@ -58,15 +51,15 @@ public:
     {
     public:
         DEFINE_MATHOPS_IMPORTS;      // Import the typedefs and usings from mathops base class
-		//using TIOAdapter::vec_float;
+		//using TIOAdapter::vf;
 
 		class VecBandState
         {
 		public:
-			typedef typename TIOAdapter::vec_float vec_float;
-			vec_float m_freq;
-			vec_float m_gain, m_q;
-            vec_float a[numBands][5], x[numBands][2], y[numBands][2];
+			typedef typename TIOAdapter::vf vf;
+			vf m_freq;
+			vf m_gain, m_q;
+            vf a[numBands][5], x[numBands][2], y[numBands][2];
         } ALIGN_POST(TIOAdapter::alignment);
         
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const typename Node::ProcessAttributes& pa)
@@ -77,8 +70,6 @@ public:
             SampleOutputStream outstream = voices.getOutputStream(0);
             VecBandState bands, bands_out;
 
-	// __asm__("int $3");
-            
 //#pragma unroll(numBands)
             for (int32 i = 0; i < numBands; i++)
             {
@@ -93,22 +84,18 @@ public:
                 }
             }
             
-#if 1 // EXTRA_TEMP_COPY
-VecBandState bs = bands;
-#else
-#define bs bands
-#endif
+            VecBandState bs = bands;
 
             for (int32 t=0; t<block_length; t++)
             {
-                 vec_float io_sample;
+                 vf io_sample;
                 
                  instream >> io_sample;
                 
                 if (numBands > 0)
                 {
                     static constexpr int bd = 0;
-                    const vec_float y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
+                    const vf y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
                     bs.x[bd][1] = bs.x[bd][0];
                     bs.x[bd][0] = io_sample;
                     bs.y[bd][1] = bs.y[bd][0];
@@ -118,7 +105,7 @@ VecBandState bs = bands;
                 if (numBands > 1)
                 {
                     static constexpr int bd = 1;
-                    const vec_float y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
+                    const vf y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
                     bs.x[bd][1] = bs.x[bd][0];
                     bs.x[bd][0] = io_sample;
                     bs.y[bd][1] = bs.y[bd][0];
@@ -128,7 +115,7 @@ VecBandState bs = bands;
                 if (numBands > 2)
                 {
                     static constexpr int bd = 2;
-                    const vec_float y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
+                    const vf y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
                     bs.x[bd][1] = bs.x[bd][0];
                     bs.x[bd][0] = io_sample;
                     bs.y[bd][1] = bs.y[bd][0];
@@ -138,7 +125,7 @@ VecBandState bs = bands;
                 if (numBands > 3)
                 {
                     static constexpr int bd = 3;
-                    const vec_float y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
+                    const vf y0 = bs.a[bd][0] * io_sample + bs.a[bd][1] * bs.x[bd][0] + bs.a[bd][2] * bs.x[bd][1] - bs.a[bd][3] * bs.y[bd][0] - bs.a[bd][4] * bs.y[bd][1];
                     bs.x[bd][1] = bs.x[bd][0];
                     bs.x[bd][0] = io_sample;
                     bs.y[bd][1] = bs.y[bd][0];
@@ -161,10 +148,7 @@ VecBandState bs = bands;
              voices.member_scatter(bands_out.x[i][1], my_offsetof(m_bandState[i].x[1]));
              voices.member_scatter(bands_out.y[i][0], my_offsetof(m_bandState[i].y[0]));
              voices.member_scatter(bands_out.y[i][1], my_offsetof(m_bandState[i].y[1]));
-             // for (int32 j = 0; j < 5; j++)             voices.member_scatter(bands_out.a[i][j], my_offsetof(m_bandState[i].a[j]));
              }
-    
-            
         }; // ProcessBuffer()
     };	// class Worker
     

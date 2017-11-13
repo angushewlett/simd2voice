@@ -228,12 +228,17 @@ public:
 	// x86 / x64 dispatch
 	// These are compiled on all architectures but not called (they live in their own compilation units)
 #if ARCH_X86 || ARCH_X64
+#if ENABLE_AVX512
+#endif
+#if ENABLE_AVX
     static void ProcessBuffer_AVX2(const ProcessGlobals& process_globals, TNode* caller);
     static void ProcessBuffer_AVX(const ProcessGlobals& process_globals, TNode* caller);
+#endif
+#if ENABLE_SSE
     static void ProcessBuffer_SSE4(const ProcessGlobals& process_globals, TNode* caller);
     static void ProcessBuffer_SSE2(const ProcessGlobals& process_globals, TNode* caller);
 #endif
-
+#endif
 #if ARCH_ARM
 	// ARM dispatch
 	static int32 ProcessBuffer_NEON(const ProcessGlobals& process_globals, TNode* caller);
@@ -316,7 +321,7 @@ public:
     // Main dispatch entry point for buffer processing, selects which CPU specific dispatch to use
     virtual int32 ProcessBuffer_Dispatch(const ProcessGlobals& process_globals)
     {
-        int32 cpu_feature_level = SIMDLevel::GetFeatureLevel();
+//        int32 cpu_feature_level = SIMDLevel::GetFeatureLevel();
 
         ///////
         // These static functions ( NodeTmpl<T>::ProcessBuffer_$ARCH ) are implemented as specializations
@@ -396,13 +401,12 @@ protected:
     void* m_voiceMemory = 0;
 };
 
-    ////////////////////////////////
-    // Template implementation class for node-instance-specific voice data
-    template <class T> class VoiceTmpl : public Node::Voice
-    {
+////////////////////////////////
+// Template implementation class for node-instance-specific voice data
+template <class T> class VoiceTmpl : public Node::Voice
+{
     public:
-//        static const size_t size_padded = (((sizeof(T::Voice) >> 6) + 1) << 6);
-    };
+};
 
     
 };

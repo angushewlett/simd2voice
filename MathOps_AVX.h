@@ -24,7 +24,7 @@ public:
 
 	typedef ALIGN_PRE(32) __m256 vec_elem_f ALIGN_POST(32);
 	typedef ALIGN_PRE(32) __m256i vec_elem_i ALIGN_POST(32);
-	typedef ALIGN_PRE(32) vf_t<MathOps_AVX_v, interleave> vec_float ALIGN_POST(32);
+	typedef ALIGN_PRE(32) vf_t<MathOps_AVX_v, interleave> vf ALIGN_POST(32);
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
@@ -141,9 +141,9 @@ public:
     // Load, gather, scatter
 
     // Load
-    static vforceinline vec_float  loadps(const float* q1)
+    static vforceinline vf  loadps(const float* q1)
     {
-        vec_float rv;
+        vf rv;
         if (interleave > 0x0) rv.m[0x0] = _mm256_loadu_ps(&(q1[0]));
         if (interleave > 0x1) rv.m[0x1] = _mm256_loadu_ps(&(q1[8]));
         if (interleave > 0x2) rv.m[0x2] = _mm256_loadu_ps(&(q1[16]));
@@ -164,10 +164,10 @@ public:
     };
     
     // Gather
-    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    template <size_t increment> vforceinline vf gather(const float* base_address)
     {
 #if AVX_VERSION == 1
-        vec_float rv;
+        vf rv;
         int32 fc = increment / sizeof(float);
         const float* ba = base_address;
         
@@ -190,7 +190,7 @@ public:
         return rv;
 #else
         const __m256i scale_base = _mm256_set_epi32(0x00 * increment,0x01 * increment, 0x02 * increment, 0x03 * increment, 0x04 * increment, 0x05 * increment, 0x06 * increment, 0x07 * increment);
-        vec_float rv;
+        vf rv;
         constexpr int32 inc_f = increment / sizeof(float);
         if (interleave > 0x0) rv.m[0x0] = _mm256_i32gather_ps(base_address + (inc_f * 0x00), scale_base, 1);
         if (interleave > 0x1) rv.m[0x1] = _mm256_i32gather_ps(base_address + (inc_f * 0x08), scale_base, 1);
@@ -232,7 +232,7 @@ public:
     };
     
     // Scatter
-    template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
+    template <size_t increment> vforceinline void scatter(const vf& rv, float* base_address)
     {
         constexpr int32 inc_f = increment / sizeof(float);
         if (interleave > 0x0) storeps<inc_f>(rv.m[0x0],  base_address + (inc_f * 0x00));

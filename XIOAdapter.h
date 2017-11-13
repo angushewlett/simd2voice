@@ -16,31 +16,21 @@
 // * static const int32 interleave -- an int declaring the vector's interleave factor
 ////////////////////////////////
 
-// Macro for implementing dispatcher methods @ cpp compilation units
-#define IMPLEMENT_DISPATCHMETHOD(AClass, AMethod) \
-typedef XDSP::NodeTmpl<IMPL_Class> NodeImpl_##AClass;\
-typedef IOAdapter<IMPL_MathNamespace::MathOps<1> , AClass> IOAdapterImpl_##AClass;\
-template<> int32 NodeImpl_##AClass::AMethod(const XDSP::ProcessGlobals& process_globals, AClass::Node* caller)\
-{\
-    NodeImpl_##AClass::ProcessAllVoices<IOAdapterImpl_##AClass::Worker>(process_globals, caller);\
-    return 0;\
-};
-
 // Hack for getting offset of members: 'offsetof' keyword isn't allowed for non POD types. Ugly but the compiler will resolve...
 #define my_offsetof(MEMBER_VAR) (size_t)((char*)&(((Voice*)1)->MEMBER_VAR)-1)
 
 ////////////////////////////////
-template <class simd_t, class dspnode_t> class IOAdapter : public simd_t
+template <class simd_t, class dsp_t> class IOAdapter : public simd_t
 {
 public:
     // Import types from the base mathops implementation
-	typedef typename simd_t::vec_float vec_float;    
+	typedef typename simd_t::vf vf;
 	static constexpr int32 num_elem = simd_t::num_elem;
 	static constexpr int32 interleave = simd_t::interleave;
     
     // Import voice type from the DSP node
-    typedef typename dspnode_t::Voice Voice;
-    typedef typename dspnode_t::template Worker<IOAdapter> Worker;
+    typedef typename dsp_t::Voice Voice;
+    typedef typename dsp_t::template Worker<IOAdapter> Worker;
     typedef Voice* VoiceBlock[simd_t::num_elem];
     
     /////////////////////////////////
@@ -50,7 +40,7 @@ public:
     public:
 
 		// Init
-        void Init(const vec_float* buff_start)
+        void Init(const vf* buff_start)
         {
             m_buff_read = m_buff_start = buff_start;
         };
@@ -62,7 +52,7 @@ public:
 		};
         
 		// Read & increment
-        vforceinline SampleInputStream & operator >> (vec_float& f)
+        vforceinline SampleInputStream & operator >> (vf& f)
         {
             f= *m_buff_read;
             m_buff_read += XDSP::kMaxVoices / num_elem;
@@ -78,14 +68,14 @@ public:
         };
         
 		// Read
-        vforceinline const vec_float & operator*()
+        vforceinline const vf & operator*()
         {
             return *m_buff_read;
         };
         
     protected:
-        const vec_float* m_buff_read = 0;
-        const vec_float* m_buff_start = 0;
+        const vf* m_buff_read = 0;
+        const vf* m_buff_start = 0;
     };
 
     /////////////////////////////////
@@ -95,7 +85,7 @@ public:
     public:
 
 		// Init
-        void Init(vec_float* buff_start)
+        void Init(vf* buff_start)
         {
             m_buff_write = m_buff_start = buff_start;
         };
@@ -107,7 +97,7 @@ public:
 		};
 
 		// Write & increment
-        vforceinline SampleOutputStream & operator << (vec_float f)
+        vforceinline SampleOutputStream & operator << (vf f)
         {
             *m_buff_write = f;
             m_buff_write += XDSP::kMaxVoices / num_elem;
@@ -123,30 +113,30 @@ public:
         };
         
 		// Write
-        vforceinline vec_float & operator*()
+        vforceinline vf & operator*()
         {
             return *m_buff_write;
         };
         
     protected:
-        vec_float* m_buff_write = 0;
-        vec_float* m_buff_start = 0;
+        vf* m_buff_write = 0;
+        vf* m_buff_start = 0;
     };
     
 protected:
     // Store all the voices
     VoiceBlock& m_voices;
     // I/O sample streaming objects
-    SampleInputStream m_inStreams[dspnode_t::kNumAudioInputs];
-    SampleOutputStream m_outStreams[dspnode_t::kNumAudioOutputs];
+    SampleInputStream m_inStreams[dsp_t::kNumAudioInputs];
+    SampleOutputStream m_outStreams[dsp_t::kNumAudioOutputs];
    	 
 public:
     //////////////////////////////
     // ctor
     vforceinline IOAdapter (VoiceBlock& voices) : m_voices(voices)
 	{
-        for (int32 i = 0; i < dspnode_t::kNumAudioInputs; i++) m_inStreams[i].Init(reinterpret_cast<const vec_float*>(m_voices[0]->AudioIn(i)));
-        for (int32 i = 0; i < dspnode_t::kNumAudioOutputs; i++) m_outStreams[i].Init(reinterpret_cast<vec_float*>(m_voices[0]->AudioOut(i)));
+        for (int32 i = 0; i < dsp_t::kNumAudioInputs; i++) m_inStreams[i].Init(reinterpret_cast<const vf*>(m_voices[0]->AudioIn(i)));
+        for (int32 i = 0; i < dsp_t::kNumAudioOutputs; i++) m_outStreams[i].Init(reinterpret_cast<vf*>(m_voices[0]->AudioOut(i)));
 	};
 
     //////////////////////////////
@@ -165,30 +155,30 @@ public:
     
     //////////////////////////////
     // Gather for voice member variables
-	vforceinline vec_float member_gather(size_t offset)
+	vforceinline vf member_gather(size_t offset)
 	{
         const float* base = reinterpret_cast<const float*>(m_voices[0]);
-        return simd_t::template gather<dspnode_t::Node::s_voice_size_padded> (base + (offset / sizeof(float)));
+        return simd_t::template gather<dsp_t::Node::s_voice_size_padded> (base + (offset / sizeof(float)));
 	};
 
     //////////////////////////////
     // Scatter for voice member variables
-	vforceinline void member_scatter(const vec_float& data, size_t offset)
+	vforceinline void member_scatter(const vf& data, size_t offset)
 	{
         float* base = reinterpret_cast<float*>(m_voices[0]);
-        simd_t::template scatter<dspnode_t::Node::s_voice_size_padded> (data, base + (offset / sizeof(float)));
+        simd_t::template scatter<dsp_t::Node::s_voice_size_padded> (data, base + (offset / sizeof(float)));
     };
 
     ///////////////////////////////
     // Gather for controlport variables (assume interleaved)
-	vforceinline vec_float controlport_gather(int32 portindex)
+	vforceinline vf controlport_gather(int32 portindex)
 	{
-		return *(vec_float*)(m_voices[0]->ControlIn(portindex));
+		return *(vf*)(m_voices[0]->ControlIn(portindex));
 	};
     
     ///////////////////////////////
     // Gather for controlport variables (assume interleaved)
-    vforceinline void controlport_scatter(int32 portindex, const vec_float& data)
+    vforceinline void controlport_scatter(int32 portindex, const vf& data)
     {
         *m_voices[0]->ControlOut(portindex) = data;
     };

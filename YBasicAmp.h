@@ -32,12 +32,10 @@ public:
         virtual ~Voice() {};
         virtual void Reset ()
         {
-            // m_linear_gain = 1.f;
         };
         
     protected:
         template <class T> friend class Worker;
-        // float m_linear_gain = 1.f;
     };
     
     ////////
@@ -59,13 +57,13 @@ public:
         static void ProcessBuffer (const XDSP::ProcessGlobals& process_globals, TIOAdapter& voices, const Node::ProcessAttributes& pa)
         {
             const int32 block_length = process_globals.block_length;
-            vec_float next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
+            vf next_linear_gain  = voices.controlport_gather(C_GAIN_LINEAR);
             SampleInputStream instream = voices.getInputStream(0);
             SampleOutputStream outstream = voices.getOutputStream(0);            
             
             for (int32 t=0; t<block_length; t++)
             {
-                vec_float sample;
+                vf sample;
                 instream >> sample;
                 outstream << (sample * next_linear_gain);
                 // Or: *outstream++ = *instream++ * next_linear_gain;

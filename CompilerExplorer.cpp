@@ -1,6 +1,7 @@
 //
 //  CompilerExplorer.cpp
 
+// Tell other headers we're using CEX - that way they won't try to include other local headers
 #define CEXCOMPILE 1
 
 #ifdef _MSC_VER
@@ -17,17 +18,15 @@
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XBasicAmp.h>
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/XEQFilter.h>
 
-namespace MFMA
-{
+#define MathOps_AVX_v MathOps_AVX2
 #include <https://raw.githubusercontent.com/angushewlett/simdtest/master/MathOps_AVX.h>
-};
 
 #define TTestClass XEQFilter<1>
-#define TMathClass MFMA::MathOps<2>
+#define TMathClass MathOps_AVX2<4>
 
-void process(TTestClass::Node* node)
+// This is just to check CompilerExplorer code generation: no need to initialise anything.
+void process(TTestClass::Node* node, const XDSP::ProcessGlobals& process_globals)
 {
-    XDSP::ProcessGlobals process_globals;
     XDSP::NodeTmpl<TTestClass>::template ProcessAllVoices<typename IOAdapter<TMathClass, TTestClass>::Worker>(process_globals, node);
 }
 

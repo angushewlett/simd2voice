@@ -252,7 +252,6 @@ template <class simd_t, int32 interleave> class alignas(simd_t::alignment) vf_t 
 {
 public:
 	typedef typename simd_t::vec_elem_f vec_elem_f;
-//	typedef typename simd_t::vec_union_f vec_union_f;
 
 	// Data storage - (interleave) elements of SIMD vectors
 	alignas(simd_t::alignment) vec_elem_f m[interleave];
@@ -356,20 +355,6 @@ public:
 		vf_t lo_lim_v = lo_lim;
 		*this = vf_t::minps(vf_t::maxps(val, lo_lim_v), hi_lim_v);
 	};
-/*
-	////////////////////////////////
-	// Individual element accessors. Warning: SLOW. Use sparingly!
-	float  elem(int32 a) const
-	{
-		vec_union_f r_out = *this;
-		return r_out.f[a];
-	};
-
-	void  set_elem(int32 a, float v)
-	{
-		vec_union_f *r_out = (vec_union_f*)this;
-		r_out->f[a] = v;
-	};*/
 } ALIGN_POST(simd_t::alignment);
 
 
@@ -379,7 +364,7 @@ public:
     typedef typename TIOAdapter::SampleInputStream SampleInputStream;\
     typedef typename TIOAdapter::SampleOutputStream SampleOutputStream;\
     typedef TIOAdapter IOAdapterImpl;\
-    typedef typename TIOAdapter::vec_float vec_float;\
+    typedef typename TIOAdapter::vf vf;\
     using TIOAdapter::minps;\
     using TIOAdapter::maxps;\
     using TIOAdapter::addps;\

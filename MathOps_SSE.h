@@ -25,7 +25,7 @@ public:
 
     typedef ALIGN_PRE(16) __m128 vec_elem_f ALIGN_POST(16);
     typedef ALIGN_PRE(16) __m128i vec_elem_i ALIGN_POST(16);
-	typedef ALIGN_PRE(16) vf_t<MathOps_SSE_v, interleave> vec_float ALIGN_POST(16);
+	typedef ALIGN_PRE(16) vf_t<MathOps_SSE_v, interleave> vf ALIGN_POST(16);
     
     ////////////////////////////////
     // Operation classes: set, add, sub, mul, div, min, max, rcp, abs, and, or, andn, xor, not, cmp(ge,gt,le,lt,eq,ne).
@@ -140,9 +140,9 @@ public:
     // Load, gather, scatter
 
     // Load
-    static vforceinline vec_float  loadps(const float* q1)
+    static vforceinline vf  loadps(const float* q1)
     {
-        vec_float rv;
+        vf rv;
         if (interleave > 0x0) rv.m[0x0] = _mm_loadu_ps(&(q1[0]));
         if (interleave > 0x1) rv.m[0x1] = _mm_loadu_ps(&(q1[4]));
         if (interleave > 0x2) rv.m[0x2] = _mm_loadu_ps(&(q1[8]));
@@ -163,9 +163,9 @@ public:
     };
     
     // Gather
-    template <size_t increment> vforceinline vec_float gather(const float* base_address)
+    template <size_t increment> vforceinline vf gather(const float* base_address)
     {
-        vec_float rv;
+        vf rv;
         int32 fc = increment / sizeof(float);
         const float* ba = base_address;
         
@@ -209,7 +209,7 @@ public:
     }
     
     // Scatter
-    template <size_t increment> vforceinline void scatter(const vec_float& rv, float* base_address)
+    template <size_t increment> vforceinline void scatter(const vf& rv, float* base_address)
     {
         //        printf("%d\n", (const int32)increment);
         int32 fc = increment / sizeof(float);
